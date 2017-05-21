@@ -35,7 +35,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 		this.attackDiceAmount = (byte) atk;
 		this.defenceDiceAmount = (byte) def;
 		
-		this.isVisible = true;
+		this.isVisible = false;
 	}
 
 	public byte getMovement() {

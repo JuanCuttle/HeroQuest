@@ -25,7 +25,7 @@ public class Position implements Jogada {
 	public Position(int row, int column) {
 		this.row = (byte) row;
 		this.column = (byte) column;
-		this.visible = true;
+		this.visible = false;
 	}
 
 	
