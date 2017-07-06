@@ -53,7 +53,7 @@ public class HeroQuest {
 		
 		
 		
-		this.startMusic();
+		this.startMusic();//
 	}
 
 	private void startMusic() {
