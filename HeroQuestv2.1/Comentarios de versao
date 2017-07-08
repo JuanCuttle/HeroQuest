@@ -1,0 +1,9 @@
+1) Status: Agi_up/down implementados.
+2) Status: Rock_skin implementado.
+
+Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
+3) Status: Cursed implementado (A vez dele é pulada. E, se ele estava Cursed, volta a Neutral)
+4) Status: Courage implementado (O atacante ganha 2 dados de ataque pelo proximo ataque, e volta a neutral)
+
+5) Falta: Sleep e fire of wrath/ball of flame (mais complexos)
+Falta testar adequadamente os status!
