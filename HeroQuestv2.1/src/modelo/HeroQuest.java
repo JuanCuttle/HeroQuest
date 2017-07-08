@@ -400,17 +400,46 @@ public class HeroQuest {
 	public boolean calcularSucessoDaMagia(Creature caster, Creature target,
 			Spell spell) {
 		byte dano;
-		int probabilidade;
-		boolean success, defendeu;
+		//int probabilidade;
+		boolean success; //, defendeu;
 		dano = spell.getDamage();
 		success = true;
-		if (dano < 0) {
+
+		if (spell.getNome() == "Ball of Flame"){
+			// 2 de dano, menos 1 por cada 5 ou 6 rolados em 2 dados
+			byte dado1 = (byte)(Math.random()*6);
+			byte dado2 = (byte)(Math.random()*6);
+			
+			if (dado1 > 3) {
+				dano++;
+			}
+			if (dado2 > 3) {
+				dano++;
+			}
+			spell.setDamage(dano);
+		}
+		
+		if (spell.getNome() == "Fire of Wrath") {
+			// 1 de dano, 0 se conseguir rolar 5 ou 6 em um dado
+			byte dado = (byte)(Math.random()*6);
+			
+			if (dado > 3) {
+				dano++;
+			}
+			spell.setDamage(dano);
+		}
+		
+		if (dano == 0) {
+			success = false;
+			this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
+		}
+		/*if (dano < 0) {
 			probabilidade = 3;
 			defendeu = new Random().nextInt(probabilidade) == 0;
 			if (defendeu) {
 				success = false;
 			}
-		}
+		}*/
 		return success;
 	}
 
@@ -731,9 +760,14 @@ public class HeroQuest {
 			daVez = this.getCriaturaDaVez();
 			status = daVez.getStatus();
 			
-			if (finalizada.getStatus() == Status.CURSED){
+			Status statusFinalizada = finalizada.getStatus();
+			if (statusFinalizada == Status.CURSED || 
+				statusFinalizada == Status.AGILITY_UP ||
+				statusFinalizada == Status.AGILITY_DOWN){
+				
 				finalizada.setStatus(Status.NEUTRAL);
 			}
+			
 			// body = criatura.getBody();
 		}
 		daVez.setMovement();

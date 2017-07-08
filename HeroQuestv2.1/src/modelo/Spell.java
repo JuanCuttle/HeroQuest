@@ -26,5 +26,9 @@ public class Spell implements Jogada {
 	public String getNome() {
 		return this.name;
 	}
+	
+	public void setDamage(byte damage) {
+		this.deliveredDamage = damage;
+	}
 
 }
