@@ -53,11 +53,11 @@ public class HeroQuest {
 		
 		
 		
-		this.startMusic();//
+		this.startMusic();
 	}
 
 	private void startMusic() {
-		File f = new File("src/musicas/Bach-Toccata-and-Fugue-in-D-minor-BWV-565.wav");
+		File f = new File("src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");
 		AudioInputStream audioIn = null;
 
 		try {
@@ -89,6 +89,9 @@ public class HeroQuest {
 			e.printStackTrace();
 		}
 		clip.start();
+		///////////////////////////////////////////
+		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		///////////////////////////////////////////
 	}
 
 	public void abrirPorta(int idPorta) {
