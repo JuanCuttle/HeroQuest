@@ -53,7 +53,7 @@ public class HeroQuest {
 		
 		
 		
-		this.startMusic();
+		//this.startMusic();
 	}
 
 	private void startMusic() {
@@ -178,43 +178,49 @@ public class HeroQuest {
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez) {
 			Creature criatura = this.getCriaturaDaVez();
-			byte movimento = criatura.getMovement();
-			if (movimento > 0) {
-				Position posicaoAtual = criatura.getCurrentPosition();
-				byte linha = posicaoAtual.getRow();
-				byte coluna = posicaoAtual.getColumn();
-				Position novaPosicao;
-				try {
-					novaPosicao = this.getNovaPosicao(direcao, linha, coluna);
-					LanceMovimento lance = new LanceMovimento();
+			
+			if (criatura.getStatus() == Status.SLEEPING){
+				this.atorJogador.reportarErro("Você está dormindo, não pode se mover!");
+			} else {
+			
+				byte movimento = criatura.getMovement();
+				if (movimento > 0) {
+					Position posicaoAtual = criatura.getCurrentPosition();
+					byte linha = posicaoAtual.getRow();
+					byte coluna = posicaoAtual.getColumn();
+					Position novaPosicao;
+					try {
+						novaPosicao = this.getNovaPosicao(direcao, linha, coluna);
+						LanceMovimento lance = new LanceMovimento();
 					
 					
-					lance.setSourceL(linha);
-					lance.setSourceC(coluna);
-					lance.setDestinationL(novaPosicao.getRow());
-					lance.setDestinationC(novaPosicao.getColumn());
+						lance.setSourceL(linha);
+						lance.setSourceC(coluna);
+						lance.setDestinationL(novaPosicao.getRow());
+						lance.setDestinationC(novaPosicao.getColumn());
 
-					Trap trap = novaPosicao.getTrap();
+						Trap trap = novaPosicao.getTrap();
 					
-					if (trap != null) {
-						byte dano = trap.getDeliveredDamage();
-						lance.setDano(dano);
+						if (trap != null) {
+							byte dano = trap.getDeliveredDamage();
+							lance.setDano(dano);
+						}
+					
+						this.tratarLance(lance);
+						this.enviarLance(lance);
+
+					} catch (PositionNotEmptyException e) {
+						this.atorJogador.reportarErro("Respeite as leis da física");
+						//novaPosicao = posicaoAtual;
 					}
-					
-					this.tratarLance(lance);
-					this.enviarLance(lance);
-
-				} catch (PositionNotEmptyException e) {
-					this.atorJogador.reportarErro("Respeite as leis da física");
-					//novaPosicao = posicaoAtual;
+				} else {
+					this.atorJogador
+							.reportarErro("Você não tem movimento suficiente nessa rodada.");
+					}
 				}
 			} else {
-				this.atorJogador
-						.reportarErro("Você não tem movimento suficiente nessa rodada.");
-			}
-		} else {
-			this.atorJogador.reportarErro("Não é o jogador da vez.");
-		}
+				this.atorJogador.reportarErro("Não é o jogador da vez.");
+				}
 	}
 
 	public Creature getCriaturaDaVez() {
@@ -252,23 +258,28 @@ public class HeroQuest {
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez) {
 			Creature atacante = this.getCriaturaDaVez();
-			Position posicaoAtacante = atacante.getCurrentPosition();
-			ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1,
-					posicaoAtacante);
-			Creature alvo = this.atorJogador.selecionarAlvo(possiveisAlvos);
-			Position posicaoAlvo = alvo.getCurrentPosition();
-			boolean possivel = this.verificaSeDistanciaPossivel(
-					posicaoAtacante, posicaoAlvo);
-			if (possivel) {
-				byte dano = this.calcularDanoDoAtaque(atacante, alvo);
-				LanceAtaque lance = new LanceAtaque();
-				lance.setValue(dano);
-				lance.setTargetID(alvo.getID()); ///////////////////////////////////////////
-				this.tratarLance(lance);
-				this.enviarLance(lance);
-			} else {
-				this.atorJogador
+			
+			if (atacante.getStatus() == Status.SLEEPING){
+				this.atorJogador.reportarErro("Você está dormindo, não pode atacar!");
+			} else{
+				Position posicaoAtacante = atacante.getCurrentPosition();
+				ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1,
+						posicaoAtacante);
+				Creature alvo = this.atorJogador.selecionarAlvo(possiveisAlvos);
+				Position posicaoAlvo = alvo.getCurrentPosition();
+				boolean possivel = this.verificaSeDistanciaPossivel(
+						posicaoAtacante, posicaoAlvo);
+				if (possivel) {
+					byte dano = this.calcularDanoDoAtaque(atacante, alvo);
+					LanceAtaque lance = new LanceAtaque();
+					lance.setValue(dano);
+					lance.setTargetID(alvo.getID()); ///////////////////////////////////////////
+					this.tratarLance(lance);
+					this.enviarLance(lance);
+				} else {
+					this.atorJogador
 						.reportarErro("Não é possível atacar um alvo tão distante.");
+				}
 			}
 		}
 	}
@@ -316,10 +327,14 @@ public class HeroQuest {
 		} else {
 			probabilidade = 3;
 		}
-		for (byte i = 1; i <= defDiceAmount; i++) {
-			hit = new Random().nextInt(probabilidade) == 0;
-			if (hit) {
-				defence++;
+		if (alvo.getStatus() == Status.SLEEPING){
+			defence = 0;
+		} else {
+			for (byte i = 1; i <= defDiceAmount; i++) {
+				hit = new Random().nextInt(probabilidade) == 0;
+				if (hit) {
+					defence++;
+				}
 			}
 		}
 		result = (byte) (damage - defence);
@@ -417,6 +432,11 @@ public class HeroQuest {
 				dano++;
 			}
 			spell.setDamage(dano);
+			
+			if (dano == 0) {
+				success = false;
+				this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
+			}
 		}
 		
 		if (spell.getNome() == "Fire of Wrath") {
@@ -427,12 +447,32 @@ public class HeroQuest {
 				dano++;
 			}
 			spell.setDamage(dano);
+			
+			if (dano == 0) {
+				success = false;
+				this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
+			}
 		}
 		
-		if (dano == 0) {
-			success = false;
-			this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
+		if (spell.getNome() == "Sleep"){
+			
+			String nomeAlvo = target.getClass().getSimpleName();
+			if (nomeAlvo == "Zombie" || nomeAlvo == "Mummy" || nomeAlvo == "Skeleton"){
+				success = false;
+			} else {
+				// bota para dormir, se não rolar 1 6 em (mind) dados
+				byte mind = target.getMind();
+				byte dado;
+				for (byte i = 0; i < mind; i++){
+					dado = (byte)(Math.random()*6);
+					if (dado == 5){
+						success = false;
+						break;
+					}
+				}
+			}
 		}
+		
 		/*if (dano < 0) {
 			probabilidade = 3;
 			defendeu = new Random().nextInt(probabilidade) == 0;
@@ -766,6 +806,18 @@ public class HeroQuest {
 				statusFinalizada == Status.AGILITY_DOWN){
 				
 				finalizada.setStatus(Status.NEUTRAL);
+			}
+			
+			if (statusFinalizada == Status.SLEEPING){
+				byte mind = finalizada.getMind();
+				byte dado;
+				for (byte i = 0; i < mind; i++){
+					dado = (byte)(Math.random()*6);
+					if (dado == 5){
+						finalizada.setStatus(Status.NEUTRAL);
+						break;
+					}
+				}
 			}
 			
 			// body = criatura.getBody();

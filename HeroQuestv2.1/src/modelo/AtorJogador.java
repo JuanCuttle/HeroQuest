@@ -46,7 +46,7 @@ public class AtorJogador extends JFrame {
 	}
 
 	public AtorJogador() {
-		setTitle("HeroQuestv2.0b");
+		setTitle("HeroQuestv2.1");
 		// Atributos do AtorJogador
 		this.botoesTabuleiro = new JButton[27][50];
 		this.botoesCriaturas = new ArrayList<JButton>();
