@@ -53,7 +53,7 @@ public class HeroQuest {
 		
 		
 		
-		//this.startMusic();
+		this.startMusic();
 	}
 
 	private void startMusic() {
@@ -467,6 +467,7 @@ public class HeroQuest {
 					dado = (byte)(Math.random()*6);
 					if (dado == 5){
 						success = false;
+						this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
 						break;
 					}
 				}
@@ -815,6 +816,7 @@ public class HeroQuest {
 					dado = (byte)(Math.random()*6);
 					if (dado == 5){
 						finalizada.setStatus(Status.NEUTRAL);
+						this.atorJogador.mostrarMensagem("A criatura acordou!");
 						break;
 					}
 				}
