@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
 
 public class AtorJogador extends JFrame {
 
@@ -56,6 +58,21 @@ public class AtorJogador extends JFrame {
 		setSize(1300, 710);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnHelp = new JMenu("Ajuda");
+		menuBar.add(mnHelp);
+		
+		JButton btnNewButton = new JButton("Instru\u00E7\u00F5es");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Instrucoes instr = new Instrucoes();
+				instr.setVisible(true);
+			}
+		});
+		mnHelp.add(btnNewButton);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -315,7 +332,8 @@ public class AtorJogador extends JFrame {
 
 	public String obterIdServidor() {
 		//String idServidor = ("venus.inf.ufsc.br");
-		String idServidor = ("127.0.0.1");
+		//String idServidor = ("127.0.0.1");
+		String idServidor = ("web.juan.cuttle.vms.ufsc.br");
 		idServidor = JOptionPane.showInputDialog(this,
 				("Insira o endereço do servidor"), idServidor);
 		return idServidor;

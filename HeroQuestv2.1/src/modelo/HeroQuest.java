@@ -53,9 +53,9 @@ public class HeroQuest {
 		
 		
 		
-		this.startMusic();
+		//this.startMusic();
 	}
-
+	
 	private void startMusic() {
 		File f = new File("src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");
 		AudioInputStream audioIn = null;
