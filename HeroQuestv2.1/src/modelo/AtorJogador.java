@@ -55,7 +55,7 @@ public class AtorJogador extends JFrame {
 		this.heroQuest = new HeroQuest(this);
 
 		// Configurar a janela
-		setSize(1300, 710);
+		setSize(1300, 770);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
