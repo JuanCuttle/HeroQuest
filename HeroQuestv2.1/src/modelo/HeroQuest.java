@@ -56,6 +56,7 @@ public class HeroQuest {
 		//this.startMusic();
 	}
 	
+	@SuppressWarnings("unused")
 	private void startMusic() {
 		File f = new File("src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");
 		AudioInputStream audioIn = null;
@@ -63,29 +64,23 @@ public class HeroQuest {
 		try {
 			audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
 		} catch (MalformedURLException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		} catch (UnsupportedAudioFileException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		} catch (IOException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 		Clip clip = null;
 		try {
 			clip = AudioSystem.getClip();
 		} catch (LineUnavailableException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
 			clip.open(audioIn);
 		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		clip.start();

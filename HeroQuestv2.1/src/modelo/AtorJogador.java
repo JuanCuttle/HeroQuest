@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -68,7 +69,13 @@ public class AtorJogador extends JFrame {
 		JButton btnNewButton = new JButton("Instru\u00E7\u00F5es");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Instrucoes instr = new Instrucoes();
+				Instrucoes instr = null;
+				try {
+					instr = new Instrucoes();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				instr.setVisible(true);
 			}
 		});
