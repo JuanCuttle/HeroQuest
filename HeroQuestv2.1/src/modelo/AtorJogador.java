@@ -17,6 +17,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import java.awt.Toolkit;
 
 public class AtorJogador extends JFrame {
 
@@ -49,6 +50,7 @@ public class AtorJogador extends JFrame {
 	}
 
 	public AtorJogador() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AtorJogador.class.getResource("/imagens/Wizard.png")));
 		setTitle("HeroQuestv2.1");
 		// Atributos do AtorJogador
 		this.botoesTabuleiro = new JButton[27][50];
@@ -636,5 +638,18 @@ public class AtorJogador extends JFrame {
 				+ criatura.getClass().getSimpleName()
 				+ " a qual está na linha " + linha + ", coluna " + coluna
 				+ " do tabuleiro.");
+	}
+	
+	public void atualizarArredoresJogador(Position p) {
+		byte linha = p.getRow();
+		byte coluna = p.getColumn();
+		
+		for (byte i = (byte) (linha-1); i < linha+1; i++) {
+			for (byte j = (byte) (coluna-1); j < coluna+1; j++) {
+				Position posicao = this.heroQuest.getPosition(i, j);
+				this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
+			}
+		}
+		this.exibirCriaturas();
 	}
 }

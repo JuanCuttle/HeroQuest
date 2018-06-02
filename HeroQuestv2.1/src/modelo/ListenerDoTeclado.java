@@ -24,6 +24,24 @@ public class ListenerDoTeclado implements KeyListener {
 				break;
 			case KeyEvent.VK_DOWN: this.ator.movimentar(Directions.DOWN);
 				break;
+			case KeyEvent.VK_1: this.ator.conectar();
+				break;
+			case KeyEvent.VK_2: this.ator.desconectar();
+				break;
+			case KeyEvent.VK_3: this.ator.iniciarPartida();
+				break;
+			case KeyEvent.VK_4: this.ator.finalizarJogada();
+				break;
+			case KeyEvent.VK_5: this.ator.mostrarInventario();
+				break;
+			case KeyEvent.VK_6: this.ator.atacar();
+				break;
+			case KeyEvent.VK_7: this.ator.usarMagia();
+				break;
+			case KeyEvent.VK_8: this.ator.procurarArmadilhaOuPortaSecreta();
+				break;
+			case KeyEvent.VK_9: this.ator.procurarTesouro();
+				break;
 		}
 	}
 

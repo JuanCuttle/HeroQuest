@@ -53,7 +53,7 @@ public class HeroQuest {
 		
 		
 		
-		//this.startMusic();
+		this.startMusic();
 	}
 	
 	@SuppressWarnings("unused")
@@ -820,6 +820,7 @@ public class HeroQuest {
 			// body = criatura.getBody();
 		}
 		daVez.setMovement();
+		
 		this.encerramentoDaPartida();
 		//System.out.println("" + criatura.getClass().getSimpleName());
 	}
@@ -987,6 +988,9 @@ public class HeroQuest {
 				Position pos = criatura.getCurrentPosition();
 				pos.removeCreature();
 				this.map.atualizarPosicao(pos, pos.getRow(), pos.getColumn());
+				
+
+				
 				//this.creatureQueue.remove(criatura);
 				//this.localZargon.monsters.remove(criatura);
 				//this.creatureQueue.trimToSize();
