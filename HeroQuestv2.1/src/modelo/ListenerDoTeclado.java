@@ -14,6 +14,10 @@ public class ListenerDoTeclado implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+
+	}
+
+	public void keyReleased(KeyEvent e) {
 		int tecla = e.getKeyCode();
 		switch(tecla) {
 			case KeyEvent.VK_RIGHT: this.ator.movimentar(Directions.RIGHT);
@@ -24,27 +28,27 @@ public class ListenerDoTeclado implements KeyListener {
 				break;
 			case KeyEvent.VK_DOWN: this.ator.movimentar(Directions.DOWN);
 				break;
-			case KeyEvent.VK_1: this.ator.conectar();
+			case KeyEvent.VK_Q: this.ator.conectar();
 				break;
-			case KeyEvent.VK_2: this.ator.desconectar();
+			case KeyEvent.VK_W: this.ator.desconectar();
 				break;
-			case KeyEvent.VK_3: this.ator.iniciarPartida();
+			case KeyEvent.VK_E: this.ator.iniciarPartida();
 				break;
-			case KeyEvent.VK_4: this.ator.finalizarJogada();
+			case KeyEvent.VK_R: this.ator.finalizarJogada();
 				break;
-			case KeyEvent.VK_5: this.ator.mostrarInventario();
+			case KeyEvent.VK_I: this.ator.mostrarInventario();
 				break;
-			case KeyEvent.VK_6: this.ator.atacar();
+			case KeyEvent.VK_A: this.ator.atacar();
 				break;
-			case KeyEvent.VK_7: this.ator.usarMagia();
+			case KeyEvent.VK_S: this.ator.usarMagia();
 				break;
-			case KeyEvent.VK_8: this.ator.procurarArmadilhaOuPortaSecreta();
+			case KeyEvent.VK_Z: this.ator.procurarArmadilhaOuPortaSecreta();
 				break;
-			case KeyEvent.VK_9: this.ator.procurarTesouro();
+			case KeyEvent.VK_X: this.ator.procurarTesouro();
+				break;
+			case KeyEvent.VK_C: this.ator.abrirPortaTeclado();
 				break;
 		}
 	}
-
-	public void keyReleased(KeyEvent e) {}
 	public void keyTyped(KeyEvent e) {}
 }

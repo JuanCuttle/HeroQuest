@@ -17,6 +17,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+
 import java.awt.Toolkit;
 
 public class AtorJogador extends JFrame {
@@ -249,8 +250,11 @@ public class AtorJogador extends JFrame {
 		this.contentPane.add(this.botaoProcurarTesouro);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public void abrirPortaTeclado(){
+		this.heroQuest.abrirPortaTeclado();
+	}
+	
 	public void abrirPorta(int idPorta) {
 		this.heroQuest.abrirPorta(idPorta);
 	}
@@ -651,5 +655,15 @@ public class AtorJogador extends JFrame {
 			}
 		}
 		this.exibirCriaturas();
+	}
+
+	public int escolherPorta(ArrayList<String> portaIds) {
+		String inputDialog = "Escolha a porta a ser aberta: \n";
+		for (int i = 0; i < portaIds.size(); i++){
+			inputDialog += i + " - " + portaIds.get(i)+"\n";
+		}
+		String opcao = JOptionPane.showInputDialog(inputDialog);
+		return Integer.parseInt(opcao);
+		
 	}
 }

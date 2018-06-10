@@ -22,5 +22,9 @@ public class Door extends Position {
 	public int getID() {
 		return id;
 	}
+	
+	public void fecharPorta(){
+		this.open = false;
+	}
 
 }

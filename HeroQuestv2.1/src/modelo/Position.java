@@ -13,6 +13,7 @@ public class Position implements Jogada {
 	
 	protected boolean visible;
 	
+	
 	public boolean isVisible() {
 		return visible;
 	}

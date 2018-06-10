@@ -53,7 +53,7 @@ public class HeroQuest {
 		
 		
 		
-		this.startMusic();
+		//this.startMusic();
 	}
 	
 	@SuppressWarnings("unused")
@@ -99,16 +99,13 @@ public class HeroQuest {
 			boolean perto = this.verificaSePertoDaPorta(
 					(PlayableCharacter) criatura, porta);
 			if (perto) {
-				boolean aberta = porta.getPortaEstaAberta();
-				if (aberta) {
-					this.atorJogador.reportarErro("A porta já está aberta");
-				} else {
+				//boolean aberta = porta.getPortaEstaAberta();
+				
 					LanceAbrirPorta lance = new LanceAbrirPorta();
 					lance.setObjectID(idPorta);
 					this.tratarLance(lance);
 					this.enviarLance(lance);
 					
-				}
 			} else {
 				this.atorJogador.reportarErro("Não está perto da porta.");
 			}
@@ -117,6 +114,63 @@ public class HeroQuest {
 					.reportarErro("Não é jogador da vez ou seu personagem é um monstro.");
 		}
 	}
+	
+	public void abrirPortaTeclado() {
+		Creature criatura = this.getCriaturaDaVez();
+		boolean daVez = this.verificaSeJogadorDaVez();
+		if (daVez
+				&& (criatura instanceof Barbarian || criatura instanceof Wizard
+						|| criatura instanceof Elf || criatura instanceof Dwarf)) {
+			byte linha = criatura.getCurrentPosition().getRow();
+			byte coluna = criatura.getCurrentPosition().getColumn();
+			Position norte = this.getPosition((byte)(linha-1), (byte)coluna);
+			Position leste = this.getPosition((byte)(linha), (byte)(coluna+1));
+			Position sul = this.getPosition((byte)(linha+1), (byte)coluna);
+			Position oeste = this.getPosition((byte)(linha), (byte)(coluna-1));
+			
+			ArrayList<String> portaIds = new ArrayList<>();
+			ArrayList<String> portaId = new ArrayList<>();
+			
+			if (norte instanceof Door){
+				portaId.add(""+norte.getRow()+norte.getColumn());
+				portaIds.add("norte");
+			} if (leste instanceof Door){
+				portaId.add(""+leste.getRow()+leste.getColumn());
+				portaIds.add("leste");
+			} if (sul instanceof Door){
+				portaId.add(""+sul.getRow()+sul.getColumn());
+				portaIds.add("sul");
+			} if (oeste instanceof Door){
+				portaId.add(""+oeste.getRow()+oeste.getColumn());
+				portaIds.add("oeste");
+			}
+			
+			
+			if (!portaIds.isEmpty()) {
+				
+				int escolhida = this.atorJogador.escolherPorta(portaIds);
+				int idPorta = Integer.parseInt(portaId.get(escolhida));
+			
+				//Door porta = this.getPorta(idPorta);
+			
+				/*boolean perto = this.verificaSePertoDaPorta(
+						(PlayableCharacter) criatura, porta);*/
+				//if (perto) {
+				
+					LanceAbrirPorta lance = new LanceAbrirPorta();
+					lance.setObjectID(idPorta);
+					this.tratarLance(lance);
+					this.enviarLance(lance);
+	 
+			} else {
+				this.atorJogador.reportarErro("Não está perto de uma porta.");
+			}
+		} else {
+			this.atorJogador
+					.reportarErro("Não é jogador da vez ou seu personagem é um monstro.");
+		}
+	}
+	
 
 	private boolean verificaSeJogadorDaVez() {
 		int idCriaturaLocal, idCriaturaDaVez;
@@ -525,6 +579,7 @@ public class HeroQuest {
 		PlayableCharacter character;
 		Adventurer playerA;
 		byte personagem = lance.getValue();
+		//JOptionPane.showMessageDialog(null, personagem);
 		switch (personagem) {
 		case 0:
 			Zargon playerZ = lance.getZargon();
@@ -708,7 +763,6 @@ public class HeroQuest {
 		criatura = this.getCriaturaDaVez();
 		
 		
-		
 		linha = posicaoAtual.getRow();
 		coluna = posicaoAtual.getColumn();
 		
@@ -724,13 +778,9 @@ public class HeroQuest {
 		coluna = novaPosicao.getColumn();
 		this.map.atualizarPosicao(novaPosicao, linha, coluna);
 		
-		
-		
-
-		
-
-		
 		this.setAreaVisible(linha, coluna);
+		
+		//this.setAreavisibleTeste(linha, coluna, novaPosicao.getClass().getSimpleName());
 		
 		byte dano = lance.getDano();
 		////////Trap trap = novaPosicao.getTrap();   gerada nova se a posicao nao e enviada
@@ -758,6 +808,36 @@ public class HeroQuest {
 		}
 	}
 
+	/*private void setAreavisibleTeste(byte linha, byte coluna, String tipoAnterior) {
+		Position inicial = this.map.getPosition(linha, coluna);
+		String tipo = inicial.getClass().getSimpleName();
+		
+		if (inicial.isVisible()){
+			return;
+		}
+		
+		if (tipo.equals(tipoAnterior)){
+			inicial.setVisible(true);
+		}
+		
+		if (linha-1 >= 0){
+			Position norte = this.map.getPosition((byte)(linha-1), (byte)(coluna));
+			this.setAreavisibleTeste(norte.getRow(), norte.getColumn(), tipo);
+		}
+		if (coluna+1 < 50){
+			Position leste = this.map.getPosition((byte)(linha), (byte)(coluna+1));
+			this.setAreavisibleTeste(leste.getRow(), leste.getColumn(), tipo);
+		}
+		if (linha+1 < 27){
+			Position sul = this.map.getPosition((byte)(linha+1), (byte)(coluna));
+			this.setAreavisibleTeste(sul.getRow(), sul.getColumn(), tipo);
+		}
+		if (coluna-1 >= 0){
+			Position oeste = this.map.getPosition((byte)(linha), (byte)(coluna-1));
+			this.setAreavisibleTeste(oeste.getRow(), oeste.getColumn(), tipo);
+		}
+	}*/
+
 	private void setAreaVisible(byte linha, byte coluna) {
 
 		for (int i = linha - 2; i <= linha + 2; i++) {
@@ -778,7 +858,11 @@ public class HeroQuest {
 	private void tratarAbrirPorta(LanceAbrirPorta lance) {
 		int idPorta = lance.getObjectID();
 		Door porta = this.getPorta(idPorta);
-		porta.abrirPorta();
+		if (!porta.getPortaEstaAberta()){
+			porta.abrirPorta();
+		} else {
+			porta.fecharPorta();
+		}
 	}
 	
 	private void tratarFinalizarJogada(Lance lance) {
@@ -988,6 +1072,7 @@ public class HeroQuest {
 				Position pos = criatura.getCurrentPosition();
 				pos.removeCreature();
 				this.map.atualizarPosicao(pos, pos.getRow(), pos.getColumn());
+				pos.setVisible(true);
 				
 
 				
