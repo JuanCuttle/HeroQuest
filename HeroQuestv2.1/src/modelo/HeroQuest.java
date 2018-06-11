@@ -25,11 +25,11 @@ public class HeroQuest {
 	protected Player localPlayer;
 	protected ArrayList<Creature> creatureQueue;
 	protected ArrayList<Door> doors;
-	protected boolean zargonAvailable;
-	protected boolean barbarianAvailable;
-	protected boolean wizardAvailable;
-	protected boolean elfAvailable;
-	protected boolean dwarfAvailable;
+	protected static boolean zargonAvailable;
+	protected static boolean barbarianAvailable;
+	protected static boolean wizardAvailable;
+	protected static boolean elfAvailable;
+	protected static boolean dwarfAvailable;
 	protected boolean conectado;
 	protected boolean emAndamento;
 	protected Adventurer localAdventurer;
@@ -41,11 +41,11 @@ public class HeroQuest {
 		this.atorClienteServidor = new AtorClientServer(this);
 		this.creatureQueue = new ArrayList<Creature>();
 		this.doors = new ArrayList<Door>();
-		this.zargonAvailable = true;
-		this.barbarianAvailable = true;
-		this.wizardAvailable = true;
-		this.elfAvailable = true;
-		this.dwarfAvailable = true;
+		zargonAvailable = true;
+		barbarianAvailable = true;
+		wizardAvailable = true;
+		elfAvailable = true;
+		dwarfAvailable = true;
 		this.conectado = false;
 		this.emAndamento = false;
 		this.localAdventurer = null;
@@ -579,74 +579,80 @@ public class HeroQuest {
 		PlayableCharacter character;
 		Adventurer playerA;
 		byte personagem = lance.getValue();
-		//JOptionPane.showMessageDialog(null, personagem);
+
 		switch (personagem) {
-		case 0:
-			Zargon playerZ = lance.getZargon();
-			for (int i = 0; i < playerZ.getMonsters().size(); i++) {
-				this.insertCreatureIntoQueue(playerZ.getMonster(i));
-			}
-			this.removePlayerFromQueue();
-			this.insertPlayerIntoQueue(playerZ);
-			this.setZargonAvailable(false);
-			break;
-		case 1:
-			playerA = lance.getAdventurer();
-			this.removePlayerFromQueue();
-			this.insertPlayerIntoQueue(playerA);
-			character = playerA.getPlayableCharacter();
-			this.insertCreatureIntoQueue(character);
-			this.creatureInPosition(character, 1, 24);
-			
-			character.setMovement();
-			this.setAreaVisible((byte)1, (byte)24);
-			
-			this.setBarbarianAvailable(false);
-			break;
-		case 2:
-			playerA = lance.getAdventurer();
-			this.removePlayerFromQueue();
-			this.insertPlayerIntoQueue(playerA);
-			character = playerA.getPlayableCharacter();
-			((Wizard) character).createSpells();
-			this.insertCreatureIntoQueue(character);
-			this.creatureInPosition(character, 1, 25);
-			
-			character.setMovement();
-			this.setAreaVisible((byte)1, (byte)25);
-			
-			this.setWizardAvailable(false);
-			break;
-		case 3:
-			playerA = lance.getAdventurer();
-			this.removePlayerFromQueue();
-			this.insertPlayerIntoQueue(playerA);
-			character = playerA.getPlayableCharacter();
-			((Elf) character).createSpells();
-			this.insertCreatureIntoQueue(character);
-			this.creatureInPosition(character, 2, 24);
-			
-			character.setMovement();
-			this.setAreaVisible((byte)2, (byte)24);
-			
-			this.setElfAvailable(false);
-			break;
-		case 4:
-			playerA = lance.getAdventurer();
-			this.removePlayerFromQueue();
-			this.insertPlayerIntoQueue(playerA);
-			character = playerA.getPlayableCharacter();
-			this.insertCreatureIntoQueue(character);
-			this.creatureInPosition(character, 2, 25);
-			
-			character.setMovement();
-			this.setAreaVisible((byte)2, (byte)25);
-			
-			this.setDwarfAvailable(false);
-			break;
-		default:
-			this.atorJogador.reportarErro("Erro na seleção de personagem.");
-			break;
+			case 0:
+				this.setZargonAvailable(false);
+				
+				Zargon playerZ = lance.getZargon();
+				for (int i = 0; i < playerZ.getMonsters().size(); i++) {
+					this.insertCreatureIntoQueue(playerZ.getMonster(i));
+				}
+				this.removePlayerFromQueue();
+				this.insertPlayerIntoQueue(playerZ);
+				
+				break;
+			case 1:
+				this.setBarbarianAvailable(false);
+				
+				playerA = lance.getAdventurer();
+				this.removePlayerFromQueue();
+				this.insertPlayerIntoQueue(playerA);
+				character = playerA.getPlayableCharacter();
+				this.insertCreatureIntoQueue(character);
+				this.creatureInPosition(character, 1, 24);
+				
+				character.setMovement();
+				this.setAreaVisible((byte)1, (byte)24);
+	
+				break;
+			case 2:			
+				this.setWizardAvailable(false);
+				
+				playerA = lance.getAdventurer();
+				this.removePlayerFromQueue();
+				this.insertPlayerIntoQueue(playerA);
+				character = playerA.getPlayableCharacter();
+				((Wizard) character).createSpells();
+				this.insertCreatureIntoQueue(character);
+				this.creatureInPosition(character, 1, 25);
+				
+				character.setMovement();
+				this.setAreaVisible((byte)1, (byte)25);
+	
+				break;
+			case 3:
+				this.setElfAvailable(false);
+				
+				playerA = lance.getAdventurer();
+				this.removePlayerFromQueue();
+				this.insertPlayerIntoQueue(playerA);
+				character = playerA.getPlayableCharacter();
+				((Elf) character).createSpells();
+				this.insertCreatureIntoQueue(character);
+				this.creatureInPosition(character, 2, 24);
+				
+				character.setMovement();
+				this.setAreaVisible((byte)2, (byte)24);
+				
+				break;
+			case 4:
+				this.setDwarfAvailable(false);
+				
+				playerA = lance.getAdventurer();
+				this.removePlayerFromQueue();
+				this.insertPlayerIntoQueue(playerA);
+				character = playerA.getPlayableCharacter();
+				this.insertCreatureIntoQueue(character);
+				this.creatureInPosition(character, 2, 25);
+				
+				character.setMovement();
+				this.setAreaVisible((byte)2, (byte)25);
+				
+				break;
+			default:
+				this.atorJogador.reportarErro("Erro na seleção de personagem.");
+				break;
 		}
 		this.sortCreatureQueueByID();
 		this.atorJogador.exibirCriaturas();
@@ -914,23 +920,23 @@ public class HeroQuest {
 	}
 
 	public void setDwarfAvailable(boolean b) {
-		this.dwarfAvailable = b;
+		dwarfAvailable = b;
 	}
 
 	public void setElfAvailable(boolean b) {
-		this.elfAvailable = b;
+		elfAvailable = b;
 	}
 
 	public void setWizardAvailable(boolean b) {
-		this.wizardAvailable = b;
+		wizardAvailable = b;
 	}
 
 	public void setBarbarianAvailable(boolean b) {
-		this.barbarianAvailable = b;
+		barbarianAvailable = b;
 	}
 
 	public void setZargonAvailable(boolean b) {
-		this.zargonAvailable = b;
+		zargonAvailable = b;
 	}
 
 	public Creature removeCreatureFromQueue() {
@@ -970,73 +976,84 @@ public class HeroQuest {
 		PlayableCharacter character;
 		LanceSelecionarPersonagem lance = new LanceSelecionarPersonagem();
 		lance.setValue((byte)resultado);
+		//JOptionPane.showMessageDialog(null, resultado);
 		switch (resultado) {
-		case 0:
-			disponivel = this.getZargonAvailable();
-			break;
-		case 1:
-			disponivel = this.getBarbarianAvailable();
-			break;
-		case 2:
-			disponivel = this.getWizardAvailable();
-			break;
-		case 3:
-			disponivel = this.getElfAvailable();
-			break;
-		case 4:
-			disponivel = this.getDwarfAvailable();
-			break;
-		default:
-			this.atorJogador.reportarErro("Erro na seleção de personagem.");
-			break;
-		}
-		if (disponivel) {
-			switch (resultado) {
 			case 0:
-				this.localZargon = playerZ;
-				lance.setZargon(playerZ);
+				disponivel = this.getZargonAvailable();
 				break;
 			case 1:
-				character = new Barbarian();
-				character.setID((byte) 20);
-				playerA.setPlayableCharacter(character);
-				this.localAdventurer = playerA;
-				lance.setAdventurer(playerA);
+				disponivel = this.getBarbarianAvailable();
 				break;
 			case 2:
-				character = new Wizard();
-				character.setID((byte) 21);
-				playerA.setPlayableCharacter(character);
-				this.localAdventurer = playerA;
-				lance.setAdventurer(playerA);
+				disponivel = this.getWizardAvailable();
 				break;
 			case 3:
-				character = new Elf();
-				character.setID((byte) 22);
-				playerA.setPlayableCharacter(character);
-				this.localAdventurer = playerA;
-				lance.setAdventurer(playerA);
+				disponivel = this.getElfAvailable();
 				break;
 			case 4:
-				character = new Dwarf();
-				character.setID((byte) 23);
-				playerA.setPlayableCharacter(character);
-				this.localAdventurer = playerA;
-				lance.setAdventurer(playerA);
+				disponivel = this.getDwarfAvailable();
 				break;
 			default:
 				this.atorJogador.reportarErro("Erro na seleção de personagem.");
+				disponivel = false;
 				break;
+		}
+		//System.out.println(this.getZargonAvailable()+"\n"+this.getBarbarianAvailable()+"\n"+this.getWizardAvailable()+"\n"+this.getElfAvailable()+"\n"+this.getDwarfAvailable());
+		if (disponivel) {
+			switch (resultado) {
+				case 0:
+					this.localZargon = playerZ;
+					lance.setZargon(playerZ);
+					
+					break;
+				case 1:
+					character = new Barbarian();
+					character.setID((byte) 20);
+					playerA.setPlayableCharacter(character);
+					this.localAdventurer = playerA;
+					lance.setAdventurer(playerA);
+	
+					break;
+				case 2:
+					character = new Wizard();
+					character.setID((byte) 21);
+					playerA.setPlayableCharacter(character);
+					this.localAdventurer = playerA;
+					lance.setAdventurer(playerA);
+	
+					break;
+				case 3:
+					character = new Elf();
+					character.setID((byte) 22);
+					playerA.setPlayableCharacter(character);
+					this.localAdventurer = playerA;
+					lance.setAdventurer(playerA);
+	
+					break;
+				case 4:
+					character = new Dwarf();
+					character.setID((byte) 23);
+					playerA.setPlayableCharacter(character);
+					this.localAdventurer = playerA;
+					lance.setAdventurer(playerA);
+	
+					break;
+				default:
+					this.atorJogador.reportarErro("Erro na seleção de personagem.");
+					break;
 			}
 			this.tratarLance(lance);
 			this.enviarLance(lance);
+			
 		} else {
 			this.atorJogador.reportarErro("Personagem não disponível");
+			this.selecionarPersonagem();
 		}
+		
 	}
 
 	public boolean getZargonAvailable() {
-		return this.zargonAvailable;
+		return zargonAvailable;
 	}
 
 	private Player removePlayerFromQueue() {
@@ -1049,19 +1066,19 @@ public class HeroQuest {
 	}
 
 	public boolean getBarbarianAvailable() {
-		return this.barbarianAvailable;
+		return barbarianAvailable;
 	}
 
 	public boolean getWizardAvailable() {
-		return this.wizardAvailable;
+		return wizardAvailable;
 	}
 
 	public boolean getElfAvailable() {
-		return this.elfAvailable;
+		return elfAvailable;
 	}
 
 	public boolean getDwarfAvailable() {
-		return this.dwarfAvailable;
+		return dwarfAvailable;
 	}
 
 	public void killCreature(int creatureID) {

@@ -69,8 +69,8 @@ public class AtorJogador extends JFrame {
 		JMenu mnHelp = new JMenu("Ajuda");
 		menuBar.add(mnHelp);
 		
-		JButton btnNewButton = new JButton("Instru\u00E7\u00F5es");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnInstructions = new JButton("Instru\u00E7\u00F5es");
+		btnInstructions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Instrucoes instr = null;
 				try {
@@ -82,7 +82,16 @@ public class AtorJogador extends JFrame {
 				instr.setVisible(true);
 			}
 		});
-		mnHelp.add(btnNewButton);
+		mnHelp.add(btnInstructions);
+		
+		JButton btnCharSelect = new JButton("Selecionar personagem");
+		btnCharSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				selecionarPersonagem();
+			}
+		});
+
+		mnHelp.add(btnCharSelect);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -250,7 +259,14 @@ public class AtorJogador extends JFrame {
 		this.contentPane.add(this.botaoProcurarTesouro);
 	}
 
+
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void selecionarPersonagem() {
+		this.heroQuest.selecionarPersonagem();
+	}
+	
 	public void abrirPortaTeclado(){
 		this.heroQuest.abrirPortaTeclado();
 	}
