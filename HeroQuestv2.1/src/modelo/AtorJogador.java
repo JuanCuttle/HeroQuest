@@ -54,9 +54,11 @@ public class AtorJogador extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AtorJogador.class.getResource("/imagens/Wizard.png")));
 		setTitle("HeroQuestv2.1");
 		// Atributos do AtorJogador
+		
 		this.botoesTabuleiro = new JButton[27][50];
 		this.botoesCriaturas = new ArrayList<JButton>();
 		this.heroQuest = new HeroQuest(this);
+		
 
 		// Configurar a janela
 		setSize(1300, 770);
@@ -66,7 +68,7 @@ public class AtorJogador extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnHelp = new JMenu("Ajuda");
+		JMenu mnHelp = new JMenu("Menu");
 		menuBar.add(mnHelp);
 		
 		JButton btnInstructions = new JButton("Instru\u00E7\u00F5es");
@@ -76,7 +78,6 @@ public class AtorJogador extends JFrame {
 				try {
 					instr = new Instrucoes();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				instr.setVisible(true);
@@ -362,7 +363,8 @@ public class AtorJogador extends JFrame {
 	public String obterIdServidor() {
 		//String idServidor = ("venus.inf.ufsc.br");
 		//String idServidor = ("127.0.0.1");
-		String idServidor = ("web.juan.cuttle.vms.ufsc.br");
+		String idServidor = ("localhost");
+		//String idServidor = ("web.juan.cuttle.vms.ufsc.br");
 		idServidor = JOptionPane.showInputDialog(this,
 				("Insira o endereço do servidor"), idServidor);
 		return idServidor;
@@ -381,6 +383,9 @@ public class AtorJogador extends JFrame {
 					servidor, idUsuario);
 			if (exito) {
 				this.heroQuest.estabelecerConectado(true);
+				
+				this.heroQuest.setNomeLocalPlayer(idUsuario);
+				
 				notificarResultado(0);
 			} else {
 				notificarResultado(2);

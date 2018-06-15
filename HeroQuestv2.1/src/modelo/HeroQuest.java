@@ -34,6 +34,7 @@ public class HeroQuest {
 	protected boolean emAndamento;
 	protected Adventurer localAdventurer;
 	protected Zargon localZargon;
+	public String nomeLocalPlayer = "";
 
 	public HeroQuest(AtorJogador ator) {
 		this.players = new ArrayList<Player>();
@@ -672,11 +673,13 @@ public class HeroQuest {
 				Treasure tesouro = posicaoAtual.getTreasure();
 				if (tesouro != null) {
 					int gold = tesouro.getGoldAmount();
-					tesouro.setGoldAmount(0);
-					character.increaseGold(gold);
-					JOptionPane.showMessageDialog(null, "O jogador "
+					if (gold > 0){
+						tesouro.setGoldAmount(0);
+						character.increaseGold(gold);
+						JOptionPane.showMessageDialog(null, "O jogador "
 							+ character.getClass().getSimpleName()
 							+ " encontrou algumas moedas de ouro.");
+					}
 				}
 			}
 		}
@@ -1182,7 +1185,8 @@ public class HeroQuest {
 	public void iniciarNovaPartida(int posicao) {
 		this.setEmAndamento(true);
 		this.map = new Map(this);
-		String idJogador = this.atorJogador.informarNomeJogador();
+		//String idJogador = this.atorJogador.informarNomeJogador();
+		String idJogador = this.nomeLocalPlayer;
 		Player player = this.criarJogador(idJogador);
 		this.setLocalPlayer(player);
 		LanceEnviarPlayer lance = new LanceEnviarPlayer();
@@ -1306,5 +1310,10 @@ public class HeroQuest {
 			}
 		}
 		return null;
+	}
+
+	public void setNomeLocalPlayer(String idUsuario) {
+		this.nomeLocalPlayer = idUsuario;
+		this.atorJogador.setTitle(this.atorJogador.getTitle()+", Jogador: "+this.nomeLocalPlayer);
 	}
 }
