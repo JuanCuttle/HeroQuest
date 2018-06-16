@@ -28,13 +28,13 @@ public class ListenerDoTeclado implements KeyListener {
 				break;
 			case KeyEvent.VK_DOWN: this.ator.movimentar(Directions.DOWN);
 				break;
-			case KeyEvent.VK_Q: this.ator.conectar();
+			case KeyEvent.VK_1: this.ator.conectar();
 				break;
-			case KeyEvent.VK_W: this.ator.desconectar();
+			case KeyEvent.VK_2: this.ator.desconectar();
 				break;
-			case KeyEvent.VK_E: this.ator.iniciarPartida();
+			case KeyEvent.VK_3: this.ator.iniciarPartida();
 				break;
-			case KeyEvent.VK_R: this.ator.finalizarJogada();
+			case KeyEvent.VK_F: this.ator.finalizarJogada();
 				break;
 			case KeyEvent.VK_I: this.ator.mostrarInventario();
 				break;
@@ -42,11 +42,13 @@ public class ListenerDoTeclado implements KeyListener {
 				break;
 			case KeyEvent.VK_S: this.ator.usarMagia();
 				break;
-			case KeyEvent.VK_Z: this.ator.procurarArmadilhaOuPortaSecreta();
+			case KeyEvent.VK_R: this.ator.procurarArmadilhaOuPortaSecreta();
 				break;
-			case KeyEvent.VK_X: this.ator.procurarTesouro();
+			case KeyEvent.VK_T: this.ator.procurarTesouro();
 				break;
-			case KeyEvent.VK_C: this.ator.abrirPortaTeclado();
+			case KeyEvent.VK_O: this.ator.abrirPortaTeclado();
+				break;
+			case KeyEvent.VK_P: this.ator.selecionarPersonagem();
 				break;
 		}
 	}

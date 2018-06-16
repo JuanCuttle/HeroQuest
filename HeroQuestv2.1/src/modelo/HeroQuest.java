@@ -1179,7 +1179,11 @@ public class HeroQuest {
 	}
 
 	public void finalizarJogo() {
-		System.exit(0);
+		//System.exit(0);
+		int option = JOptionPane.showConfirmDialog(null, "O jogo terminou, deseja fechá-lo?");
+		if (option == 0){
+			System.exit(0);
+		}
 	}
 
 	public void iniciarNovaPartida(int posicao) {

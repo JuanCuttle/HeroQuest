@@ -560,26 +560,27 @@ public class AtorJogador extends JFrame {
 						+ ".png";
 			}
 		} else {
-			if (posicao instanceof Door) {
-				if (((Door) posicao).getPortaEstaAberta()) {
-					path = "/imagens/PortaAberta.png";
+				if (posicao instanceof Door) {
+					if (((Door) posicao).getPortaEstaAberta()) {
+						path = "/imagens/PortaAberta.png";
+					} else {
+						path = "/imagens/PortaFechada.png";
+					}
 				} else {
-					path = "/imagens/PortaFechada.png";
+					path = "/imagens/" + posicao.getClass().getSimpleName()
+							+ ".png";
 				}
-			} else {
-				path = "/imagens/" + posicao.getClass().getSimpleName()
-						+ ".png";
-			}
-		}
-		if (linha == 24 && coluna == 24) {
-			path = "/imagens/2424.png";
-		} else if (linha == 24 && coluna == 25) {
-			path = "/imagens/2425.png";
-		} else if (linha == 25 && coluna == 24) {
-			path = "/imagens/2524.png";
-		} else if (linha == 25 && coluna == 25) {
-			path = "/imagens/2525.png";
-		}
+				
+				if (linha == 24 && coluna == 24) {
+					path = "/imagens/2424.png";
+				} else if (linha == 24 && coluna == 25) {
+					path = "/imagens/2425.png";
+				} else if (linha == 25 && coluna == 24) {
+					path = "/imagens/2524.png";
+				} else if (linha == 25 && coluna == 25) {
+					path = "/imagens/2525.png";
+				}
+			}	
 		}
 		img = new ImageIcon(getClass().getResource(path));
 		botao.setIcon(img);

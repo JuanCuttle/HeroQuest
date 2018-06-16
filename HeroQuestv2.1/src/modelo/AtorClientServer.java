@@ -84,6 +84,7 @@ public class AtorClientServer implements OuvidorProxy {
 
 	public void iniciarNovaPartida(Integer posicao) {
 		this.heroQuest.iniciarNovaPartida(posicao);
+	
 		//this.heroQuest.selecionarPersonagem();
 	}
 
