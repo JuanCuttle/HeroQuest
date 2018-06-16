@@ -1,17 +1,9 @@
 package modelo;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
 import exceptions.PositionNotEmptyException;
@@ -53,43 +45,8 @@ public class HeroQuest {
 		this.localZargon = null;
 		
 		
-		
-		//this.startMusic();
 	}
 	
-	@SuppressWarnings("unused")
-	private void startMusic() {
-		File f = new File("src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");
-		AudioInputStream audioIn = null;
-
-		try {
-			audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
-		} catch (MalformedURLException e2) {
-			e2.printStackTrace();
-		} catch (UnsupportedAudioFileException e2) {
-			e2.printStackTrace();
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		}
-		Clip clip = null;
-		try {
-			clip = AudioSystem.getClip();
-		} catch (LineUnavailableException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			clip.open(audioIn);
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		clip.start();
-		///////////////////////////////////////////
-		clip.loop(Clip.LOOP_CONTINUOUSLY);
-		///////////////////////////////////////////
-	}
-
 	public void abrirPorta(int idPorta) {
 		Creature criatura = this.getCriaturaDaVez();
 		boolean daVez = this.verificaSeJogadorDaVez();

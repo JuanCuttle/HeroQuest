@@ -2,23 +2,30 @@ package modelo;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-
-import java.awt.Toolkit;
 
 public class AtorJogador extends JFrame {
 
@@ -37,6 +44,10 @@ public class AtorJogador extends JFrame {
 	protected JButton botaoProcurarTesouro;
 	protected ArrayList<JButton> botoesCriaturas;
 
+	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
+
+	public MusicThread musicThread;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -51,26 +62,33 @@ public class AtorJogador extends JFrame {
 	}
 
 	public AtorJogador() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(AtorJogador.class.getResource("/imagens/Wizard.png")));
+		try {
+			createMusic();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+				AtorJogador.class.getResource("/imagens/Wizard.png")));
 		setTitle("HeroQuestv2.1");
 		// Atributos do AtorJogador
-		
+
 		this.botoesTabuleiro = new JButton[27][50];
 		this.botoesCriaturas = new ArrayList<JButton>();
 		this.heroQuest = new HeroQuest(this);
-		
+		addKeyListener(listener);
 
 		// Configurar a janela
 		setSize(1300, 770);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		JMenu mnHelp = new JMenu("Menu");
 		menuBar.add(mnHelp);
-		
+
 		JButton btnInstructions = new JButton("Instru\u00E7\u00F5es");
 		btnInstructions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -84,7 +102,7 @@ public class AtorJogador extends JFrame {
 			}
 		});
 		mnHelp.add(btnInstructions);
-		
+
 		JButton btnCharSelect = new JButton("Selecionar personagem");
 		btnCharSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -93,6 +111,17 @@ public class AtorJogador extends JFrame {
 		});
 
 		mnHelp.add(btnCharSelect);
+
+		JMenu mnSettings = new JMenu("Settings");
+		menuBar.add(mnSettings);
+
+		JButton btnMusic = new JButton("Turn music on/off");
+		mnSettings.add(btnMusic);
+		btnMusic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				music();
+			}
+		});
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -101,8 +130,7 @@ public class AtorJogador extends JFrame {
 		Border invisivel = BorderFactory.createEmptyBorder();
 		setFocusable(true);
 		requestFocusInWindow();
-		ListenerDoTeclado listener = new ListenerDoTeclado(this);
-		addKeyListener(listener);
+		
 
 		// Cria os bot√µes do tabuleiro
 		for (int i = 0; i < 27; i++) {
@@ -260,18 +288,16 @@ public class AtorJogador extends JFrame {
 		this.contentPane.add(this.botaoProcurarTesouro);
 	}
 
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
 	public void selecionarPersonagem() {
 		this.heroQuest.selecionarPersonagem();
 	}
-	
-	public void abrirPortaTeclado(){
+
+	public void abrirPortaTeclado() {
 		this.heroQuest.abrirPortaTeclado();
 	}
-	
+
 	public void abrirPorta(int idPorta) {
 		this.heroQuest.abrirPorta(idPorta);
 	}
@@ -361,10 +387,10 @@ public class AtorJogador extends JFrame {
 	}
 
 	public String obterIdServidor() {
-		//String idServidor = ("venus.inf.ufsc.br");
-		//String idServidor = ("127.0.0.1");
+		// String idServidor = ("venus.inf.ufsc.br");
+		// String idServidor = ("127.0.0.1");
 		String idServidor = ("localhost");
-		//String idServidor = ("web.juan.cuttle.vms.ufsc.br");
+		// String idServidor = ("web.juan.cuttle.vms.ufsc.br");
 		idServidor = JOptionPane.showInputDialog(this,
 				("Insira o endereÁo do servidor"), idServidor);
 		return idServidor;
@@ -383,9 +409,9 @@ public class AtorJogador extends JFrame {
 					servidor, idUsuario);
 			if (exito) {
 				this.heroQuest.estabelecerConectado(true);
-				
+
 				this.heroQuest.setNomeLocalPlayer(idUsuario);
-				
+
 				notificarResultado(0);
 			} else {
 				notificarResultado(2);
@@ -543,23 +569,24 @@ public class AtorJogador extends JFrame {
 		int linha = posicao.getRow();
 		int coluna = posicao.getColumn();
 		if (!posicao.isVisible()) {
-			path = "/imagens/" + "Wall"
-					+ ".png";
-		
-		} else {
-		if (posicao.getCreature() != null) {
-			path = "/imagens/"
-					+ posicao.getCreature().getClass().getSimpleName() + ".png";
+			path = "/imagens/" + "Wall" + ".png";
 
-		} else if (posicao.getTrap() != null) {
-			if (posicao.getTrap().getVisible()) {
-				path = "/imagens/"
-						+ posicao.getTrap().getClass().getSimpleName() + ".png";
-			} else {
-				path = "/imagens/" + posicao.getClass().getSimpleName()
-						+ ".png";
-			}
 		} else {
+			if (posicao.getCreature() != null) {
+				path = "/imagens/"
+						+ posicao.getCreature().getClass().getSimpleName()
+						+ ".png";
+
+			} else if (posicao.getTrap() != null) {
+				if (posicao.getTrap().getVisible()) {
+					path = "/imagens/"
+							+ posicao.getTrap().getClass().getSimpleName()
+							+ ".png";
+				} else {
+					path = "/imagens/" + posicao.getClass().getSimpleName()
+							+ ".png";
+				}
+			} else {
 				if (posicao instanceof Door) {
 					if (((Door) posicao).getPortaEstaAberta()) {
 						path = "/imagens/PortaAberta.png";
@@ -570,7 +597,7 @@ public class AtorJogador extends JFrame {
 					path = "/imagens/" + posicao.getClass().getSimpleName()
 							+ ".png";
 				}
-				
+
 				if (linha == 24 && coluna == 24) {
 					path = "/imagens/2424.png";
 				} else if (linha == 24 && coluna == 25) {
@@ -580,7 +607,7 @@ public class AtorJogador extends JFrame {
 				} else if (linha == 25 && coluna == 25) {
 					path = "/imagens/2525.png";
 				}
-			}	
+			}
 		}
 		img = new ImageIcon(getClass().getResource(path));
 		botao.setIcon(img);
@@ -591,7 +618,7 @@ public class AtorJogador extends JFrame {
 
 	private void atualizarBotao(JButton botao, Creature criatura,
 			int posicaoBotao) {
-		if (criatura.isVisible() == true){
+		if (criatura.isVisible() == true) {
 			String nome = criatura.getClass().getSimpleName();
 			botao.setText(nome);
 		}
@@ -665,13 +692,13 @@ public class AtorJogador extends JFrame {
 				+ " a qual est· na linha " + linha + ", coluna " + coluna
 				+ " do tabuleiro.");
 	}
-	
+
 	public void atualizarArredoresJogador(Position p) {
 		byte linha = p.getRow();
 		byte coluna = p.getColumn();
-		
-		for (byte i = (byte) (linha-1); i < linha+1; i++) {
-			for (byte j = (byte) (coluna-1); j < coluna+1; j++) {
+
+		for (byte i = (byte) (linha - 1); i < linha + 1; i++) {
+			for (byte j = (byte) (coluna - 1); j < coluna + 1; j++) {
 				Position posicao = this.heroQuest.getPosition(i, j);
 				this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
 			}
@@ -681,11 +708,47 @@ public class AtorJogador extends JFrame {
 
 	public int escolherPorta(ArrayList<String> portaIds) {
 		String inputDialog = "Escolha a porta a ser aberta: \n";
-		for (int i = 0; i < portaIds.size(); i++){
-			inputDialog += i + " - " + portaIds.get(i)+"\n";
+		for (int i = 0; i < portaIds.size(); i++) {
+			inputDialog += i + " - " + portaIds.get(i) + "\n";
 		}
 		String opcao = JOptionPane.showInputDialog(inputDialog);
 		return Integer.parseInt(opcao);
-		
+
+	}
+
+	public void createMusic() throws Exception {
+
+		File f = new File(
+				"src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");
+		AudioInputStream audioIn = null;
+
+		try {
+			audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+		} catch (MalformedURLException e2) {
+			e2.printStackTrace();
+		} catch (UnsupportedAudioFileException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		final Clip clip = AudioSystem.getClip();
+
+		try {
+			clip.open(audioIn);
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		this.musicThread = new MusicThread(clip) {
+
+		};
+		SwingUtilities.invokeLater(musicThread);
+
+	}
+
+	public void music() {
+		this.musicThread.music();
 	}
 }

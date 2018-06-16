@@ -11,7 +11,6 @@ public class ListenerDoTeclado implements KeyListener {
 		this.ator = ator;
 	}
 
-
 	@Override
 	public void keyPressed(KeyEvent e) {
 
@@ -34,7 +33,7 @@ public class ListenerDoTeclado implements KeyListener {
 				break;
 			case KeyEvent.VK_3: this.ator.iniciarPartida();
 				break;
-			case KeyEvent.VK_F: this.ator.finalizarJogada();
+			case KeyEvent.VK_E: this.ator.finalizarJogada();
 				break;
 			case KeyEvent.VK_I: this.ator.mostrarInventario();
 				break;
@@ -49,6 +48,8 @@ public class ListenerDoTeclado implements KeyListener {
 			case KeyEvent.VK_O: this.ator.abrirPortaTeclado();
 				break;
 			case KeyEvent.VK_P: this.ator.selecionarPersonagem();
+				break;
+			case KeyEvent.VK_M: this.ator.music();
 				break;
 		}
 	}
