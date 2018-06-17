@@ -45,8 +45,9 @@ public class AtorJogador extends JFrame {
 	protected ArrayList<JButton> botoesCriaturas;
 
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
-
 	public MusicThread musicThread;
+	
+	public static Boolean autoConnectToServer = false;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -54,6 +55,9 @@ public class AtorJogador extends JFrame {
 				try {
 					AtorJogador frame = new AtorJogador();
 					frame.setVisible(true);
+					if (autoConnectToServer){
+						frame.conectar();
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -391,8 +395,10 @@ public class AtorJogador extends JFrame {
 		// String idServidor = ("127.0.0.1");
 		String idServidor = ("localhost");
 		// String idServidor = ("web.juan.cuttle.vms.ufsc.br");
-		idServidor = JOptionPane.showInputDialog(this,
-				("Insira o endereço do servidor"), idServidor);
+		if (!autoConnectToServer){
+			idServidor = JOptionPane.showInputDialog(this,
+					("Insira o endereço do servidor"), idServidor);
+		}
 		return idServidor;
 	}
 
@@ -410,7 +416,7 @@ public class AtorJogador extends JFrame {
 			if (exito) {
 				this.heroQuest.estabelecerConectado(true);
 
-				this.heroQuest.setNomeLocalPlayer(idUsuario);
+				this.heroQuest.setNomeLocalPlayerAndServer(idUsuario, servidor);
 
 				notificarResultado(0);
 			} else {

@@ -28,6 +28,7 @@ public class HeroQuest {
 	protected Zargon localZargon;
 	public String nomeLocalPlayer = "";
 
+
 	public HeroQuest(AtorJogador ator) {
 		this.players = new ArrayList<Player>();
 		this.atorJogador = ator;
@@ -43,7 +44,6 @@ public class HeroQuest {
 		this.emAndamento = false;
 		this.localAdventurer = null;
 		this.localZargon = null;
-		
 		
 	}
 	
@@ -1273,8 +1273,8 @@ public class HeroQuest {
 		return null;
 	}
 
-	public void setNomeLocalPlayer(String idUsuario) {
+	public void setNomeLocalPlayerAndServer(String idUsuario, String idServer) {
 		this.nomeLocalPlayer = idUsuario;
-		this.atorJogador.setTitle(this.atorJogador.getTitle()+", Jogador: "+this.nomeLocalPlayer);
+		this.atorJogador.setTitle(this.atorJogador.getTitle()+", Connected to server: "+idServer+", Player: "+this.nomeLocalPlayer);
 	}
 }
