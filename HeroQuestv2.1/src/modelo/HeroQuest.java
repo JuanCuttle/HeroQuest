@@ -56,16 +56,20 @@ public class HeroQuest {
 			Door porta = this.getPorta(idPorta);
 			boolean perto = this.verificaSePertoDaPorta(
 					(PlayableCharacter) criatura, porta);
-			if (perto) {
-				//boolean aberta = porta.getPortaEstaAberta();
-				
-					LanceAbrirPorta lance = new LanceAbrirPorta();
-					lance.setObjectID(idPorta);
-					this.tratarLance(lance);
-					this.enviarLance(lance);
+			
+			boolean secreta = porta.isSecreta();
+			if (!secreta){
+				if (perto) {
+					//boolean aberta = porta.getPortaEstaAberta();
 					
-			} else {
-				this.atorJogador.reportarErro("Não está perto da porta.");
+						LanceAbrirPorta lance = new LanceAbrirPorta();
+						lance.setObjectID(idPorta);
+						this.tratarLance(lance);
+						this.enviarLance(lance);
+						
+				} else {
+					this.atorJogador.reportarErro("Não está perto da porta.");
+				}
 			}
 		} else {
 			this.atorJogador
@@ -90,17 +94,25 @@ public class HeroQuest {
 			ArrayList<String> portaId = new ArrayList<>();
 			
 			if (norte instanceof Door){
-				portaId.add(""+norte.getRow()+norte.getColumn());
-				portaIds.add("norte");
+				if (!((Door) norte).isSecreta()){
+					portaId.add(""+norte.getRow()+norte.getColumn());
+					portaIds.add("norte");
+				}
 			} if (leste instanceof Door){
-				portaId.add(""+leste.getRow()+leste.getColumn());
-				portaIds.add("leste");
+				if (!((Door) leste).isSecreta()){
+					portaId.add(""+leste.getRow()+leste.getColumn());
+					portaIds.add("leste");
+				}
 			} if (sul instanceof Door){
-				portaId.add(""+sul.getRow()+sul.getColumn());
-				portaIds.add("sul");
+				if (!((Door) sul).isSecreta()){
+					portaId.add(""+sul.getRow()+sul.getColumn());
+					portaIds.add("sul");
+				}
 			} if (oeste instanceof Door){
-				portaId.add(""+oeste.getRow()+oeste.getColumn());
-				portaIds.add("oeste");
+				if (!((Door) oeste).isSecreta()){
+					portaId.add(""+oeste.getRow()+oeste.getColumn());
+					portaIds.add("oeste");
+				}
 			}
 			
 			
@@ -651,6 +663,11 @@ public class HeroQuest {
 				posicaoAtual = this.map.getPosition((byte)i, (byte)j);
 				if (posicaoAtual.getTrap() != null) {
 					posicaoAtual.makeTrapVisible();
+				}
+				if (posicaoAtual instanceof Door){
+					if (((Door) posicaoAtual).isSecreta()){
+						((Door) posicaoAtual).setSecreta(false);
+					}
 				}
 			}
 		}

@@ -6,6 +6,8 @@ public class Door extends Position {
 	protected boolean open;
 	private int id;
 	
+	private boolean secreta = false;
+	
 	public Door(int row, int column, int id) {
 		super((byte)row, (byte)column);
 		this.id = id;
@@ -26,5 +28,13 @@ public class Door extends Position {
 	public void fecharPorta(){
 		this.open = false;
 	}
+	
+	public boolean isSecreta(){
+		return this.secreta;
+	}
+	public void setSecreta(boolean secreta){
+		this.secreta = secreta;
+	}
+	
 
 }

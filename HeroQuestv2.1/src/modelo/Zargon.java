@@ -98,22 +98,22 @@ public class Zargon extends Player {
 		
 		ChaosWarrior chaos_Warrior1 = new ChaosWarrior();
 		chaos_Warrior1.setID((byte) 15);
-		jogo.creatureInPosition(chaos_Warrior1, 13, 38);
+		jogo.creatureInPosition(chaos_Warrior1, 25, 46);
 		this.monsters.add(chaos_Warrior1);
 		
 		ChaosWarrior chaos_Warrior2 = new ChaosWarrior();
 		chaos_Warrior2.setID((byte) 16);
-		jogo.creatureInPosition(chaos_Warrior2, 13, 45);
+		jogo.creatureInPosition(chaos_Warrior2, 24, 46);
 		this.monsters.add(chaos_Warrior2);
 		
 		ChaosWarrior chaos_Warrior3 = new ChaosWarrior();
 		chaos_Warrior3.setID((byte) 17);
-		jogo.creatureInPosition(chaos_Warrior3, 24, 46);
+		jogo.creatureInPosition(chaos_Warrior3, 13, 45);
 		this.monsters.add(chaos_Warrior3);
 		
 		ChaosWarrior chaos_Warrior4 = new ChaosWarrior();
 		chaos_Warrior4.setID((byte) 18);
-		jogo.creatureInPosition(chaos_Warrior4, 25, 46);
+		jogo.creatureInPosition(chaos_Warrior4, 13, 38);
 		this.monsters.add(chaos_Warrior4);
 		
 		PolarWarbear polar_Warbear = new PolarWarbear();

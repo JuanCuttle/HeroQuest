@@ -47,7 +47,7 @@ public class AtorJogador extends JFrame {
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
 	public MusicThread musicThread;
 	
-	public static Boolean autoConnectToServer = false;
+	public static Boolean autoConnectToServer = true;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -594,10 +594,14 @@ public class AtorJogador extends JFrame {
 				}
 			} else {
 				if (posicao instanceof Door) {
-					if (((Door) posicao).getPortaEstaAberta()) {
-						path = "/imagens/PortaAberta.png";
+					if (!((Door) posicao).isSecreta()){
+						if (((Door) posicao).getPortaEstaAberta()) {
+							path = "/imagens/PortaAberta.png";
+						} else {
+							path = "/imagens/PortaFechada.png";
+						}
 					} else {
-						path = "/imagens/PortaFechada.png";
+						path = "/imagens/" + "Wall" + ".png";
 					}
 				} else {
 					path = "/imagens/" + posicao.getClass().getSimpleName()

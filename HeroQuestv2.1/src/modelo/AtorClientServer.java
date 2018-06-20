@@ -79,6 +79,7 @@ public class AtorClientServer implements OuvidorProxy {
 	public void finalizarPartidaComErro(String message) {
 		JOptionPane.showMessageDialog(null,
 				"Ocorreu um erro e o jogo teve de ser abortado");
+				
 		this.heroQuest.finalizarJogo();
 	}
 
