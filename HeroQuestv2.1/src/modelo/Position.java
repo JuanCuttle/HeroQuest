@@ -70,5 +70,9 @@ public class Position implements Jogada {
 	public void setTreasure(Treasure treasure) {
 		this.treasure = treasure;
 	}
+	
+	public boolean equals(Position pos){
+		return this.row == pos.getRow() && this.column == pos.getColumn();
+	}
 
 }

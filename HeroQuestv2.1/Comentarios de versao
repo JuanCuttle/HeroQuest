@@ -12,3 +12,14 @@ Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
 !!!!!!!!!!!!!!!!!!!!Falta testar adequadamente os status!!!!!!!!!!!!!!!!!!!!
 
 7) Instruções adicionadas
+
+8) Sleep, Agi_up, Agi_down, Rock_skin, Cursed working
+
+9) Creatures can attack themselves with tailored message for those cases
+
+10) Clearer error messages
+
+11) Big GUI optimizations (only updates what is necessary) FINALLY
+
+12) Next steps: Fix issue: verificaSeJogadorDaVez null pointer expection when using a player when it isn't their turn
+				Finish implementing Status.COURAGE

@@ -18,7 +18,8 @@ public class Creature implements Jogada, Comparable<Creature> {
 	protected byte id;
 	
 	protected boolean isVisible;
-	
+	protected byte roundsToSleep;
+
 	public boolean isVisible() {
 		return isVisible;
 	}
@@ -132,5 +133,13 @@ public class Creature implements Jogada, Comparable<Creature> {
 	}
 
 	public void removeSpellFromBook(Spell magia) {
+	}
+	
+	public byte getRoundsToSleep() {
+		return roundsToSleep;
+	}
+
+	public void setRoundsToSleep(byte roundsToSleep) {
+		this.roundsToSleep = roundsToSleep;
 	}
 }

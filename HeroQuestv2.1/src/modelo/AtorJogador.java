@@ -46,7 +46,7 @@ public class AtorJogador extends JFrame {
 
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
 	public MusicThread musicThread;
-	
+
 	public static Boolean autoConnectToServer = true;
 
 	public static void main(String[] args) {
@@ -55,7 +55,7 @@ public class AtorJogador extends JFrame {
 				try {
 					AtorJogador frame = new AtorJogador();
 					frame.setVisible(true);
-					if (autoConnectToServer){
+					if (autoConnectToServer) {
 						frame.conectar();
 					}
 				} catch (Exception e) {
@@ -134,7 +134,6 @@ public class AtorJogador extends JFrame {
 		Border invisivel = BorderFactory.createEmptyBorder();
 		setFocusable(true);
 		requestFocusInWindow();
-		
 
 		// Cria os bot√µes do tabuleiro
 		for (int i = 0; i < 27; i++) {
@@ -395,7 +394,7 @@ public class AtorJogador extends JFrame {
 		// String idServidor = ("127.0.0.1");
 		String idServidor = ("localhost");
 		// String idServidor = ("web.juan.cuttle.vms.ufsc.br");
-		if (!autoConnectToServer){
+		if (!autoConnectToServer) {
 			idServidor = JOptionPane.showInputDialog(this,
 					("Insira o endereÁo do servidor"), idServidor);
 		}
@@ -552,11 +551,17 @@ public class AtorJogador extends JFrame {
 	}
 
 	public void mostrarInformacoes(byte body, byte mind, byte movement,
-			Status status, int linha, int coluna) {
-		JOptionPane.showMessageDialog(null, "Body atual: " + body
+			Status status, int linha, int coluna, Byte roundsToSleep) {
+		String output = "Body atual: " + body
 				+ "\nMind restante: " + mind + "\nMovimento restante: "
 				+ movement + "\nStatus atual: " + status + "\nLinha: " + linha
-				+ " Coluna: " + coluna);
+				+ " Coluna: " + coluna;
+		if (roundsToSleep != null){
+			if (roundsToSleep != 0){
+				output += "\nRoundsToSleep: " + roundsToSleep;
+			}
+		}
+		JOptionPane.showMessageDialog(null, output);
 	}
 
 	public int informarQuantidadeDePlayers() {
@@ -594,7 +599,7 @@ public class AtorJogador extends JFrame {
 				}
 			} else {
 				if (posicao instanceof Door) {
-					if (!((Door) posicao).isSecreta()){
+					if (!((Door) posicao).isSecreta()) {
 						if (((Door) posicao).getPortaEstaAberta()) {
 							path = "/imagens/PortaAberta.png";
 						} else {
@@ -655,10 +660,16 @@ public class AtorJogador extends JFrame {
 						+ " de body points!");
 	}
 
-	public void mostrarDano(Creature alvo, byte dano) {
-		JOptionPane.showMessageDialog(null, "A criatura "
-				+ alvo.getClass().getSimpleName() + " recebeu " + dano
-				+ " de dano.");
+	public void mostrarDano(Creature alvo, byte dano, boolean seAtacou) {
+		if (!seAtacou) {
+			JOptionPane.showMessageDialog(null, "A criatura "
+					+ alvo.getClass().getSimpleName() + " recebeu " + dano
+					+ " de dano.");
+		} else {
+			JOptionPane.showMessageDialog(null, "A criatura "
+					+ alvo.getClass().getSimpleName()
+					+ " tenta seppuku e recebe " + dano + " de dano.");
+		}
 	}
 
 	public void anunciarMorteDeCriatura(Creature alvo) {
@@ -703,14 +714,18 @@ public class AtorJogador extends JFrame {
 				+ " do tabuleiro.");
 	}
 
-	public void atualizarArredoresJogador(Position p) {
+	public void atualizarArredoresJogador() {
+		Creature atual = this.heroQuest.getCriaturaDaVez();
+		Position p = atual.getCurrentPosition();
 		byte linha = p.getRow();
 		byte coluna = p.getColumn();
 
-		for (byte i = (byte) (linha - 1); i < linha + 1; i++) {
-			for (byte j = (byte) (coluna - 1); j < coluna + 1; j++) {
-				Position posicao = this.heroQuest.getPosition(i, j);
-				this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
+		for (byte i = (byte) (linha - 2); i <= linha + 2; i++) {
+			for (byte j = (byte) (coluna - 2); j <= coluna + 2; j++) {
+				if (i >= 0 && i < 27 && j >= 0 && j < 50) {
+					Position posicao = this.heroQuest.getPosition(i, j);
+					this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
+				}
 			}
 		}
 		this.exibirCriaturas();

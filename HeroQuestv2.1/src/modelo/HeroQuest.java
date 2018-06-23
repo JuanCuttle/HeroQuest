@@ -49,95 +49,105 @@ public class HeroQuest {
 	
 	public void abrirPorta(int idPorta) {
 		Creature criatura = this.getCriaturaDaVez();
-		boolean daVez = this.verificaSeJogadorDaVez();
-		if (daVez
-				&& (criatura instanceof Barbarian || criatura instanceof Wizard
-						|| criatura instanceof Elf || criatura instanceof Dwarf)) {
-			Door porta = this.getPorta(idPorta);
-			boolean perto = this.verificaSePertoDaPorta(
-					(PlayableCharacter) criatura, porta);
+		if (criatura instanceof Barbarian || criatura instanceof Wizard
+				|| criatura instanceof Elf || criatura instanceof Dwarf){
 			
-			boolean secreta = porta.isSecreta();
-			if (!secreta){
-				if (perto) {
-					//boolean aberta = porta.getPortaEstaAberta();
-					
-						LanceAbrirPorta lance = new LanceAbrirPorta();
-						lance.setObjectID(idPorta);
-						this.tratarLance(lance);
-						this.enviarLance(lance);
+			boolean daVez = this.verificaSeJogadorDaVez();
+			if (daVez) {
+				Door porta = this.getPorta(idPorta);
+				boolean perto = this.verificaSePertoDaPorta(
+						(PlayableCharacter) criatura, porta);
+				
+				boolean secreta = porta.isSecreta();
+				if (!secreta){
+					if (perto) {
+						//boolean aberta = porta.getPortaEstaAberta();
 						
-				} else {
-					this.atorJogador.reportarErro("Não está perto da porta.");
+							LanceAbrirPorta lance = new LanceAbrirPorta();
+							lance.setObjectID(idPorta);
+							this.tratarLance(lance);
+							this.enviarLance(lance);
+							
+					} else {
+						this.atorJogador.reportarErro("Não está perto da porta.");
+					}
 				}
+			} else {
+				this.atorJogador
+						.reportarErro("Não é jogador da vez.");
 			}
 		} else {
 			this.atorJogador
-					.reportarErro("Não é jogador da vez ou seu personagem é um monstro.");
+			.reportarErro("Monstros não são capazes de abrir portas!");
 		}
 	}
 	
 	public void abrirPortaTeclado() {
 		Creature criatura = this.getCriaturaDaVez();
-		boolean daVez = this.verificaSeJogadorDaVez();
-		if (daVez
-				&& (criatura instanceof Barbarian || criatura instanceof Wizard
-						|| criatura instanceof Elf || criatura instanceof Dwarf)) {
-			byte linha = criatura.getCurrentPosition().getRow();
-			byte coluna = criatura.getCurrentPosition().getColumn();
-			Position norte = this.getPosition((byte)(linha-1), (byte)coluna);
-			Position leste = this.getPosition((byte)(linha), (byte)(coluna+1));
-			Position sul = this.getPosition((byte)(linha+1), (byte)coluna);
-			Position oeste = this.getPosition((byte)(linha), (byte)(coluna-1));
-			
-			ArrayList<String> portaIds = new ArrayList<>();
-			ArrayList<String> portaId = new ArrayList<>();
-			
-			if (norte instanceof Door){
-				if (!((Door) norte).isSecreta()){
-					portaId.add(""+norte.getRow()+norte.getColumn());
-					portaIds.add("norte");
-				}
-			} if (leste instanceof Door){
-				if (!((Door) leste).isSecreta()){
-					portaId.add(""+leste.getRow()+leste.getColumn());
-					portaIds.add("leste");
-				}
-			} if (sul instanceof Door){
-				if (!((Door) sul).isSecreta()){
-					portaId.add(""+sul.getRow()+sul.getColumn());
-					portaIds.add("sul");
-				}
-			} if (oeste instanceof Door){
-				if (!((Door) oeste).isSecreta()){
-					portaId.add(""+oeste.getRow()+oeste.getColumn());
-					portaIds.add("oeste");
-				}
-			}
-			
-			
-			if (!portaIds.isEmpty()) {
+		if (criatura instanceof Barbarian || criatura instanceof Wizard
+				|| criatura instanceof Elf || criatura instanceof Dwarf){
+
+			boolean daVez = this.verificaSeJogadorDaVez();
+			if (daVez) {
+				byte linha = criatura.getCurrentPosition().getRow();
+				byte coluna = criatura.getCurrentPosition().getColumn();
+				Position norte = this.getPosition((byte)(linha-1), (byte)coluna);
+				Position leste = this.getPosition((byte)(linha), (byte)(coluna+1));
+				Position sul = this.getPosition((byte)(linha+1), (byte)coluna);
+				Position oeste = this.getPosition((byte)(linha), (byte)(coluna-1));
 				
-				int escolhida = this.atorJogador.escolherPorta(portaIds);
-				int idPorta = Integer.parseInt(portaId.get(escolhida));
-			
-				//Door porta = this.getPorta(idPorta);
-			
-				/*boolean perto = this.verificaSePertoDaPorta(
-						(PlayableCharacter) criatura, porta);*/
-				//if (perto) {
+				ArrayList<String> portaIds = new ArrayList<>();
+				ArrayList<String> portaId = new ArrayList<>();
 				
-					LanceAbrirPorta lance = new LanceAbrirPorta();
-					lance.setObjectID(idPorta);
-					this.tratarLance(lance);
-					this.enviarLance(lance);
-	 
+				if (norte instanceof Door){
+					if (!((Door) norte).isSecreta()){
+						portaId.add(""+norte.getRow()+norte.getColumn());
+						portaIds.add("norte");
+					}
+				} if (leste instanceof Door){
+					if (!((Door) leste).isSecreta()){
+						portaId.add(""+leste.getRow()+leste.getColumn());
+						portaIds.add("leste");
+					}
+				} if (sul instanceof Door){
+					if (!((Door) sul).isSecreta()){
+						portaId.add(""+sul.getRow()+sul.getColumn());
+						portaIds.add("sul");
+					}
+				} if (oeste instanceof Door){
+					if (!((Door) oeste).isSecreta()){
+						portaId.add(""+oeste.getRow()+oeste.getColumn());
+						portaIds.add("oeste");
+					}
+				}
+				
+				
+				if (!portaIds.isEmpty()) {
+					
+					int escolhida = this.atorJogador.escolherPorta(portaIds);
+					int idPorta = Integer.parseInt(portaId.get(escolhida));
+				
+					//Door porta = this.getPorta(idPorta);
+				
+					/*boolean perto = this.verificaSePertoDaPorta(
+							(PlayableCharacter) criatura, porta);*/
+					//if (perto) {
+					
+						LanceAbrirPorta lance = new LanceAbrirPorta();
+						lance.setObjectID(idPorta);
+						this.tratarLance(lance);
+						this.enviarLance(lance);
+		 
+				} else {
+					this.atorJogador.reportarErro("Não está perto de uma porta.");
+				}
 			} else {
-				this.atorJogador.reportarErro("Não está perto de uma porta.");
+				this.atorJogador
+						.reportarErro("Não é o jogador da vez.");
 			}
 		} else {
 			this.atorJogador
-					.reportarErro("Não é jogador da vez ou seu personagem é um monstro.");
+			.reportarErro("Monstros não são capazes de abrir portas!");
 		}
 	}
 	
@@ -177,7 +187,8 @@ public class HeroQuest {
 		return (linhaAtacante == linhaAlvo && colunaAtacante == colunaAlvo - 1)
 				|| (linhaAtacante == linhaAlvo && colunaAtacante == colunaAlvo + 1)
 				|| (colunaAtacante == colunaAlvo && linhaAtacante == linhaAlvo - 1)
-				|| (colunaAtacante == colunaAlvo && linhaAtacante == linhaAlvo + 1);
+				|| (colunaAtacante == colunaAlvo && linhaAtacante == linhaAlvo + 1)
+				|| (pos1.equals(pos2));
 	}
 
 	private boolean verificaSePertoDaPorta(PlayableCharacter character,
@@ -230,7 +241,6 @@ public class HeroQuest {
 
 					} catch (PositionNotEmptyException e) {
 						this.atorJogador.reportarErro("Respeite as leis da física");
-						//novaPosicao = posicaoAtual;
 					}
 				} else {
 					this.atorJogador
@@ -239,7 +249,7 @@ public class HeroQuest {
 				}
 			} else {
 				this.atorJogador.reportarErro("Não é o jogador da vez.");
-				}
+			}
 	}
 
 	public Creature getCriaturaDaVez() {
@@ -309,7 +319,7 @@ public class HeroQuest {
 		byte coluna = pos.getColumn();
 		for (int i = linha - area; i <= linha + area; i++) {
 			for (int j = coluna - area; j <= coluna + area; j++) {
-				if (i >= 0 && j >= 0) {
+				if (i >= 0 && i < 27 && j >= 0 && j < 50) {
 					Position posicao = this.map.getPosition((byte)i, (byte)j);
 					if (posicao.getCreature() != null) {
 						possiveisAlvos.add(posicao.getCreature());
@@ -357,10 +367,11 @@ public class HeroQuest {
 			}
 		}
 		result = (byte) (damage - defence);
+		
 		if (result >= 0) {
-			if(alvo.getStatus() == Status.ROCK_SKIN){
+			/*if(alvo.getStatus() == Status.ROCK_SKIN){
 				alvo.setStatus(Status.NEUTRAL);
-			}
+			}*/
 			return result;
 		} else {
 			return 0;
@@ -387,6 +398,21 @@ public class HeroQuest {
 							alvo, magia);
 					if (sucesso) {
 						LanceMagia lance = new LanceMagia();
+						if (magia.getStatus() == Status.SLEEPING){ // determinar o numero de rodadas a dormir
+							byte roundsToSleep = 0;
+							byte dado = 0;
+							byte mindAlvo = alvo.getMind();
+							while(dado != 5){
+								for (byte i = 0; i < mindAlvo; i++){
+									roundsToSleep++;
+									dado = (byte)(Math.random()*6);
+									if (dado == 5){
+										break;
+									}
+								}
+							}
+							lance.setRoundsToSleep(roundsToSleep);
+						}
 						lance.setSpell(magia);
 						lance.setTargetID(alvo.getID());
 						this.tratarLance(lance);
@@ -526,9 +552,11 @@ public class HeroQuest {
 			break;
 		case "LanceFinalizarJogada":
 			this.tratarFinalizarJogada(lance);
+			this.atorJogador.exibirCriaturas();
 			break;
 		case "LanceMagia":
 			this.tratarMagia((LanceMagia) lance);
+			this.atorJogador.exibirCriaturas();
 			this.tratarFinalizarJogada(lance);
 			break;
 		case "LanceProcArmadilha":
@@ -539,9 +567,11 @@ public class HeroQuest {
 			break;
 		case "LanceSelecionarPersonagem":
 			this.tratarSelecionarPersonagem((LanceSelecionarPersonagem) lance);
+			this.atorJogador.atualizarInterfaceGrafica();
 			break;
 		}
-		this.atorJogador.atualizarInterfaceGrafica();
+		//this.atorJogador.atualizarInterfaceGrafica();
+		this.atorJogador.atualizarArredoresJogador();
 	}
 	
 	// Inserir aqui a area visivel inicial por personagem
@@ -677,6 +707,7 @@ public class HeroQuest {
 		byte alvo;
 		byte dano;
 		byte body;
+		Byte roundsToSleep = lance.getRoundsToSleep();
 		Spell magia = lance.getSpell();
 		alvo = lance.getTargetID();
 		//int id = alvo.getID();
@@ -685,6 +716,9 @@ public class HeroQuest {
 		Status status = magia.getStatus();
 		if (status != null) {
 			criatura.setStatus(status);
+		}
+		if (roundsToSleep != null){
+			criatura.setRoundsToSleep(roundsToSleep);
 		}
 		this.getCriaturaDaVez().usarMagia(magia);
 		this.atorJogador.anunciarUsoDeMagia(this.getCriaturaDaVez(), magia,
@@ -704,16 +738,24 @@ public class HeroQuest {
 	}
 
 	private void tratarAtaque(LanceAtaque lance) {
+		byte idAtacante = this.getCriaturaDaVez().getID();
 		byte idAlvo;
 		byte dano;
 		byte body;
 		idAlvo = lance.getTargetID();
 		dano = lance.getValue();
-		//int idAlvo = alvo.getID();
 		Creature criatura = this.getCriaturaPorID(idAlvo);
 		criatura.decreaseBody(dano);
 		body = criatura.getBody();
-		this.atorJogador.mostrarDano(this.getCreaturePorID(idAlvo), dano);
+		
+		if (dano > 0){
+			if (criatura.getStatus() == Status.ROCK_SKIN){
+				criatura.setStatus(Status.NEUTRAL);
+			}
+		}
+		
+		boolean seAtacou = idAtacante == idAlvo;
+		this.atorJogador.mostrarDano(this.getCreaturePorID(idAlvo), dano, seAtacou);
 		if (body <= 0) {
 			this.atorJogador.anunciarMorteDeCriatura(criatura);
 			this.killCreature(idAlvo);
@@ -791,36 +833,6 @@ public class HeroQuest {
 		}
 	}
 
-	/*private void setAreavisibleTeste(byte linha, byte coluna, String tipoAnterior) {
-		Position inicial = this.map.getPosition(linha, coluna);
-		String tipo = inicial.getClass().getSimpleName();
-		
-		if (inicial.isVisible()){
-			return;
-		}
-		
-		if (tipo.equals(tipoAnterior)){
-			inicial.setVisible(true);
-		}
-		
-		if (linha-1 >= 0){
-			Position norte = this.map.getPosition((byte)(linha-1), (byte)(coluna));
-			this.setAreavisibleTeste(norte.getRow(), norte.getColumn(), tipo);
-		}
-		if (coluna+1 < 50){
-			Position leste = this.map.getPosition((byte)(linha), (byte)(coluna+1));
-			this.setAreavisibleTeste(leste.getRow(), leste.getColumn(), tipo);
-		}
-		if (linha+1 < 27){
-			Position sul = this.map.getPosition((byte)(linha+1), (byte)(coluna));
-			this.setAreavisibleTeste(sul.getRow(), sul.getColumn(), tipo);
-		}
-		if (coluna-1 >= 0){
-			Position oeste = this.map.getPosition((byte)(linha), (byte)(coluna-1));
-			this.setAreavisibleTeste(oeste.getRow(), oeste.getColumn(), tipo);
-		}
-	}*/
-
 	private void setAreaVisible(byte linha, byte coluna) {
 
 		for (int i = linha - 2; i <= linha + 2; i++) {
@@ -853,36 +865,40 @@ public class HeroQuest {
 		Creature finalizada = this.removeCreatureFromQueue();
 		this.creatureQueue.trimToSize();
 		this.insertCreatureIntoQueue(finalizada);
+		
+		Status finalizadaStatus = finalizada.getStatus();
+		if (finalizadaStatus == Status.AGILITY_UP
+			|| finalizadaStatus == Status.AGILITY_DOWN){
+				
+			finalizada.setStatus(Status.NEUTRAL);
+		}
+		
 		daVez = this.getCriaturaDaVez();
 		// int body = criatura.getBody();
 		Status status = daVez.getStatus();
-		while (status == Status.DEAD || daVez.isVisible() == false || status == Status.CURSED) {
+		while (status == Status.DEAD || daVez.isVisible() == false || status == Status.CURSED
+			|| status == Status.SLEEPING) {
+			
+			if (status == Status.CURSED || 
+				status == Status.AGILITY_UP ||
+				status == Status.AGILITY_DOWN){
+				
+				daVez.setStatus(Status.NEUTRAL);
+			}
+			
+			if (status == Status.SLEEPING){
+				byte roundsToSleep = (byte)(daVez.getRoundsToSleep()-1);
+				daVez.setRoundsToSleep(roundsToSleep);
+				if (roundsToSleep == 0){
+					daVez.setStatus(Status.NEUTRAL);
+					this.atorJogador.mostrarMensagem("A criatura "+daVez.getClass().getSimpleName()+" acordou!");
+				}
+			}			
 			finalizada = this.removeCreatureFromQueue();
 			this.creatureQueue.trimToSize();
 			this.insertCreatureIntoQueue(finalizada);
 			daVez = this.getCriaturaDaVez();
 			status = daVez.getStatus();
-			
-			Status statusFinalizada = finalizada.getStatus();
-			if (statusFinalizada == Status.CURSED || 
-				statusFinalizada == Status.AGILITY_UP ||
-				statusFinalizada == Status.AGILITY_DOWN){
-				
-				finalizada.setStatus(Status.NEUTRAL);
-			}
-			
-			if (statusFinalizada == Status.SLEEPING){
-				byte mind = finalizada.getMind();
-				byte dado;
-				for (byte i = 0; i < mind; i++){
-					dado = (byte)(Math.random()*6);
-					if (dado == 5){
-						finalizada.setStatus(Status.NEUTRAL);
-						this.atorJogador.mostrarMensagem("A criatura acordou!");
-						break;
-					}
-				}
-			}
 			
 			// body = criatura.getBody();
 		}
@@ -930,18 +946,22 @@ public class HeroQuest {
 	public void procurarTesouro() {
 		Creature caster = this.getCriaturaDaVez();
 		boolean daVez = this.verificaSeJogadorDaVez();
-		if (daVez
-				&& (caster instanceof Barbarian || caster instanceof Wizard
-						|| caster instanceof Elf || caster instanceof Dwarf)) {
-			Position source = caster.getCurrentPosition();
-			LanceProcTesouro lance = new LanceProcTesouro();
-			lance.setSourceL(source.getRow());
-			lance.setSourceC(source.getColumn());
-			this.tratarLance(lance);
-			this.enviarLance(lance);
+		if (daVez) {
+			if (caster instanceof Barbarian || caster instanceof Wizard
+					|| caster instanceof Elf || caster instanceof Dwarf){
+				Position source = caster.getCurrentPosition();
+				LanceProcTesouro lance = new LanceProcTesouro();
+				lance.setSourceL(source.getRow());
+				lance.setSourceC(source.getColumn());
+				this.tratarLance(lance);
+				this.enviarLance(lance);
+			} else {
+				this.atorJogador
+					.reportarErro("O monstro não é capaz de entender esse comando.");
+			}
 		} else {
 			this.atorJogador
-					.reportarErro("Não é jogador da vez ou é o Zargon.");
+				.reportarErro("Não é jogador da vez");
 		}
 	}
 
@@ -1093,15 +1113,21 @@ public class HeroQuest {
 	 */
 
 	public void procurarArmadilhaOuPortaSecreta() {
+		Creature caster = this.getCriaturaDaVez();
 		boolean daVez = this.verificaSeJogadorDaVez();
-		if (daVez) {
-			Creature criatura = this.getCriaturaDaVez();
-			Position posicao = criatura.getCurrentPosition();
-			LanceProcArmadilha lance = new LanceProcArmadilha();
-			lance.setSourceC(posicao.getColumn());
-			lance.setSourceL(posicao.getRow());
-			tratarLance(lance);
-			enviarLance(lance);
+		if (daVez ) {
+			if (caster instanceof Barbarian || caster instanceof Wizard
+					|| caster instanceof Elf || caster instanceof Dwarf){
+				Creature criatura = this.getCriaturaDaVez();
+				Position posicao = criatura.getCurrentPosition();
+				LanceProcArmadilha lance = new LanceProcArmadilha();
+				lance.setSourceC(posicao.getColumn());
+				lance.setSourceL(posicao.getRow());
+				tratarLance(lance);
+				enviarLance(lance);
+			} else {
+				this.atorJogador.reportarErro("O monstro não é capaz de entender esse comando.");
+			}
 		} else {
 			this.atorJogador.reportarErro("Não é jogador da vez.");
 		}
@@ -1240,9 +1266,10 @@ public class HeroQuest {
 			Position posicao = criatura.getCurrentPosition();
 			byte linha = posicao.getRow();
 			byte coluna = posicao.getColumn();
+			byte roundsToSleep = criatura.getRoundsToSleep();
 		
 			this.atorJogador.mostrarInformacoes(body, mind, movement, status,
-					linha, coluna);
+					linha, coluna, roundsToSleep);
 		} else {
 			JOptionPane.showMessageDialog(null, "???????");
 		}
