@@ -728,7 +728,7 @@ public class AtorJogador extends JFrame {
 				}
 			}
 		}
-		this.exibirCriaturas();
+		this.exibirCriaturas(); //precisa?
 	}
 
 	public int escolherPorta(ArrayList<String> portaIds) {

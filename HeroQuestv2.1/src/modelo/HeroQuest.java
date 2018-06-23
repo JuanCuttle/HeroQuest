@@ -556,7 +556,7 @@ public class HeroQuest {
 			break;
 		case "LanceMagia":
 			this.tratarMagia((LanceMagia) lance);
-			this.atorJogador.exibirCriaturas();
+			//this.atorJogador.exibirCriaturas();
 			this.tratarFinalizarJogada(lance);
 			break;
 		case "LanceProcArmadilha":

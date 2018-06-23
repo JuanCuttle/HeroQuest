@@ -9,7 +9,6 @@ public class LanceMagia extends Lance {
 
 	protected Spell spell;
 	protected byte targetID;
-
 	protected byte roundsToSleep;
 
 	public Spell getSpell() {

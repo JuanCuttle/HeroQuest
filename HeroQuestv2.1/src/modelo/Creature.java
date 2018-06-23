@@ -20,6 +20,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 	protected boolean isVisible;
 	protected byte roundsToSleep;
 
+	
 	public boolean isVisible() {
 		return isVisible;
 	}
