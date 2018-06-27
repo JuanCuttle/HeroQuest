@@ -362,16 +362,21 @@ public class AtorJogador extends JFrame {
 	}
 
 	// Chamar TelaSelecionarPersonagem!
-	public int mostrarOsCincoPersonagens() {
-		String inputDialog = "Digite o número correspondente ao personagem escolhido: \nObs.: Zargon controla os monstros, não um aventureiro";
+	public void mostrarOsCincoPersonagens() {
+/*		String inputDialog = "Digite o número correspondente ao personagem escolhido: \nObs.: Zargon controla os monstros, não um aventureiro";
 		inputDialog += "\n0 - Zargon";
 		inputDialog += "\n1 - Barbarian";
 		inputDialog += "\n2 - Wizard";
 		inputDialog += "\n3 - Elf";
-		inputDialog += "\n4 - Dwarf";
-		String opcao = JOptionPane.showInputDialog(inputDialog);
+		inputDialog += "\n4 - Dwarf";*/
+		
+		CharacterSelection cs = new CharacterSelection(this);
+		cs.setVisible(true);
+		
+		/*String opcao = JOptionPane.showInputDialog(null, inputDialog);
+		
 		int index = Integer.parseInt(opcao);
-		return index;
+		return index;*/
 	}
 
 	public void procurarArmadilhaOuPortaSecreta() {
@@ -558,7 +563,7 @@ public class AtorJogador extends JFrame {
 				+ " Coluna: " + coluna;
 		if (roundsToSleep != null){
 			if (roundsToSleep != 0){
-				output += "\nRoundsToSleep: " + roundsToSleep;
+				output += "\nTurns left to sleep: " + roundsToSleep;
 			}
 		}
 		JOptionPane.showMessageDialog(null, output);

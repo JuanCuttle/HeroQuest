@@ -15,10 +15,29 @@ public class ImagePanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
 
-    public ImagePanel() {
-       try {                
-    	   image = ImageIO.read(getClass().getResource(
-   				"/imagens/Dungeon.png"));
+    public ImagePanel(ImageEnum type) {
+       try {     
+    	   switch(type){
+    	   		case INSTRUCTIONS: image = ImageIO.read(getClass().getResource(
+      				"/imagens/Dungeon.png"));
+    	   			break;
+    	   		case ZARGON: image = ImageIO.read(getClass().getResource(
+          				"/imagens/Zargon.png"));
+    	   				break;
+    	   		case BARBARIAN: image = ImageIO.read(getClass().getResource(
+          				"/imagens/BarbarianCard.png"));
+    	   				break;
+    	   		case WIZARD: image = ImageIO.read(getClass().getResource(
+          				"/imagens/WizardCard.png"));
+    	   				break;
+    	   		case ELF: image = ImageIO.read(getClass().getResource(
+          				"/imagens/ElfCard.png"));
+    	   				break;
+    	   		default: image = ImageIO.read(getClass().getResource(
+          				"/imagens/DwarfCard.png"));
+    	   				break;
+    	   }
+    	   
        } catch (IOException ex) {
             // handle exception...
        }

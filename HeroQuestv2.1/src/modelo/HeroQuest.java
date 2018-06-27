@@ -866,11 +866,13 @@ public class HeroQuest {
 		this.creatureQueue.trimToSize();
 		this.insertCreatureIntoQueue(finalizada);
 		
-		Status finalizadaStatus = finalizada.getStatus();
-		if (finalizadaStatus == Status.AGILITY_UP
-			|| finalizadaStatus == Status.AGILITY_DOWN){
-				
-			finalizada.setStatus(Status.NEUTRAL);
+		if (!(finalizada instanceof Wizard) && !(finalizada instanceof Elf)){
+			Status finalizadaStatus = finalizada.getStatus();
+			if (finalizadaStatus == Status.AGILITY_UP
+				|| finalizadaStatus == Status.AGILITY_DOWN){
+					
+				finalizada.setStatus(Status.NEUTRAL);
+			}
 		}
 		
 		daVez = this.getCriaturaDaVez();
@@ -966,8 +968,12 @@ public class HeroQuest {
 	}
 
 	public void selecionarPersonagem() {
+		this.atorJogador.mostrarOsCincoPersonagens();
+		//int resultado = this.atorJogador.mostrarOsCincoPersonagens();
+	}
+	
+	public void selecionarPersonagemEscolhida(int resultado){
 		boolean disponivel = false;
-		int resultado = this.atorJogador.mostrarOsCincoPersonagens();
 		Zargon playerZ = new Zargon(this);
 		Adventurer playerA = new Adventurer();
 		PlayableCharacter character;
@@ -1046,7 +1052,6 @@ public class HeroQuest {
 			this.atorJogador.reportarErro("Personagem não disponível");
 			this.selecionarPersonagem();
 		}
-		
 	}
 
 	public boolean getZargonAvailable() {

@@ -21,5 +21,7 @@ Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
 
 11) Big GUI optimizations (only updates what is necessary) FINALLY
 
-12) Next steps: Fix issue: verificaSeJogadorDaVez NullPointer Expection when using a player when it isn't their turn
+12) Beautiful character selection screen implemented
+
+13) Next steps: Fix issue: verificaSeJogadorDaVez NullPointer Expection when using a player when it isn't their turn
 				Finish implementing Status.COURAGE
