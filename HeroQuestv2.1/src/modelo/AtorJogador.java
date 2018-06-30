@@ -781,4 +781,8 @@ public class AtorJogador extends JFrame {
 	public void music() {
 		this.musicThread.music();
 	}
+
+	public void mostrarRemocaoTrap() {
+		JOptionPane.showMessageDialog(null, "O anão desarmou as armadilhas próximas a ele!");
+	}
 }

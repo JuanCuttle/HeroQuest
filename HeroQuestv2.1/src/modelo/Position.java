@@ -60,6 +60,10 @@ public class Position implements Jogada {
 	public void makeTrapVisible() {
 		this.trap.makeTrapVisible();
 	}
+	
+	public void makeTrapTriggered(){
+		this.trap.makeTrapTriggered();
+	}
 
 	public Treasure getTreasure() {
 		return this.treasure;
@@ -72,6 +76,11 @@ public class Position implements Jogada {
 	
 	public boolean equals(Position pos){
 		return this.row == pos.getRow() && this.column == pos.getColumn();
+	}
+
+
+	public void removeTrap() {
+		this.trap = null;
 	}
 
 }

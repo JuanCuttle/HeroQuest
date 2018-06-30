@@ -25,3 +25,5 @@ Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
 
 13) Next steps: Fix issue: verificaSeJogadorDaVez NullPointer Expection when using a player when it isn't their turn
 				Finish implementing Status.COURAGE
+				
+14) Spear trap working, FallingRock trap blocks path (transform to wall/rockslide?).

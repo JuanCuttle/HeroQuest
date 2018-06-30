@@ -7,6 +7,8 @@ public class Spear extends Trap {
 	public Spear() {
 		this.deliveredDamage = calcularDano();
 		this.visible = false;
+		
+		this.triggered = false;
 	}
 	
 	public byte calcularDano() {

@@ -31,14 +31,14 @@ public class CharacterSelection extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		try {
 			CharacterSelection frame = new CharacterSelection(new AtorJogador());
 			frame.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Create the frame.

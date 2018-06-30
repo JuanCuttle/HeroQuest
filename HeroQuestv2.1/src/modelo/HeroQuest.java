@@ -276,7 +276,8 @@ public class HeroQuest {
 		if (novaPosicao.getCreature() != null
 				|| novaPosicao instanceof Wall
 				|| (novaPosicao instanceof Door && !((Door) novaPosicao)
-						.getPortaEstaAberta())) {
+						.getPortaEstaAberta())
+				|| (novaPosicao.getTrap() != null && novaPosicao.getTrap() instanceof FallingRock && novaPosicao.getTrap().getTriggered())) {
 			throw new PositionNotEmptyException();
 		} else {
 			return novaPosicao;
@@ -600,7 +601,9 @@ public class HeroQuest {
 				this.insertPlayerIntoQueue(playerA);
 				character = playerA.getPlayableCharacter();
 				this.insertCreatureIntoQueue(character);
+				
 				this.creatureInPosition(character, 1, 24);
+				//this.creatureInPosition(character, 20, 25);
 				
 				character.setMovement();
 				this.setAreaVisible((byte)1, (byte)24);
@@ -644,7 +647,10 @@ public class HeroQuest {
 				this.insertPlayerIntoQueue(playerA);
 				character = playerA.getPlayableCharacter();
 				this.insertCreatureIntoQueue(character);
+				
 				this.creatureInPosition(character, 2, 25);
+				
+				//this.creatureInPosition(character, 20, 25);
 				
 				character.setMovement();
 				this.setAreaVisible((byte)2, (byte)25);
@@ -688,11 +694,20 @@ public class HeroQuest {
 		int linha = lance.getSourceL();
 		int coluna = lance.getSourceC();
 		Position posicaoAtual;
+		
+		boolean removeuArmadilhas = false;
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
 				posicaoAtual = this.map.getPosition((byte)i, (byte)j);
 				if (posicaoAtual.getTrap() != null) {
 					posicaoAtual.makeTrapVisible();
+					
+					// Se eh dwarf, desativa as armadilhas
+					if (this.getPosition((byte)linha, (byte)coluna).getCreature() instanceof Dwarf){
+						//posicaoAtual.makeTrapTriggered();
+						posicaoAtual.removeTrap();
+						removeuArmadilhas = true;
+					}
 				}
 				if (posicaoAtual instanceof Door){
 					if (((Door) posicaoAtual).isSecreta()){
@@ -700,6 +715,10 @@ public class HeroQuest {
 					}
 				}
 			}
+		}
+		
+		if (removeuArmadilhas){
+			this.atorJogador.mostrarRemocaoTrap();
 		}
 	}
 
@@ -816,9 +835,19 @@ public class HeroQuest {
 			//System.out.println(""+visivel);
 			//if (true) {//(!visivel) { //////////////////// Fonte do problema!!!!!!!!
 				//dano = trap.getDeliveredDamage();
-				criatura.decreaseBody(dano);
-				this.atorJogador.mostrarAcaoTrap(dano, criatura);
-				novaPosicao.getTrap().makeTrapVisible(); ////////
+				
+				if (!novaPosicao.getTrap().getTriggered()){
+					criatura.decreaseBody(dano);
+					this.atorJogador.mostrarAcaoTrap(dano, criatura);
+					novaPosicao.getTrap().makeTrapVisible(); ////////
+					
+					novaPosicao.getTrap().makeTrapTriggered();
+					
+					/*if (novaPosicao.getTrap() instanceof FallingRock){ // make it wall, doesn't work 
+						novaPosicao.removeTrap();
+						novaPosicao = new Wall(novaPosicao.getRow(), novaPosicao.getColumn());
+					}*/
+				}
 				
 				body = criatura.getBody();
 				if (body <= 0) {
@@ -1100,7 +1129,8 @@ public class HeroQuest {
 				//this.creatureQueue.trimToSize();
 				//this.localZargon.monsters.trimToSize();
 				//this.removerCriaturaPorID(creatureID);
-				this.atorJogador.atualizarInterfaceGrafica();
+				
+				//this.atorJogador.atualizarInterfaceGrafica();
 			}
 		}
 	}

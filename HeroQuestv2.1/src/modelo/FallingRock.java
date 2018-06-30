@@ -7,6 +7,8 @@ public class FallingRock extends Trap {
 	public FallingRock() {
 		this.deliveredDamage = calcularDano();
 		this.visible = false;
+		
+		this.triggered = false;
 	}
 	
 
