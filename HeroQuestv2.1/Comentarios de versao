@@ -26,4 +26,10 @@ Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
 13) Next steps: Fix issue: verificaSeJogadorDaVez NullPointer Expection when using a player when it isn't their turn
 				Finish implementing Status.COURAGE
 				
-14) Spear trap working, FallingRock trap blocks path (transform to wall/rockslide?).
+14) Spear trap working, FallingRock trap blocks path (transforms to Rubble) and side choice works.
+
+15) Known problem: infinite loop after hero died (and goblin dead (at trap?))
+	When all monsters are dead and the player kills themselves, infinite loop at tratarFinalizarJogada, line 1000.
+	(maybe) SOLUTION:  counter at loop, exits loop if all are dead.
+	
+16) Known problem: GUI refresh doesn't update creature when far from next player

@@ -19,7 +19,7 @@ public class Trap implements Jogada {
 	}
 
 	public byte getDeliveredDamage() {
-		if (!triggered){
+		if (!triggered){ // needed?
 			return this.deliveredDamage;
 		} else {
 			return 0;

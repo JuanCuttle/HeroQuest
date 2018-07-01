@@ -13,6 +13,25 @@ public class LanceMovimento extends Lance {
 	protected byte destinationC;
 
 	protected byte dano;
+	
+	protected Directions direction;
+	protected byte opcao;
+
+	public byte getOpcao() {
+		return opcao;
+	}
+
+	public void setOpcao(byte opcao) {
+		this.opcao = opcao;
+	}
+
+	public Directions getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Directions direction) {
+		this.direction = direction;
+	}
 
 	public byte getDano() {
 		return dano;

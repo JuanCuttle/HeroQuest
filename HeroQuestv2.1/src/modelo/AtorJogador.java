@@ -594,14 +594,20 @@ public class AtorJogador extends JFrame {
 						+ ".png";
 
 			} else if (posicao.getTrap() != null) {
-				if (posicao.getTrap().getVisible()) {
-					path = "/imagens/"
-							+ posicao.getTrap().getClass().getSimpleName()
-							+ ".png";
-				} else {
-					path = "/imagens/" + posicao.getClass().getSimpleName()
-							+ ".png";
-				}
+					if (posicao.getTrap().getVisible()) {
+						if (posicao.getTrap() instanceof FallingRock && posicao.getTrap().getTriggered()){
+							path = "/imagens/"
+									+ "Rubble"
+									+ ".png";
+						} else {
+							path = "/imagens/"
+									+ posicao.getTrap().getClass().getSimpleName()
+									+ ".png";
+						}
+					} else {
+						path = "/imagens/" + posicao.getClass().getSimpleName()
+								+ ".png";
+					}
 			} else {
 				if (posicao instanceof Door) {
 					if (!((Door) posicao).isSecreta()) {
@@ -733,6 +739,7 @@ public class AtorJogador extends JFrame {
 				}
 			}
 		}
+		
 		this.exibirCriaturas(); //precisa?
 	}
 
@@ -784,5 +791,13 @@ public class AtorJogador extends JFrame {
 
 	public void mostrarRemocaoTrap() {
 		JOptionPane.showMessageDialog(null, "O anão desarmou as armadilhas próximas a ele!");
+	}
+
+	public byte mostrarOpcoesFallingRock() {
+		String input = "Oh não, você está sendo soterrado! Escolha se deseja ir para frente ou para trás:\n";
+		input += "0 - para frente\n";
+		input += "1 - para trás";
+		String option = JOptionPane.showInputDialog(input);
+		return (byte)Integer.parseInt(option);
 	}
 }
