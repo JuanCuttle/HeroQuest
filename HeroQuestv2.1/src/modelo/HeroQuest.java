@@ -765,6 +765,8 @@ public class HeroQuest {
 	}
 
 	private void tratarProcurarTesouro(LanceProcTesouro lance) {
+		boolean foundGold = false;
+		
 		PlayableCharacter character;
 		byte linha = lance.getSourceL();
 		byte coluna = lance.getSourceC();
@@ -781,12 +783,15 @@ public class HeroQuest {
 					if (gold > 0){
 						tesouro.setGoldAmount(0);
 						character.increaseGold(gold);
-						JOptionPane.showMessageDialog(null, "O jogador "
-							+ character.getClass().getSimpleName()
-							+ " encontrou algumas moedas de ouro.");
+						foundGold = true;
 					}
 				}
 			}
+		}
+		if (foundGold){
+			JOptionPane.showMessageDialog(null, "O jogador "
+					+ character.getClass().getSimpleName()
+					+ " encontrou algumas moedas de ouro.");
 		}
 	}
 
@@ -802,12 +807,18 @@ public class HeroQuest {
 				if (posicaoAtual.getTrap() != null) {
 					posicaoAtual.makeTrapVisible();
 					
+					// Se eh pit e estah visivel, desarma
+					if (posicaoAtual.getTrap() instanceof Pit){
+						posicaoAtual.getTrap().setTriggered(true);
+					}
+					
 					// Se eh dwarf, desativa as armadilhas
 					if (this.getPosition((byte)linha, (byte)coluna).getCreature() instanceof Dwarf){
 						//posicaoAtual.makeTrapTriggered();
 						posicaoAtual.removeTrap();
 						removeuArmadilhas = true;
 					}
+					
 				}
 				if (posicaoAtual instanceof Door){
 					if (((Door) posicaoAtual).isSecreta()){
@@ -1137,6 +1148,14 @@ public class HeroQuest {
 			// body = criatura.getBody();
 		}
 		daVez.setMovement();
+		
+		// Courage status removal
+		ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1, daVez.getCurrentPosition());
+		if (possiveisAlvos.size() == 1){ // Cannot any enemies
+			if (daVez.getStatus() == Status.COURAGE){
+				daVez.setStatus(Status.NEUTRAL);
+			}
+		}
 		
 		this.encerramentoDaPartida();
 		//System.out.println("" + criatura.getClass().getSimpleName());

@@ -38,3 +38,5 @@ Can be troublesome with Creature objects (change not made through ID)
 17) Next steps: 13) and Pit traps
 
 18) Pit traps working!!!! ALL TRAPS WORKING!!!
+
+19) Adjusted treasure searching message (only appears once), exported jar music now works, Courage implemented and visible pit is now disarmed

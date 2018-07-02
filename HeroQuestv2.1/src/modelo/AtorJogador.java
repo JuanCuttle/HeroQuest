@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -74,7 +73,7 @@ public class AtorJogador extends JFrame {
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				AtorJogador.class.getResource("/imagens/Wizard.png")));
-		setTitle("HeroQuestv2.1");
+		setTitle("HeroQuestv2.7.2");
 		// Atributos do AtorJogador
 
 		this.botoesTabuleiro = new JButton[27][50];
@@ -755,12 +754,13 @@ public class AtorJogador extends JFrame {
 
 	public void createMusic() throws Exception {
 
-		File f = new File(
-				"src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");
+		/*File f = new File("src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");*/
+		String f = "/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav";
 		AudioInputStream audioIn = null;
 
 		try {
-			audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+			//audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+			audioIn = AudioSystem.getAudioInputStream(getClass().getResource(f));
 		} catch (MalformedURLException e2) {
 			e2.printStackTrace();
 		} catch (UnsupportedAudioFileException e2) {
