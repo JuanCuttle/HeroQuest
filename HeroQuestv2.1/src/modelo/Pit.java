@@ -10,9 +10,10 @@ public class Pit extends Trap {
 	}
 	
 	private byte calcularDano() {
-		if ((int)(Math.random()*2) == 1) {
+		/*if ((int)(Math.random()*2) == 1) {
 			return 1;
 		}
-		return 0;
+		return 0;*/
+		return 1;
 	}
 }

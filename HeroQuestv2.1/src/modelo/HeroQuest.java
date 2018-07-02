@@ -276,6 +276,53 @@ public class HeroQuest {
 								
 								lance.setDirection(direcao);
 								lance.setOpcao(opcao);
+							} else if (trap instanceof Pit){
+								
+								if (trap.getVisible()){
+								
+									byte opcao = this.atorJogador.mostrarOpcoesPit();
+									
+									switch(direcao){
+									case UP: {	if (opcao == 0){
+													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+													if (novaPosicao instanceof Wall){
+														opcao = 1;
+													}
+												}
+												break;
+												}
+									case DOWN: {if (opcao == 0){
+													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+													if (novaPosicao instanceof Wall){
+														opcao = 1;
+													}
+												}
+												break;
+												}
+									case LEFT: {if (opcao == 0){
+													novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+													if (novaPosicao instanceof Wall){
+														opcao = 1;
+													}
+												}
+												break;
+												}
+									default: {if (opcao == 0){
+													novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+													if (novaPosicao instanceof Wall){
+														opcao = 1;
+													}
+												}
+												break;
+												}
+									}
+									
+									lance.setDirection(direcao);
+									lance.setOpcao(opcao);
+									} else {
+										lance.setDirection(direcao);
+										lance.setOpcao((byte)2);
+									}
 							}
 						}
 					
@@ -380,7 +427,17 @@ public class HeroQuest {
 		damage = 0;
 		defence = 0;
 		atkDiceAmount = atacante.getAttackDiceAmount();
+		if (atacante.getCurrentPosition().getTrap() != null){
+			if (atacante.getCurrentPosition().getTrap() instanceof Pit){
+				atkDiceAmount--;
+			}
+		}
 		defDiceAmount = alvo.getDefenceDiceAmount();
+		if (alvo.getCurrentPosition().getTrap() != null){
+			if (alvo.getCurrentPosition().getTrap() instanceof Pit){
+				defDiceAmount--;
+			}
+		}
 		if (alvo.getStatus() == Status.ROCK_SKIN){
 			defDiceAmount++;
 		}
@@ -894,6 +951,55 @@ public class HeroQuest {
 					}*/
 				}
 				
+				if (novaPosicao.getTrap() instanceof Pit){
+					//novaPosicao.getTrap().setTriggered(false);
+					
+					// se foi para frente ou para tras (se caiu no pit, fica nele)
+					if (lance.getOpcao() != 2){
+						novaPosicao.removeCreature();
+						
+						byte opcao = lance.getOpcao();
+						switch(lance.getDirection()){
+						case UP: {	if (opcao == 0){
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+									} else{
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+									}
+									break;
+									}
+						case DOWN: {if (opcao == 0){
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+									} else{
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+									}
+									break;
+									}
+						case LEFT: {if (opcao == 0){
+										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+									} else{
+										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+									}
+									break;
+									}
+						default: {if (opcao == 0){
+										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+									} else{
+										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+									}
+									break;
+									}
+						}
+						novaPosicao.setCreature(criatura);
+						criatura.setCurrentPosition(novaPosicao);
+						
+						linha = novaPosicao.getRow();
+						coluna = novaPosicao.getColumn();
+						this.map.atualizarPosicao(novaPosicao, linha, coluna);
+						
+						this.setAreaVisible(linha, coluna);
+					}
+				}
+				
 				if (novaPosicao.getTrap() instanceof FallingRock){
 					novaPosicao.removeCreature();
 					
@@ -980,6 +1086,8 @@ public class HeroQuest {
 	}
 	
 	private void tratarFinalizarJogada(Lance lance) {
+		this.atorJogador.atualizarArredoresJogador(); // added for GUI refresh
+		
 		Creature daVez;
 		Creature finalizada = this.removeCreatureFromQueue();
 		this.creatureQueue.trimToSize();

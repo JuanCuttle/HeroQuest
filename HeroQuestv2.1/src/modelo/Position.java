@@ -17,7 +17,6 @@ public class Position implements Jogada {
 		return visible;
 	}
 
-
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
@@ -28,7 +27,6 @@ public class Position implements Jogada {
 		this.visible = false;
 	}
 
-	
 	public byte getRow() {
 		return this.row;
 	}
@@ -77,7 +75,6 @@ public class Position implements Jogada {
 	public boolean equals(Position pos){
 		return this.row == pos.getRow() && this.column == pos.getColumn();
 	}
-
 
 	public void removeTrap() {
 		this.trap = null;

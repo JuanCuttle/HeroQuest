@@ -19,11 +19,7 @@ public class Trap implements Jogada {
 	}
 
 	public byte getDeliveredDamage() {
-		if (!triggered){ // needed?
-			return this.deliveredDamage;
-		} else {
-			return 0;
-		}
+		return this.deliveredDamage;
 	}
 	
 	public boolean getVisible() {
@@ -32,6 +28,10 @@ public class Trap implements Jogada {
 	
 	public boolean getTriggered() {
 		return this.triggered;
+	}
+	
+	public void setTriggered(boolean trig){
+		this.triggered = trig;
 	}
 
 }

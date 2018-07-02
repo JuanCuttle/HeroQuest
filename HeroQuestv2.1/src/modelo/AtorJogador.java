@@ -800,4 +800,12 @@ public class AtorJogador extends JFrame {
 		String option = JOptionPane.showInputDialog(input);
 		return (byte)Integer.parseInt(option);
 	}
+	
+	public byte mostrarOpcoesPit() {
+		String input = "Você deseja pular o buraco?\n";
+		input += "0 - sim\n";
+		input += "1 - não";
+		String option = JOptionPane.showInputDialog(input);
+		return (byte)Integer.parseInt(option);
+	}
 }

@@ -1,17 +1,17 @@
-1) Status: Agi_up/down implementados.
-2) Status: Rock_skin implementado.
+1) Status: Agi_up/down implemented.
+2) Status: Rock_skin implemented.
 
-Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
-3) Status: Cursed implementado (A vez dele é pulada. E, se ele estava Cursed, volta a Neutral)
-4) Status: Courage implementado (O atacante ganha 2 dados de ataque pelo proximo ataque, e volta a neutral)
+Can be troublesome with Creature objects (change not made through ID)
+3) Status: Cursed implemented (His turn is skipped. And, if he was Cursed, returns to Neutral)
+4) Status: Courage implemented (The target gains 2 attack dice for his next attack, and returns to neutral)
 
-5) Fire of wrath e ball of flame implementados
+5) Fire of Wrath and Ball of Flame implemented
 
-6) Sleep implementado (COMPLEXO)
+6) Sleep implemented (COMPLEX)
 
-!!!!!!!!!!!!!!!!!!!!Falta testar adequadamente os status!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!Adequately test all status!!!!!!!!!!!!!!!!!!!!
 
-7) Instruções adicionadas
+7) Addded instructions
 
 8) Sleep, Agi_up, Agi_down, Rock_skin, Cursed working
 
@@ -23,7 +23,7 @@ Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
 
 12) Beautiful character selection screen implemented
 
-13) Next steps: Fix issue: verificaSeJogadorDaVez NullPointer Expection when using a player when it isn't their turn
+13) Next steps: Fix issue: verificaSeJogadorDaVez NullPointer Exception when using a player when it isn't their turn
 				Finish implementing Status.COURAGE
 				
 14) Spear trap working, FallingRock trap blocks path (transforms to Rubble) and side choice works.
@@ -33,3 +33,8 @@ Podem dar problema quanto aos objetos criatura (alteração não foi pelo ID)
 	(maybe) SOLUTION:  counter at loop, exits loop if all are dead.
 	
 16) Known problem: GUI refresh doesn't update creature when far from next player
+	SOLUTION: refreshes GUI before ending turn
+	
+17) Next steps: 13) and Pit traps
+
+18) Pit traps working!!!! ALL TRAPS WORKING!!!
