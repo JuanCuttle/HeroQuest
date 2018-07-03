@@ -160,7 +160,10 @@ public class HeroQuest {
 					.getID();
 			return idCriaturaLocal == idCriaturaDaVez;
 		} else {
-			for (int i = 0; i < this.creatureQueue.size() - players.size() + 1; i++) {
+			//for (int i = 0; i < this.creatureQueue.size() - players.size() + 1; i++) {
+			
+			// Attempt of fixing null pointer exception (index 19 inaccessible)
+			for (int i = 0; i < this.creatureQueue.size() - players.size(); i++) {
 				idCriaturaLocal = (this.localZargon).getMonster(i).getID();
 				if (idCriaturaDaVez == idCriaturaLocal)
 					return true;
@@ -401,6 +404,8 @@ public class HeroQuest {
 						.reportarErro("Não é possível atacar um alvo tão distante.");
 				}
 			}
+		} else {
+			this.atorJogador.reportarErro("Não é o jogador da vez.");
 		}
 	}
 
@@ -443,7 +448,6 @@ public class HeroQuest {
 		}
 		if (atacante.getStatus() == Status.COURAGE){
 			atkDiceAmount += 2;
-			atacante.setStatus(Status.NEUTRAL);
 		}
 		probabilidade = 2;
 		for (byte i = 1; i <= atkDiceAmount; i++) {
@@ -776,14 +780,16 @@ public class HeroQuest {
 		character = (PlayableCharacter) posicaoAtual.getCreature();
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				posicaoAtual = this.map.getPosition((byte)i, (byte)j);
-				Treasure tesouro = posicaoAtual.getTreasure();
-				if (tesouro != null) {
-					int gold = tesouro.getGoldAmount();
-					if (gold > 0){
-						tesouro.setGoldAmount(0);
-						character.increaseGold(gold);
-						foundGold = true;
+				if (i >= 0 && i < 27 && j >= 0 && j < 50){
+					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
+					Treasure tesouro = posicaoAtual.getTreasure();
+					if (tesouro != null) {
+						int gold = tesouro.getGoldAmount();
+						if (gold > 0){
+							tesouro.setGoldAmount(0);
+							character.increaseGold(gold);
+							foundGold = true;
+						}
 					}
 				}
 			}
@@ -803,26 +809,28 @@ public class HeroQuest {
 		boolean removeuArmadilhas = false;
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				posicaoAtual = this.map.getPosition((byte)i, (byte)j);
-				if (posicaoAtual.getTrap() != null) {
-					posicaoAtual.makeTrapVisible();
-					
-					// Se eh pit e estah visivel, desarma
-					if (posicaoAtual.getTrap() instanceof Pit){
-						posicaoAtual.getTrap().setTriggered(true);
+				if (i >= 0 && i < 27 && j >= 0 && j < 50) {
+					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
+					if (posicaoAtual.getTrap() != null) {
+						posicaoAtual.makeTrapVisible();
+						
+						// Se eh pit e estah visivel, desarma
+						if (posicaoAtual.getTrap() instanceof Pit){
+							posicaoAtual.getTrap().setTriggered(true);
+						}
+						
+						// Se eh dwarf, desativa as armadilhas
+						if (this.getPosition((byte)linha, (byte)coluna).getCreature() instanceof Dwarf){
+							//posicaoAtual.makeTrapTriggered();
+							posicaoAtual.removeTrap();
+							removeuArmadilhas = true;
+						}
+						
 					}
-					
-					// Se eh dwarf, desativa as armadilhas
-					if (this.getPosition((byte)linha, (byte)coluna).getCreature() instanceof Dwarf){
-						//posicaoAtual.makeTrapTriggered();
-						posicaoAtual.removeTrap();
-						removeuArmadilhas = true;
-					}
-					
-				}
-				if (posicaoAtual instanceof Door){
-					if (((Door) posicaoAtual).isSecreta()){
-						((Door) posicaoAtual).setSecreta(false);
+					if (posicaoAtual instanceof Door){
+						if (((Door) posicaoAtual).isSecreta()){
+							((Door) posicaoAtual).setSecreta(false);
+						}
 					}
 				}
 			}
@@ -882,6 +890,11 @@ public class HeroQuest {
 			if (criatura.getStatus() == Status.ROCK_SKIN){
 				criatura.setStatus(Status.NEUTRAL);
 			}
+		}
+		// Courage status removal
+		Creature attacker = this.getCreaturePorID(idAtacante);
+		if (attacker.getStatus() == Status.COURAGE){
+			attacker.setStatus(Status.NEUTRAL);
 		}
 		
 		boolean seAtacou = idAtacante == idAlvo;
@@ -1503,7 +1516,8 @@ public class HeroQuest {
 	}
 
 	public void mostrarInventario() {
-		if (localAdventurer.getPlayableCharacter() != null) {
+		//if (localAdventurer.getPlayableCharacter() != null) {
+		if (this.localAdventurer != null) {
 			PlayableCharacter character = localAdventurer
 					.getPlayableCharacter();
 			int gold = character.getGold();

@@ -29,7 +29,7 @@ Can be troublesome with Creature objects (change not made through ID)
 14) Spear trap working, FallingRock trap blocks path (transforms to Rubble) and side choice works.
 
 15) Known problem: infinite loop after hero died (and goblin dead (at trap?))
-	When all monsters are dead and the player kills themselves, infinite loop at tratarFinalizarJogada, line 1000.
+	When all monsters are dead and the player kills themselves, infinite loop at tratarFinalizarJogada, line ~1000.
 	(maybe) SOLUTION:  counter at loop, exits loop if all are dead.
 	
 16) Known problem: GUI refresh doesn't update creature when far from next player
@@ -40,3 +40,7 @@ Can be troublesome with Creature objects (change not made through ID)
 18) Pit traps working!!!! ALL TRAPS WORKING!!!
 
 19) Adjusted treasure searching message (only appears once), exported jar music now works, Courage implemented and visible pit is now disarmed
+
+20) Squashed Courage status removal bug, attempt of fixing verificaSeJogadorDaVez() NullPointerException (finished 13)), 
+	added error message for trying to attack when not the players' turn, fixed error message for Zargon checking gold, 
+	fixed bound checking in search for treasure and traps,

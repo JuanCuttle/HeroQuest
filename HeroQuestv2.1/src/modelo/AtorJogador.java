@@ -73,7 +73,7 @@ public class AtorJogador extends JFrame {
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				AtorJogador.class.getResource("/imagens/Wizard.png")));
-		setTitle("HeroQuestv2.7.2");
+		setTitle("HeroQuestv2.8");
 		// Atributos do AtorJogador
 
 		this.botoesTabuleiro = new JButton[27][50];
