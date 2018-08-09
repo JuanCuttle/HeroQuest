@@ -1,0 +1,50 @@
+1) Status: Agi_up/down implemented.
+2) Status: Rock_skin implemented.
+
+Can be troublesome with Creature objects (change not made through ID)
+3) Status: Cursed implemented (His turn is skipped. And, if he was Cursed, returns to Neutral)
+4) Status: Courage implemented (The target gains 2 attack dice for his next attack, and returns to neutral)
+
+5) Fire of Wrath and Ball of Flame implemented
+
+6) Sleep implemented (COMPLEX)
+
+!!!!!!!!!!!!!!!!!!!!Adequately test all status!!!!!!!!!!!!!!!!!!!!
+
+7) Addded instructions
+
+8) Sleep, Agi_up, Agi_down, Rock_skin, Cursed working
+
+9) Creatures can attack themselves with tailored message for those cases
+
+10) Clearer error messages
+
+11) Big GUI optimizations (only updates what is necessary) FINALLY
+
+12) Beautiful character selection screen implemented
+
+13) Next steps: Fix issue: verificaSeJogadorDaVez NullPointer Exception when using a player when it isn't their turn
+				Finish implementing Status.COURAGE
+				
+14) Spear trap working, FallingRock trap blocks path (transforms to Rubble) and side choice works.
+
+15) Known problem: infinite loop after hero died (and goblin dead (at trap?))
+	When all monsters are dead and the player kills themselves, infinite loop at tratarFinalizarJogada, line ~1000.
+	(maybe) SOLUTION:  counter at loop, exits loop if all are dead.
+	
+16) Known problem: GUI refresh doesn't update creature when far from next player
+	SOLUTION: refreshes GUI before ending turn
+	
+17) Next steps: 13) and Pit traps
+
+18) Pit traps working!!!! ALL TRAPS WORKING!!!
+
+19) Adjusted treasure searching message (only appears once), exported jar music now works, Courage implemented and visible pit is now disarmed
+
+20) Squashed Courage status removal bug, attempt of fixing verificaSeJogadorDaVez() NullPointerException (finished 13)), 
+	added error message for trying to attack when not the players' turn, fixed error message for Zargon checking gold, 
+	fixed bound checking in search for treasure and traps
+
+21) Refactoring MVC, fixed NetgamesNRT error messages, added generic GUI interface (InterfaceGUI)
+	
+22) Need to fix verificaSeJogadorDaVez() and player queue (GUI)

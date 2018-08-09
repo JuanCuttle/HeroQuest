@@ -43,4 +43,6 @@ Can be troublesome with Creature objects (change not made through ID)
 
 20) Squashed Courage status removal bug, attempt of fixing verificaSeJogadorDaVez() NullPointerException (finished 13)), 
 	added error message for trying to attack when not the players' turn, fixed error message for Zargon checking gold, 
-	fixed bound checking in search for treasure and traps,
+	fixed bound checking in search for treasure and traps
+	
+21) Need to fix verificaSeJogadorDaVez() and player queue (GUI)
