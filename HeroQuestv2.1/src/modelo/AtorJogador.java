@@ -46,7 +46,7 @@ public class AtorJogador extends JFrame {
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
 	public MusicThread musicThread;
 
-	public static Boolean autoConnectToServer = true;
+	public static Boolean autoConnectToServer = false;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -398,6 +398,7 @@ public class AtorJogador extends JFrame {
 		// String idServidor = ("127.0.0.1");
 		String idServidor = ("localhost");
 		// String idServidor = ("web.juan.cuttle.vms.ufsc.br");
+		//String idServidor = ("netgames.labsoft.ufsc.br");
 		if (!autoConnectToServer) {
 			idServidor = JOptionPane.showInputDialog(this,
 					("Insira o endereço do servidor"), idServidor);
