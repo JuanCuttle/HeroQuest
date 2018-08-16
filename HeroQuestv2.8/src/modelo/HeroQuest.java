@@ -71,16 +71,16 @@ public class HeroQuest {
 							this.enviarLance(lance);
 							
 					} else {
-						this.atorJogador.reportarErro("Não está perto da porta.");
+						this.atorJogador.reportarErro(Strings.DOOROUTOFRANGE.toString());
 					}
 				}
 			} else {
 				this.atorJogador
-						.reportarErro("Não é jogador da vez.");
+						.reportarErro(Strings.NOTYOURTURN.toString());
 			}
 		} else {
 			this.atorJogador
-			.reportarErro("Monstros não são capazes de abrir portas!");
+			.reportarErro(Strings.CANTOPENDOOR.toString());
 		}
 	}
 	
@@ -141,15 +141,15 @@ public class HeroQuest {
 						this.enviarLance(lance);
 		 
 				} else {
-					this.atorJogador.reportarErro("Não está perto de uma porta.");
+					this.atorJogador.reportarErro(Strings.DOOROUTOFRANGE.toString());
 				}
 			} else {
 				this.atorJogador
-						.reportarErro("Não é o jogador da vez.");
+						.reportarErro(Strings.NOTYOURTURN.toString());
 			}
 		} else {
 			this.atorJogador
-			.reportarErro("Monstros não são capazes de abrir portas!");
+			.reportarErro(Strings.CANTOPENDOOR.toString());
 		}
 	}
 	
@@ -215,7 +215,7 @@ public class HeroQuest {
 			Creature criatura = this.getCriaturaDaVez();
 			
 			if (criatura.getStatus() == Status.SLEEPING){
-				this.atorJogador.reportarErro("Você está dormindo, não pode se mover!");
+				this.atorJogador.reportarErro(Strings.SLEEPFREEZE.toString());
 			} else {
 			
 				byte movimento = criatura.getMovement();
@@ -335,15 +335,15 @@ public class HeroQuest {
 						this.enviarLance(lance);
 
 					} catch (PositionNotEmptyException e) {
-						this.atorJogador.reportarErro("Respeite as leis da física");
+						this.atorJogador.reportarErro(Strings.PHYSICSLAWS.toString());
 					}
 				} else {
 					this.atorJogador
-							.reportarErro("Você não tem movimento suficiente nessa rodada.");
+							.reportarErro(Strings.NOMOVELEFT.toString());
 					}
 				}
 			} else {
-				this.atorJogador.reportarErro("Não é o jogador da vez.");
+				this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
 			}
 	}
 
@@ -385,7 +385,7 @@ public class HeroQuest {
 			Creature atacante = this.getCriaturaDaVez();
 			
 			if (atacante.getStatus() == Status.SLEEPING){
-				this.atorJogador.reportarErro("Você está dormindo, não pode atacar!");
+				this.atorJogador.reportarErro(Strings.SLEEPNOATT.toString());
 			} else{
 				Position posicaoAtacante = atacante.getCurrentPosition();
 				ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1,
@@ -403,11 +403,11 @@ public class HeroQuest {
 					this.enviarLance(lance);
 				} else {
 					this.atorJogador
-						.reportarErro("Não é possível atacar um alvo tão distante.");
+						.reportarErro(Strings.OUTOFRANGE.toString());
 				}
 			}
 		} else {
-			this.atorJogador.reportarErro("Não é o jogador da vez.");
+			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -526,7 +526,7 @@ public class HeroQuest {
 						this.enviarLance(lance);
 					}
 				} else {
-					this.atorJogador.reportarErro("Mind insuficiente.");
+					this.atorJogador.reportarErro(Strings.NOMIND.toString());
 				}
 			} else if (atacante instanceof Elf) {
 				ArrayList<Spell> magiasDisponiveis = ((Elf) atacante)
@@ -550,13 +550,13 @@ public class HeroQuest {
 						this.enviarLance(lance);
 					}
 				} else {
-					this.atorJogador.reportarErro("Mind insuficiente.");
+					this.atorJogador.reportarErro(Strings.NOMIND.toString());
 				}
 			} else {
-				this.atorJogador.reportarErro("Seu personagem não usa magia.");
+				this.atorJogador.reportarErro(Strings.DOESNTUSESPELLS.toString());
 			}
 		} else {
-			this.atorJogador.reportarErro("Não é o jogador da vez.");
+			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -587,7 +587,7 @@ public class HeroQuest {
 			
 			if (dano == 0) {
 				success = false;
-				this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
+				this.atorJogador.mostrarMensagem(Strings.MAGICFAIL.toString());
 			}
 		}
 		
@@ -602,7 +602,7 @@ public class HeroQuest {
 			
 			if (dano == 0) {
 				success = false;
-				this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
+				this.atorJogador.mostrarMensagem(Strings.MAGICFAIL.toString());
 			}
 		}
 		
@@ -619,7 +619,7 @@ public class HeroQuest {
 					dado = (byte)(Math.random()*6);
 					if (dado == 5){
 						success = false;
-						this.atorJogador.mostrarMensagem("O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...");
+						this.atorJogador.mostrarMensagem(Strings.MAGICFAIL.toString());
 						break;
 					}
 				}
@@ -763,7 +763,7 @@ public class HeroQuest {
 				
 				break;
 			default:
-				this.atorJogador.reportarErro("Erro na seleção de personagem.");
+				this.atorJogador.reportarErro(Strings.CHARSELECTERROR.toString());
 				break;
 		}
 		this.sortCreatureQueueByID();
@@ -797,9 +797,9 @@ public class HeroQuest {
 			}
 		}
 		if (foundGold){
-			JOptionPane.showMessageDialog(null, "O jogador "
+			JOptionPane.showMessageDialog(null, Strings.THEPLAYER.toString()
 					+ character.getClass().getSimpleName()
-					+ " encontrou algumas moedas de ouro.");
+					+ Strings.FOUNDGOLD.toString());
 		}
 	}
 
@@ -1149,7 +1149,7 @@ public class HeroQuest {
 				daVez.setRoundsToSleep(roundsToSleep);
 				if (roundsToSleep == 0){
 					daVez.setStatus(Status.NEUTRAL);
-					this.atorJogador.mostrarMensagem("A criatura "+daVez.getClass().getSimpleName()+" acordou!");
+					this.atorJogador.mostrarMensagem(Strings.THECREATURE.toString()+daVez.getClass().getSimpleName()+Strings.WOKEUP.toString());
 				}
 			}
 			finalizada = this.removeCreatureFromQueue();
@@ -1225,11 +1225,11 @@ public class HeroQuest {
 				this.enviarLance(lance);
 			} else {
 				this.atorJogador
-					.reportarErro("O monstro não é capaz de entender esse comando.");
+					.reportarErro(Strings.MONSTERCANTUNDERSTAND.toString());
 			}
 		} else {
 			this.atorJogador
-				.reportarErro("Não é jogador da vez");
+				.reportarErro(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -1263,7 +1263,7 @@ public class HeroQuest {
 				disponivel = this.getDwarfAvailable();
 				break;
 			default:
-				this.atorJogador.reportarErro("Erro na seleção de personagem.");
+				this.atorJogador.reportarErro(Strings.CHARSELECTERROR.toString());
 				disponivel = false;
 				break;
 		}
@@ -1308,14 +1308,14 @@ public class HeroQuest {
 	
 					break;
 				default:
-					this.atorJogador.reportarErro("Erro na seleção de personagem.");
+					this.atorJogador.reportarErro(Strings.CHARSELECTERROR.toString());
 					break;
 			}
 			this.tratarLance(lance);
 			this.enviarLance(lance);
 			
 		} else {
-			this.atorJogador.reportarErro("Personagem não disponível");
+			this.atorJogador.reportarErro(Strings.CHARUNAVAILABLE.toString());
 			this.selecionarPersonagem();
 		}
 	}
@@ -1398,10 +1398,10 @@ public class HeroQuest {
 				tratarLance(lance);
 				enviarLance(lance);
 			} else {
-				this.atorJogador.reportarErro("O monstro não é capaz de entender esse comando.");
+				this.atorJogador.reportarErro(Strings.MONSTERCANTUNDERSTAND.toString());
 			}
 		} else {
-			this.atorJogador.reportarErro("Não é jogador da vez.");
+			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -1412,7 +1412,7 @@ public class HeroQuest {
 			this.tratarLance(lance);
 			this.enviarLance(lance);
 		} else {
-			this.atorJogador.reportarErro("Não é o jogador da vez.");
+			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -1452,7 +1452,7 @@ public class HeroQuest {
 
 	public void finalizarJogo() {
 		//System.exit(0);
-		int option = JOptionPane.showConfirmDialog(null, "O jogo terminou, deseja fechá-lo?");
+		int option = JOptionPane.showConfirmDialog(null, Strings.ENDGAME.toString());
 		if (option == 0){
 			System.exit(0);
 		}
@@ -1525,7 +1525,7 @@ public class HeroQuest {
 			int gold = character.getGold();
 			this.atorJogador.mostrarInventario(gold);
 		} else {
-			this.atorJogador.reportarErro("Zargon não carrega gold");
+			this.atorJogador.reportarErro(Strings.ZARGONNOGOLD.toString());
 		}
 	}
 
@@ -1544,7 +1544,7 @@ public class HeroQuest {
 			this.atorJogador.mostrarInformacoes(body, mind, movement, status,
 					linha, coluna, roundsToSleep);
 		} else {
-			JOptionPane.showMessageDialog(null, "???????");
+			JOptionPane.showMessageDialog(null, Strings.UKNOWN.toString());
 		}
 	}
 
@@ -1592,7 +1592,7 @@ public class HeroQuest {
 
 	public void setNomeLocalPlayerAndServer(String idUsuario, String idServer) {
 		this.nomeLocalPlayer = idUsuario;
-		this.atorJogador.setTitle(this.atorJogador.getTitle()+", Connected to server: "+idServer+", Player: "+this.nomeLocalPlayer);
+		this.atorJogador.setTitle(this.atorJogador.getTitle()+Strings.SERVER.toString()+idServer+Strings.COMMAPLAYER.toString()+this.nomeLocalPlayer);
 	}
 
 	public AtorClientServer getAtorClienteServidor() {

@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import modelo.Strings;
+
 public class CharacterSelection extends JFrame {
 
 	/**
@@ -48,7 +50,7 @@ public class CharacterSelection extends JFrame {
 		
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle("Selecione seu personagem");
+		setTitle(Strings.SELECTYOURCHAR.toString());
 		setBounds(250, 225, 440, 120);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());
@@ -72,20 +74,20 @@ public class CharacterSelection extends JFrame {
 				}
 			});
 			{
-				Label label = new Label("Digite o n\u00FAmero ao lado do escolhido:");
+				Label label = new Label(Strings.TYPECHARNUMBER.toString());
 				contentPanel.add(label);
 			}
 			contentPanel.add(textField);
 		}
 		{
-			JButton btnZargon = new JButton("0 - Zargon");
+			JButton btnZargon = new JButton("0 - " + Strings.ZARGON.toString());
 			btnZargon.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
 					JFrame cardScreen = new JFrame();
 					cardScreen.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 					
-					cardScreen.setTitle("Zargon. You control the monsters in the dungeon. Your task is to kill the heroes.");
+					cardScreen.setTitle(Strings.ZARGONDESCRIPTION.toString());
 					cardScreen.setBounds(800, 200, 800, 600);
 					
 					ImagePanel ip = new ImagePanel(ImageEnum.ZARGON);
@@ -99,14 +101,14 @@ public class CharacterSelection extends JFrame {
 		}
 		{
 			{
-				JButton btnWizard = new JButton("2 - Wizard");
+				JButton btnWizard = new JButton("2 - " + Strings.WIZARD.toString());
 				btnWizard.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 						JFrame cardScreen = new JFrame();
 						cardScreen.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 						
-						cardScreen.setTitle("Wizard");
+						cardScreen.setTitle(Strings.WIZARD.toString());
 						cardScreen.setBounds(800, 200, 560, 780);
 						
 						ImagePanel ip = new ImagePanel(ImageEnum.WIZARD);
@@ -116,14 +118,14 @@ public class CharacterSelection extends JFrame {
 						cardScreen.setVisible(true);
 					}
 				});
-				JButton btnNewButton = new JButton("1 - Barbarian");
+				JButton btnNewButton = new JButton("1 - " + Strings.BARBARIAN.toString());
 				btnNewButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 						JFrame cardScreen = new JFrame();
 						cardScreen.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 						
-						cardScreen.setTitle("Barbarian");
+						cardScreen.setTitle(Strings.BARBARIAN.toString());
 						cardScreen.setBounds(800, 200, 560, 780);
 						
 						ImagePanel ip = new ImagePanel(ImageEnum.BARBARIAN);
@@ -142,14 +144,14 @@ public class CharacterSelection extends JFrame {
 			}
 		}
 		{
-			JButton btnElf = new JButton("3 - Elf");
+			JButton btnElf = new JButton("3 - " + Strings.ELF.toString());
 			btnElf.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					JFrame cardScreen = new JFrame();
 					cardScreen.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 					
-					cardScreen.setTitle("Elf");
+					cardScreen.setTitle(Strings.ELF.toString());
 					cardScreen.setBounds(800, 200, 560, 780);
 					
 					ImagePanel ip = new ImagePanel(ImageEnum.ELF);
@@ -162,14 +164,14 @@ public class CharacterSelection extends JFrame {
 			contentPanel.add(btnElf);
 		}
 		{
-			JButton btnDwarf = new JButton("4 - Dwarf");
+			JButton btnDwarf = new JButton("4 - " + Strings.DWARF.toString());
 			btnDwarf.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					JFrame cardScreen = new JFrame();
 					cardScreen.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 					
-					cardScreen.setTitle("Dwarf");
+					cardScreen.setTitle(Strings.DWARF.toString());
 					cardScreen.setBounds(800, 200, 560, 780);
 					
 					ImagePanel ip = new ImagePanel(ImageEnum.DWARF);

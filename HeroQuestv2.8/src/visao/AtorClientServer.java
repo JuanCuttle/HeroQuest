@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import modelo.HeroQuest;
 import modelo.Lance;
 import modelo.LanceAbrirPorta;
+import modelo.Strings;
 import br.ufsc.inf.leobr.cliente.Jogada;
 import br.ufsc.inf.leobr.cliente.OuvidorProxy;
 import br.ufsc.inf.leobr.cliente.Proxy;
@@ -85,7 +86,7 @@ public class AtorClientServer implements OuvidorProxy {
 
 	public void finalizarPartidaComErro(String message) {
 		JOptionPane.showMessageDialog(null,
-				"Ocorreu um erro e o jogo teve de ser abortado");
+				Strings.ERRORABORT.toString());
 				
 		this.heroQuest.finalizarJogo();
 	}

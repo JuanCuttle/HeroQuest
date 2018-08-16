@@ -35,6 +35,7 @@ import modelo.InterfaceGUI;
 import modelo.Position;
 import modelo.Spell;
 import modelo.Status;
+import modelo.Strings;
 
 public class AtorJogador extends JFrame implements InterfaceGUI {
 
@@ -55,6 +56,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
 	public MusicThread musicThread;
+	
+	public static Languages language = Languages.Portugues;
 
 	public static Boolean autoConnectToServer = false;
 
@@ -83,7 +86,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				AtorJogador.class.getResource("/imagens/Wizard.png")));
-		setTitle("HeroQuestv2.8");
+		setTitle(Strings.HEROQUEST.toString());
 		// Atributos do AtorJogador
 
 		this.botoesTabuleiro = new JButton[27][50];
@@ -99,10 +102,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu mnHelp = new JMenu("Menu");
+		JMenu mnHelp = new JMenu(Strings.MENU.toString());
 		menuBar.add(mnHelp);
 
-		JButton btnInstructions = new JButton("Instru\u00E7\u00F5es");
+		JButton btnInstructions = new JButton(Strings.INSTRUCTIONS.toString());
 		btnInstructions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Instrucoes instr = null;
@@ -116,7 +119,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		});
 		mnHelp.add(btnInstructions);
 
-		JButton btnCharSelect = new JButton("Selecionar personagem");
+		JButton btnCharSelect = new JButton(Strings.SELECTCHAR.toString());
 		btnCharSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				selecionarPersonagem();
@@ -125,11 +128,20 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 		mnHelp.add(btnCharSelect);
 
-		JMenu mnSettings = new JMenu("Settings");
+		JMenu mnSettings = new JMenu(Strings.SETTINGS.toString());
 		menuBar.add(mnSettings);
 
-		JButton btnMusic = new JButton("Turn music on/off");
+		JButton btnMusic = new JButton(Strings.TRIGGERMUSIC.toString());
 		mnSettings.add(btnMusic);
+		
+		JButton btnLanguage = new JButton("Language");
+		btnLanguage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LanguageSelector ls = new LanguageSelector(getThis());
+				ls.setVisible(true);
+			}
+		});
+		mnSettings.add(btnLanguage);
 		btnMusic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				music();
@@ -335,7 +347,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public Spell selecionarMagia(ArrayList<Spell> magiasDisponiveis) {
-		String inputDialog = "Digite o número correspondente à magia que deseja usar: ";
+		String inputDialog = Strings.SELECTSPELL.toString();
 		for (int i = 0; i < magiasDisponiveis.size(); i++) {
 			inputDialog += "\n" + i + " - "
 					+ magiasDisponiveis.get(i).getNome();
@@ -346,7 +358,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public Creature selecionarAlvo(ArrayList<Creature> possiveisAlvos) {
-		String inputDialog = "Digite o número correspondente ao alvo escolhido: ";
+		String inputDialog = Strings.SELECTTARGET.toString();
 		for (int i = 0; i < possiveisAlvos.size(); i++) {
 			inputDialog += "\n" + i + " - "
 					+ possiveisAlvos.get(i).getClass().getSimpleName();
@@ -399,19 +411,15 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	// Cï¿½digo nï¿½o usado
 	public String obterIdJogador() {
 		String idJogador = JOptionPane
-				.showInputDialog("Digite o nome do seu personagem: ");
+				.showInputDialog(Strings.INPUTNAME.toString());
 		return idJogador;
 	}
 
 	public String obterIdServidor() {
-		// String idServidor = ("venus.inf.ufsc.br");
-		// String idServidor = ("127.0.0.1");
-		String idServidor = ("localhost");
-		// String idServidor = ("web.juan.cuttle.vms.ufsc.br");
-		//String idServidor = ("netgames.labsoft.ufsc.br");
+		String idServidor = (Strings.OBTAINSERVERID.toString());
 		if (!autoConnectToServer) {
 			idServidor = JOptionPane.showInputDialog(this,
-					("Insira o endereço do servidor"), idServidor);
+					(Strings.INPUTSERVERADDRESS.toString()), idServidor);
 		}
 		return idServidor;
 	}
@@ -450,31 +458,31 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		String mensagem = "";
 		switch (resultado) {
 		case 0:
-			mensagem = "Conexao com exito";
+			mensagem = Strings.SUCCESSFULCONNECT.toString();
 			break;
 		case 1:
-			mensagem = "Tentativa de conexao com conexao previamente estabelecida";
+			mensagem = Strings.ALREADYCONNECTED.toString();
 			break;
 		case 2:
-			mensagem = "Tentativa de conexao falhou";
+			mensagem = Strings.FAILEDCONNECT.toString();
 			break;
 		case 3:
-			mensagem = "Desconexao com exito";
+			mensagem = Strings.SUCCESSFULDISCONNECT.toString();
 			break;
 		case 4:
-			mensagem = "Tentativa de desconexao sem conexao previamente estabelecida";
+			mensagem = Strings.DISCBEFORECONNECT.toString();
 			break;
 		case 5:
-			mensagem = "Tentativa de desconexao falhou";
+			mensagem = Strings.FAILEDDISCONNECT.toString();
 			break;
 		case 6:
-			mensagem = "Solicitação de inicio procedida com exito";
+			mensagem = Strings.SUCCESSFULSTART.toString();
 			break;
 		case 7:
-			mensagem = "Tentativa de inicio sem conexao previamente estabelecida";
+			mensagem = Strings.STARTBEFORECONNECT.toString();
 			break;
 		case 13:
-			mensagem = "Partida corrente nao interrompida";
+			mensagem = Strings.UNINTERRUPTEDGAME.toString();
 			break;
 		default:
 			mensagem = "";
@@ -538,17 +546,17 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 	public void anunciarVitoriaDosJogadores() {
 		JOptionPane.showMessageDialog(null,
-				"Parabéns aos aventureiros!\n Vocês foram vitoriosos!!!");
+				Strings.HEROWIN.toString());
 	}
 
 	public void anunciarVitoriaDoZargon() {
 		JOptionPane.showMessageDialog(null,
-				"Oh não, o terrível Zargon venceu desta vez!");
+				Strings.ZARGONWIN.toString());
 	}
 
 	public String informarNomeJogador() {
 		String nomeJogador = JOptionPane
-				.showInputDialog("Digite o nome do seu personagem: ");
+				.showInputDialog(Strings.INPUTNAME.toString());
 		return nomeJogador;
 	}
 
@@ -557,8 +565,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void mostrarInventario(int gold) {
-		JOptionPane.showMessageDialog(null, "Você possui " + gold
-				+ " gold coins no seu inventário.");
+		JOptionPane.showMessageDialog(null, Strings.YOUHAVE.toString() + gold
+				+ Strings.INVYCOINS.toString());
 	}
 
 	public void mostrarInformacoes(int characterID) {
@@ -567,13 +575,13 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 	public void mostrarInformacoes(byte body, byte mind, byte movement,
 			Status status, int linha, int coluna, Byte roundsToSleep) {
-		String output = "Body atual: " + body
-				+ "\nMind restante: " + mind + "\nMovimento restante: "
-				+ movement + "\nStatus atual: " + status + "\nLinha: " + linha
-				+ " Coluna: " + coluna;
+		String output = Strings.CURRENTBP.toString() + body
+				+ Strings.CURRENTMP.toString() + mind + Strings.REMAININGMOVES.toString()
+				+ movement + Strings.CURRENTSTATUS.toString() + status + Strings.LINE.toString()+ linha
+				+ Strings.COLUMN.toString() + coluna;
 		if (roundsToSleep != null){
 			if (roundsToSleep != 0){
-				output += "\nTurns left to sleep: " + roundsToSleep;
+				output += Strings.TTW.toString() + roundsToSleep;
 			}
 		}
 		JOptionPane.showMessageDialog(null, output);
@@ -583,7 +591,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		int numJogadores;
 		do {
 			String numjog = JOptionPane
-					.showInputDialog("Favor digitar a quantidade de jogadores que irão participar desta partida: ");
+					.showInputDialog(Strings.NUMBEROFPLAYERS.toString());
 			numJogadores = Integer.parseInt(numjog);
 		} while (numJogadores < 2);
 		return numJogadores;
@@ -675,64 +683,64 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 	public void mostrarAcaoTrap(byte dano, Creature criatura) {
 		JOptionPane
-				.showMessageDialog(null, "Oh não! "
+				.showMessageDialog(null, Strings.OHNO.toString()
 						+ criatura.getClass().getSimpleName()
-						+ " ativou uma armadilha e perdeu " + dano
-						+ " de body points!");
+						+ Strings.ACTIVATEDTRAP.toString() + dano
+						+ Strings.OFBP.toString());
 	}
 
 	public void mostrarDano(Creature alvo, byte dano, boolean seAtacou) {
 		if (!seAtacou) {
-			JOptionPane.showMessageDialog(null, "A criatura "
-					+ alvo.getClass().getSimpleName() + " recebeu " + dano
-					+ " de dano.");
+			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
+					+ alvo.getClass().getSimpleName() + Strings.RECEIVED.toString() + dano
+					+ Strings.OFDAMAGE.toString());
 		} else {
-			JOptionPane.showMessageDialog(null, "A criatura "
+			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
 					+ alvo.getClass().getSimpleName()
-					+ " tenta seppuku e recebe " + dano + " de dano.");
+					+ Strings.ATTEMPTSSEPPUKU.toString() + dano + Strings.OFDAMAGE.toString());
 		}
 	}
 
 	public void anunciarMorteDeCriatura(Creature alvo) {
-		JOptionPane.showMessageDialog(null, "A criatura "
+		JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
 				+ alvo.getClass().getSimpleName()
-				+ " morreu honrosamente em batalha.");
+				+ Strings.DIEDHONORABLY.toString());
 	}
 
 	public void anunciarUsoDeMagia(Creature caster, Spell magia, Creature alvo,
 			byte dano, Status status) {
 		if (status != null) {
-			JOptionPane.showMessageDialog(null, "O "
+			JOptionPane.showMessageDialog(null, Strings.THE.toString()
 					+ caster.getClass().getSimpleName()
-					+ " murmurou algumas palavras mágicas (" + magia.getNome()
-					+ "), e a criatura " + alvo.getClass().getSimpleName()
-					+ " modificou em " + dano
-					+ " seus body points, e conferiu a ele o estado " + status
-					+ "!");
+					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
+					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
+					+ Strings.MODIFIEDIN.toString() + dano
+					+ Strings.BPMODSTATUS.toString() + status
+					+ Strings.EXCLMARK.toString());
 		} else {
-			JOptionPane.showMessageDialog(null, "O "
+			JOptionPane.showMessageDialog(null, Strings.THE.toString()
 					+ caster.getClass().getSimpleName()
-					+ " murmurou algumas palavras mágicas (" + magia.getNome()
-					+ "), e a criatura " + alvo.getClass().getSimpleName()
-					+ " modificou em " + dano + " seus body points!");
+					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
+					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
+					+ Strings.MODIFIEDIN.toString() + dano + Strings.BPMODSNOTATUS.toString());
 		}
 
 	}
 
 	public void anunciarMorteDesafortunada(Creature criatura) {
-		JOptionPane.showMessageDialog(null, "Oh não! A criatura "
+		JOptionPane.showMessageDialog(null, Strings.OHNO.toString()+" "+Strings.THECREATURE.toString()
 				+ criatura.getClass().getSimpleName()
-				+ " morreu ao pisar numa armadilha!");
+				+ Strings.DIEDONTRAP.toString());
 	}
 
 	public void anunciarDaVez(Creature criatura) {
 		Position posicaoCriatura = criatura.getCurrentPosition();
 		int linha = posicaoCriatura.getRow();
 		int coluna = posicaoCriatura.getColumn();
-		JOptionPane.showMessageDialog(null, "A vez é da criatura "
+		JOptionPane.showMessageDialog(null, Strings.CREATURESTURN.toString()
 				+ criatura.getClass().getSimpleName()
-				+ " a qual está na linha " + linha + ", coluna " + coluna
-				+ " do tabuleiro.");
+				+ Strings.ONLINE.toString() + linha + Strings.COMMACOLUMN.toString() + coluna
+				+ Strings.OFGAMEBOARD.toString());
 	}
 
 	public void atualizarArredoresJogador() {
@@ -754,7 +762,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public int escolherPorta(ArrayList<String> portaIds) {
-		String inputDialog = "Escolha a porta a ser aberta: \n";
+		String inputDialog = Strings.SELECTDOOR.toString();
 		for (int i = 0; i < portaIds.size(); i++) {
 			inputDialog += i + " - " + portaIds.get(i) + "\n";
 		}
@@ -801,22 +809,30 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void mostrarRemocaoTrap() {
-		JOptionPane.showMessageDialog(null, "O anão desarmou as armadilhas próximas a ele!");
+		JOptionPane.showMessageDialog(null, Strings.DWARFDISARMEDTRAPS.toString());
 	}
 
 	public byte mostrarOpcoesFallingRock() {
-		String input = "Oh não, você está sendo soterrado! Escolha se deseja ir para frente ou para trás:\n";
-		input += "0 - para frente\n";
-		input += "1 - para trás";
+		String input = Strings.ROCKFALL.toString();
+		input += "0 - " + Strings.FORWARD.toString();
+		input += "1 - " + Strings.BACKWARD.toString();
 		String option = JOptionPane.showInputDialog(input);
 		return (byte)Integer.parseInt(option);
 	}
 	
 	public byte mostrarOpcoesPit() {
-		String input = "Você deseja pular o buraco?\n";
-		input += "0 - sim\n";
-		input += "1 - não";
+		String input = Strings.PITJUMP.toString();
+		input += "0 - " + Strings.YES.toString();
+		input += "1 - " + Strings.NO.toString();
 		String option = JOptionPane.showInputDialog(input);
 		return (byte)Integer.parseInt(option);
+	}
+	
+	public void setLanguage(Languages lang) {
+		language = lang;
+	}
+	
+	public AtorJogador getThis(){
+		return this;
 	}
 }
