@@ -48,3 +48,5 @@ Can be troublesome with Creature objects (change not made through ID)
 21) Refactoring MVC, fixed NetgamesNRT error messages, added generic GUI interface (InterfaceGUI)
 	
 22) Need to fix verificaSeJogadorDaVez() and player queue (GUI)
+
+23) Refactorings, new initial game screen, separated strings into enum, can select languages
