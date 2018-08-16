@@ -33,8 +33,11 @@ public class ImagePanel extends JPanel{
     	   		case ELF: image = ImageIO.read(getClass().getResource(
           				"/imagens/ElfCard.png"));
     	   				break;
-    	   		default: image = ImageIO.read(getClass().getResource(
+    	   		case DWARF: image = ImageIO.read(getClass().getResource(
           				"/imagens/DwarfCard.png"));
+    	   				break;
+    	   		default: image = ImageIO.read(getClass().getResource(
+          				"/imagens/HeroQuest.png"));
     	   				break;
     	   }
     	   
