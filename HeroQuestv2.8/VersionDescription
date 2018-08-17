@@ -50,3 +50,5 @@ Can be troublesome with Creature objects (change not made through ID)
 22) Need to fix verificaSeJogadorDaVez() and player queue (GUI)
 
 23) Refactorings, new initial game screen, separated strings into enum, can select languages
+
+24) Added "your turn" to heroes, (almost) full support for both Portuguese and English (need to update button/jframe titles)

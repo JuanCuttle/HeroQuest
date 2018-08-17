@@ -134,7 +134,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		JButton btnMusic = new JButton(Strings.TRIGGERMUSIC.toString());
 		mnSettings.add(btnMusic);
 		
-		JButton btnLanguage = new JButton("Language");
+		JButton btnLanguage = new JButton(Strings.LANGUAGEBUTTON.toString());
 		btnLanguage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				LanguageSelector ls = new LanguageSelector(getThis());

@@ -1128,6 +1128,7 @@ public class HeroQuest {
 			}
 		}
 		
+		
 		daVez = this.getCriaturaDaVez();
 		// int body = criatura.getBody();
 		Status status = daVez.getStatus();
@@ -1173,6 +1174,16 @@ public class HeroQuest {
 		}
 		
 		this.encerramentoDaPartida();
+		
+		Adventurer a = this.localAdventurer; 
+		if (a != null){
+			String creatureName = a.getPlayableCharacter().getClass().getSimpleName();
+			if (creatureName != null){
+				if (daVez.getClass().getSimpleName().equals(creatureName)){
+					this.atorJogador.mostrarMensagem(Strings.YOURTURN.toString()+Strings.REMAININGMOVES.toString()+daVez.getMovement());
+				}			
+			}
+		}
 		//System.out.println("" + criatura.getClass().getSimpleName());
 	}
 

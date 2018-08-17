@@ -6,127 +6,196 @@ import visao.Languages;
 public enum Strings {
 	 HEROQUEST {
 	      public String toString() {
-	          return "HeroQuestv2.8";
+	          return "HeroQuestv2.9";
 	      }
 	  },
 	  
 	  DOOROUTOFRANGE {
 	      public String toString() {
-	          return "Não está perto da porta.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Não está perto da porta.";
+	    	  	default: return "You are too far from the door.";
+	    	  }
 	      }
 	  },
 
 	  NOTYOURTURN {
 	      public String toString() {
-	          return "Não é jogador da vez.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Não é o jogador da vez.";
+	    	  	default: return "It's not your turn.";
+	    	  }
+	      }
+	  },
+	  
+	  YOURTURN {
+	      public String toString() {
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "É sua vez.";
+	    	  	default: return "It's your turn.";
+	    	  }
 	      }
 	  },
 	  
 	  CANTOPENDOOR {
 	      public String toString() {
-	          return "Monstros não são capazes de abrir portas!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Monstros não são capazes de abrir portas!";
+	    	  	default: return "Monsters cannot open doors!";
+	    	  }
 	      }
 	  },
 	  
 	  SLEEPFREEZE {
 	      public String toString() {
-	          return "Você está dormindo, não pode se mover!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Você está dormindo, não pode se mover!";
+	    	  	default: return "You are fast asleep, and cannot move!";
+	    	  }
 	      }
 	  },
 	  
 	  PHYSICSLAWS {
 	      public String toString() {
-	          return "Respeite as leis da física";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Respeite as leis da física!";
+	    	  	default: return "Show some respect for the laws of Physics!";
+	    	  }
 	      }
 	  },
 	  
 	  NOMOVELEFT {
 	      public String toString() {
-	          return "Você não tem movimento suficiente nessa rodada.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Você não tem movimento suficiente nesta rodada.";
+	    	  	default: return "You have no movement left!";
+	    	  }
 	      }
 	  },
 	  
 	  SLEEPNOATT {
 	      public String toString() {
-	          return "Você está dormindo, não pode atacar!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Você está dormindo, não pode atacar!";
+	    	  	default: return "You are fast asleep, and cannot attack!";
+	    	  }
 	      }
 	  },
 	  
 	  OUTOFRANGE {
 	      public String toString() {
-	          return "Não é possível atacar um alvo tão distante.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Não é possível atacar um alvo tão distante.";
+	    	  	default: return "You cannot reach your target.";
+	    	  }
 	      }
 	  },
 	  
 	  NOMIND {
 	      public String toString() {
-	          return "Mind insuficiente.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Mind insuficiente.";
+	    	  	default: return "Insufficient Mind points.";
+	    	  }
 	      }
 	  },
 	  
 	  DOESNTUSESPELLS {
 	      public String toString() {
-	          return "Seu personagem não usa magia.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Seu personagem não usa magia.";
+	    	  	default: return "Your character cannot use spells.";
+	    	  }
 	      }
 	  },
 	  
 	  MAGICFAIL {
 	      public String toString() {
-	          return "O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "O encantamento parece perigoso, mas o conjurador se desconcentra e o feitiço se desfaz...";
+		    	default: return "The spell seems dangerous at first, but the caster loses his focus for a split-second and the spell vanishes from whence it came...";
+	    	  }
 	      }
 	  },
 	  
 	  CHARSELECTERROR {
 	      public String toString() {
-	          return "Erro na seleção de personagem.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Erro na seleção de personagem. Tente novamente.";
+	    	  	default: return "Error during character selection. Please try again.";
+	    	  }
 	      }
 	  },
 	  
 	  THEPLAYER {
 	      public String toString() {
-	          return "O jogador ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "O jogador ";
+	    	  	default: return "The player ";
+	    	  }
 	      }
 	  },
 	  
 	  FOUNDGOLD {
 	      public String toString() {
-	          return " encontrou algumas moedas de ouro.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " encontrou algumas moedas de ouro.";
+	    	  	default: return " found some gold coins.";
+	    	  }
 	      }
 	  },
 	  
 	  THECREATURE {
 	      public String toString() {
-	          return "A criatura ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "A criatura ";
+	    	  	default: return "The creature ";
+	    	  }
 	      }
 	  },
 	  
 	  WOKEUP {
 	      public String toString() {
-	          return " acordou!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " acordou!";
+	    	  	default: return " woke up!";
+	    	  }
 	      }
 	  },
 	  
 	  MONSTERCANTUNDERSTAND {
 	      public String toString() {
-	          return "O monstro não é capaz de entender esse comando.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "O monstro não é capaz de entender esse comando.";
+	    	  	default: return "The monster cannot understand this command.";
+	    	  }
 	      }
 	  },
 	  
 	  CHARUNAVAILABLE {
 	      public String toString() {
-	          return "Personagem não disponível";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Personagem não disponível";
+	    	  	default: return "The selected character is unavailable";
+	    	  }
 	      }
 	  },
 	  
 	  ENDGAME {
 	      public String toString() {
-	          return "O jogo terminou, deseja fechá-lo?";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "O jogo terminou, deseja fechá-lo?";
+	    	  	default: return "The game has ended, do you wish to exit?";
+	    	  }
 	      }
 	  },
 	  
 	  ZARGONNOGOLD {
 	      public String toString() {
-	          return "Zargon não carrega gold";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Zargon não carrega gold.";
+	    	  	default: return "Zargon does not carry gold.";
+	    	  }
 	      }
 	  },
 	  
@@ -138,19 +207,28 @@ public enum Strings {
 	  
 	  SERVER {
 	      public String toString() {
-	          return ", Connected to server: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return ", Conectado ao servidor: ";
+	    	  	default: return ", Connected to server: ";
+	    	  }
 	      }
 	  },
 	  
 	  COMMAPLAYER {
 	      public String toString() {
-	          return ", Player: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return ", Jogador: ";
+	    	  	default: return ", Player: ";
+	    	  }
 	      }
 	  },
 	  
 	  INSTRUCTIONS {
 	      public String toString() {
-	          return "Instru\u00E7\u00F5es";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Instru\u00E7\u00F5es";
+	    	  	default: return "Instructions";
+	    	  }
 	      }
 	  },
 	  
@@ -162,37 +240,64 @@ public enum Strings {
 	  
 	  SELECTCHAR {
 	      public String toString() {
-	          return "Selecionar personagem";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Selecionar personagem";
+	    	  	default: return "Character selection";
+	    	  }
 	      }
 	  },
 	  
 	  SETTINGS {
 	      public String toString() {
-	          return "Configurações";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Configurações";
+	    	  	default: return "Settings";
+	    	  }
 	      }
 	  },
 	  
 	  TRIGGERMUSIC {
 	      public String toString() {
-	          return "Turn music on/off";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Iniciar/pausar a música";
+	    	  	default: return "Turn music on/off";
+	    	  }
+	      }
+	  },
+	  
+	  LANGUAGEBUTTON {
+	      public String toString() {
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Língua";
+	    	  	default: return "Language";
+	    	  }
 	      }
 	  },
 	  
 	  SELECTSPELL {
 	      public String toString() {
-	          return "Digite o número correspondente à magia que deseja usar: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Digite o número correspondente à magia que deseja usar: ";
+	    	  	default: return "Type in the number corresponding to the spell you wish to use: ";
+	    	  }
 	      }
 	  },
 	  
 	  SELECTTARGET {
 	      public String toString() {
-	          return "Digite o número correspondente ao alvo escolhido: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Digite o número correspondente ao alvo escolhido: ";
+	    	  	default: return "Type in the number corresponding to the desired target: ";
+	    	  }
 	      }
 	  },
 	  
 	  INPUTNAME {
 	      public String toString() {
-	          return "Digite o nome do seu personagem: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Digite o nome do seu personagem: ";
+	    	  	default: return "Type in the your character's name: ";
+	    	  }
 	      }
 	  },
 	  
@@ -209,211 +314,316 @@ public enum Strings {
 	  
 	  INPUTSERVERADDRESS {
 	      public String toString() {
-	          return "Insira o endereço do servidor";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Insira o endereço do servidor";
+	    	  	default: return "Type in the server's address";
+	    	  }
 	      }
 	  },
 	  
 	  SUCCESSFULCONNECT {
 	      public String toString() {
-	          return "Conexao com exito";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Conexao com exito";
+	    	  	default: return "Successful connection";
+	    	  }
 	      }
 	  },
 	  
 	  ALREADYCONNECTED {
 	      public String toString() {
-	          return "Tentativa de conexao com conexao previamente estabelecida";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Tentativa de conexao com conexao previamente estabelecida";
+	    	  	default: return "Conection attempt with previously established connection";
+	    	  }
 	      }
 	  },
 	  
 	  FAILEDCONNECT {
 	      public String toString() {
-	          return "Tentativa de conexao falhou";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Tentativa de conexao falhou";
+	    	  	default: return "Failed to establish connection";
+	    	  }
 	      }
 	  },
 	  
 	  SUCCESSFULDISCONNECT {
 	      public String toString() {
-	          return "Desconexao com exito";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Desconexao com exito";
+	    	  	default: return "Successfully disconnected";
+	    	  }
 	      }
 	  },
 	  
 	  DISCBEFORECONNECT {
 	      public String toString() {
-	          return "Tentativa de desconexao sem conexao previamente estabelecida";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Tentativa de desconexao sem conexao previamente estabelecida";
+		    	default: return "Attempt to disconnect without previous connection";
+	    	  }
 	      }
 	  },
 	  
 	  FAILEDDISCONNECT {
 	      public String toString() {
-	          return "Tentativa de desconexao falhou";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Tentativa de desconexao falhou";
+	    	  	default: return "Failed disconnection attempt";
+	    	  }
 	      }
 	  },
 	  
 	  SUCCESSFULSTART {
 	      public String toString() {
-	          return "Solicitação de inicio procedida com exito";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Solicitação de inicio procedida com exito";
+	    	  	default: return "Successful starting request";
+	    	  }
 	      }
 	  },
 	  
 	  STARTBEFORECONNECT {
 	      public String toString() {
-	          return "Tentativa de inicio sem conexao previamente estabelecida";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Tentativa de inicio sem conexao previamente estabelecida";
+	    	  	default: return "Attempt at starting without previous connection";
+	    	  }
 	      }
 	  },
 	  
 	  UNINTERRUPTEDGAME {
 	      public String toString() {
-	          return "Partida corrente nao interrompida";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Partida corrente nao interrompida";
+	    	  	default: return "Current game not interrupted";
+	    	  }
 	      }
 	  },
 	  
 	  HEROWIN {
 	      public String toString() {
-	          return "Parabéns aos aventureiros!\n Vocês foram vitoriosos!!!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Parabéns aos aventureiros!\n Vocês foram vitoriosos!!!";
+		    	default: return "Congratulations to the heroes!\n You were victorious!!!";
+	    	  }
 	      }
 	  },
 	  
 	  ZARGONWIN {
 	      public String toString() {
-	          return "Oh não, o terrível Zargon venceu desta vez!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Oh não, o terrível Zargon venceu desta vez!";
+	    	  	default: return "Oh no, the evil Zargon has won!";
+	    	  }
 	      }
 	  },
 	  
 	  YOUHAVE {
 	      public String toString() {
-	          return "Você possui ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Você possui ";
+	    	  	default: return "You have ";
+	    	  }
 	      }
 	  },
 	  
 	  INVYCOINS {
 	      public String toString() {
-	          return " moedas de ouro no seu inventário.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " moedas de ouro no seu inventário.";
+	    	  	default: return " gold coins in your inventory.";
+	    	  }
 	      }
 	  },
 	  
 	  CURRENTBP {
 	      public String toString() {
-	          return "Body atual: ";
+	    	  switch(AtorJogador.language){
+		    	  case Portugues: return "Body atual: ";
+		    	  default: return "Current Body: ";
+	    	  }
 	      }
 	  },
 	  
 	  CURRENTMP {
 	      public String toString() {
-	          return "\nMind restante: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "\nMind restante: ";
+	    	  	default: return "\nCurrent Mind: ";
+	    	  }
 	      }
 	  },
 	  
 	  REMAININGMOVES {
 	      public String toString() {
-	          return "\nMovimento restante: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "\nMovimento restante: ";
+	    	  	default: return "\nRemaining movement: ";
+	    	  }
 	      }
 	  },
 	  
 	  CURRENTSTATUS {
 	      public String toString() {
-	          return "\nStatus atual: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "\nStatus atual: ";
+	    	  	default: return "\nCurrent Status: ";
+	    	  }
 	      }
 	  },
 	  
 	  LINE {
 	      public String toString() {
-	          return "\nLinha: " ;
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "\nLinha: " ;
+	    	  	default: return "\nLine: ";
+	    	  }
 	      }
 	  },
 	  
 	  COLUMN {
 	      public String toString() {
-	          return " Coluna: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " Coluna: ";
+	    	  	default: return " Column: ";
+	    	  }
 	      }
 	  },
 	  
 	  TTW {
 	      public String toString() {
-	          return "\nTurns left to wake: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "\nTurnos até acordar: ";
+	    	  	default: return "\nTurns left to wake: ";
+	    	  }
 	      }
 	  },
 	  
 	  NUMBEROFPLAYERS {
 	      public String toString() {
-	          return "Favor digitar a quantidade de jogadores que irão participar desta partida: ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Favor digitar a quantidade de jogadores que irão participar desta partida: ";
+	    	  	default: return "Please type in the (total) number of players who will participate in this game: ";
+	    	  }
 	      }
 	  },
 	  
 	  OHNO {
 	      public String toString() {
-	          return "Oh não! ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Oh não! ";
+	    	  	default: return "Oh no! ";
+	    	  }
 	      }
 	  },
 	  
 	  ACTIVATEDTRAP {
 	      public String toString() {
-	          return " ativou uma armadilha e perdeu ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " ativou uma armadilha e perdeu ";
+	    	  	default: return " has activated a trap and lost ";
+	    	  }
 	      }
 	  },
 	  
 	  OFBP {
 	      public String toString() {
-	          return " de body points!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " de Body points!";
+	    	  	default: return " of Body points!";
+	    	  }
 	      }
 	  },
 	  
 	  RECEIVED {
 	      public String toString() {
-	          return " recebeu ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " recebeu ";
+	    	  	default: return " received ";
+	    	  }
 	      }
 	  },
 	  
 	  OFDAMAGE {
 	      public String toString() {
-	          return " de dano.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " de dano.";
+	    	  	default: return " of damage.";
+	    	  }
 	      }
 	  },
 	  
 	  ATTEMPTSSEPPUKU {
 	      public String toString() {
-	          return " tenta seppuku e recebe ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " tenta seppuku e recebe ";
+	    	  	default: return " attempts seppuku and inflicts ";
+	    	  }
 	      }
 	  },
 	  
 	  DIEDHONORABLY {
 	      public String toString() {
-	          return " morreu honrosamente em batalha.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " morreu honrosamente em batalha.";
+	    	  	default: return " has died honorably in battle.";
+	    	  }
 	      }
 	  },
 	  
 	  THE {
 	      public String toString() {
-	          return "O ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "O ";
+	    	  	default: return "The ";
+	    	  }
 	      }
 	  },
 	  
 	  MURMUREDSPELL {
 	      public String toString() {
-	          return " murmurou algumas palavras mágicas (";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " murmurou algumas palavras mágicas (";
+	    	  	default: return " murmured a few magical words (";
+	    	  }
 	      }
 	  },
 	  
 	  ANDTHECREATURE {
 	      public String toString() {
-	          return "), e a criatura ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "), e a criatura ";
+	    	  	default: return "), and the creature ";
+	    	  }
 	      }
 	  },
 	  
 	  MODIFIEDIN {
 	      public String toString() {
-	          return " modificou em ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " modificou em ";
+	    	  	default: return " modified in ";
+	    	  }
 	      }
 	  },
 	  
 	  BPMODSTATUS {
 	      public String toString() {
-	          return " seus body points, e conferiu a ele o estado ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " seus Body points, e conferiu a ele o estado ";
+	    	  	default : return " its Body points, and conferred to it the status ";
+	    	  }
 	      }
 	  },
 	  
 	  BPMODSNOTATUS {
 	      public String toString() {
-	          return " seus body points!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " seus Body points!";
+	    	  	default: return " its Body points!";
+	    	  }
 	      }
 	  },
 	  
@@ -425,103 +635,154 @@ public enum Strings {
 	  
 	  DIEDONTRAP {
 	      public String toString() {
-	          return " morreu ao pisar numa armadilha!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " morreu ao ativar uma armadilha!";
+	    	  	default: return " died as it triggered a trap!";
+	    	  }
 	      }
 	  },
 	  
 	  CREATURESTURN {
 	      public String toString() {
-	          return "A vez é da criatura ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "A vez é da criatura ";
+	    	  	default: return "The turn is of creature ";
+	    	  }
 	      }
 	  },
 	  
 	  ONLINE {
 	      public String toString() {
-	          return " a qual está na linha ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " a qual está na linha ";
+	    	  	default: return " which is on line ";
+	    	  }
 	      }
 	  },
 	  
 	  COMMACOLUMN {
 	      public String toString() {
-	          return ", coluna ";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return ", coluna ";
+	    	  	default: return ", column ";
+	    	  }
 	      }
 	  },
 	  
 	  OFGAMEBOARD {
 	      public String toString() {
-	          return " do tabuleiro.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " do tabuleiro.";
+	    	  	default: return " of the game board.";
+	    	  }
 	      }
 	  },
 	  
 	  SELECTDOOR {
 	      public String toString() {
-	          return "Escolha a porta a ser aberta: \n";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Escolha a porta a ser aberta: \n";
+	    	  	default: return "Choose the door to be opened: \n";
+	    	  }
 	      }
 	  },
 	  
 	  DWARFDISARMEDTRAPS {
 	      public String toString() {
-	          return "O anão desarmou as armadilhas próximas a ele!";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "O Anão desarmou as armadilhas próximas a ele!";
+	    	  	default: return "The Dwarf has disarmed the traps close to him!";
+	    	  }
 	      }
 	  },
 	  
 	  ROCKFALL {
 	      public String toString() {
-	          return "Oh não, você está sendo soterrado! Escolha se deseja ir para frente ou para trás:\n";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Oh não, você está sendo soterrado! Escolha se deseja ir para frente ou para trás:\n";
+	    	  	default: return "Oh no, you are being buried by rocks! Decide if you want to move forwards or backwards:\n";
+	    	  }
 	      }
 	  },
 	  
 	  FORWARD {
 	      public String toString() {
-	          return "para frente\n";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "para frente\n";
+	    	  	default: return "forwards\n";
+	    	  }
 	      }
 	  },
 	  
 	  BACKWARD {
 	      public String toString() {
-	          return "para trás";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "para trás";
+	    	  	default: return "backwards";
+	    	  }
 	      }
 	  },
 	  
 	  PITJUMP {
 	      public String toString() {
-	          return "Você deseja pular o buraco?\n";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Você deseja pular o buraco?\n";
+	    	  	default: return "Do you wish to jump over the pit?\n";
+	    	  }
 	      }
 	  },
 	  
 	  YES {
 	      public String toString() {
-	          return "sim\n";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "sim\n";
+	    	  	default: return "yes\n";
+	    	  }
 	      }
 	  },
 	  
 	  NO {
 	      public String toString() {
-	          return "não";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "não";
+	    	  	default: return "no";
+	    	  }
 	      }
 	  },
 	  
 	  ERRORABORT {
 	      public String toString() {
-	          return "Ocorreu um erro e o jogo teve de ser abortado";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Ocorreu um erro e o jogo teve de ser abortado";
+	    	  	default: return "An error has ocurred and the game had to be aborted";
+	    	  }
 	      }
 	  },
 	  
 	  SELECTYOURCHAR {
 	      public String toString() {
-	          return "Selecione seu personagem";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Selecione seu personagem";
+	    	  	default: return "Select your character";
+	    	  }
 	      }
 	  },
 	  
 	  TYPECHARNUMBER {
 	      public String toString() {
-	          return "Digite o n\u00FAmero ao lado do escolhido:";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Digite o n\u00FAmero ao lado do escolhido:";
+	    	  	default: return "Type in the number beside the chosen character";
+	    	  }
 	      }
 	  },
 	  
 	  ZARGONDESCRIPTION {
 	      public String toString() {
-	          return "Zargon. You control the monsters in the dungeon. Your task is to kill the heroes.";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Zargon. Você controla os monstros na masmorra. Seu objetivo é matar os herois."; 
+	    	  	default: return "Zargon. You control the monsters in the dungeon. Your task is to kill the heroes.";
+	    	  }
 	      }
 	  },
 	  
@@ -551,19 +812,25 @@ public enum Strings {
 	  
 	  DWARF {
 	      public String toString() {
-	          return "Elf";
+	          return "Dwarf";
 	      }
 	  },
 	  
 	  LANGSELECT {
 	      public String toString() {
-	          return "Select a language";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Selecione uma língua";
+	    	  	default: return "Select a language";
+	    	  }
 	      }
 	  },
 	  
 	  SELECT {
 	      public String toString() {
-	          return "Select";
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Selecione";
+	    	  	default: return "Select";
+	    	  }
 	      }
 	  },
 	  
@@ -579,15 +846,44 @@ public enum Strings {
 	  
 	  GUIDE {
 	      public String toString() {
-	          return "You are in a dungeon. It is cold, damp and dark. "
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Você está em uma masmorra. Está frio, úmido e totalmente escuro. "
+	    	  			+ "Os únicos sons são de seus próprios batimentos cardíacos, "
+	    	  			+ "respiração e ecos de água gotejando pelos corredores. "
+	    	  			+ "Não há luz, nem ao longe, "
+	    	  			+ "exceto pelas tochas que você e seus aliados carregam. "
+	    	  			+ "Seu objetivo é alcançar a escada e encerrar seu turno para escapar "
+	    	  			+ "o terrível destino que espera a todos que se perdem nas masmorras de Zargon. "
+	    	  			+ "Eu mencionei Zargon? Ele é um feiticeiro que se especializa em magia negra. "
+	    	  			+ "Ele controla monstros com ela, "
+	    	  			+ "e se regozija ao destruir todos que se atrevem a entrar em seu covil. "
+	    	  			+ "Lute em seu caminho e sobreviva, ou morra tentando. "
+	    	  			+ "Boa sorte, e que os Deuses tenham piedade de sua alma."
+	    	  			+ "\r\n\rUse as setas em seu teclado para se mover."
+	    	  			+ "\r\nClique nos botões com seu mouse para selecionar uma ação. "
+	    	  			+ "Alternativamente, veja \"Teclado\" abaixo."
+	    	  			+ "\r\nAbra/feche portas se posicionando ao lado delas "
+	    	  			+ "e clicando nelas diretamente no mapa, "
+	    	  			+ "ou escolhendo através do menu pelo Teclado."
+	    	  			+ "\r\nTeclado: 1, 2 e 3 para conectar, "
+	    	  			+ "desconectar e iniciar partida, respectivamente. "
+	    	  			+ "A para atacar, S para usar magia, R para procurar por armadilhas, "
+	    	  			+ "T para procurar por tesouro, O para abrir portas, "
+	    	  			+ "P para selecionar personagem, I para abrir o inventário, "
+	    	  			+ "E para encerrar seu turno e M para tocar/pausar a música."
+	    	  			+ "\r\n*Para começar a jogar, conecte se já não estiver conectado. "
+	    	  			+ "Então, UM jogador inicia a partida "
+	    	  			+ "e digita o número de jogadores que irão participar. "
+	    	  			+ "Então todos selecionam seus personagens e começam a jogar!";
+	    	  	default: return "You are in a dungeon. It is cold, damp and pitch-black. "
 	          		+ "The only sounds are your own heartbeat, "
-	          		+ "breathing and dripping water ecoing through the passageways. "
+	          		+ "breathing and dripping water echoing through the passageways. "
 	          		+ "There are no lights, even in the distance, "
 	          		+ "except for the torches you and your allies carry. "
 	          		+ "Your objective is to reach the ladder and end your turn to escape "
 	          		+ "the terrible fate that awaits all who get lost in Zargon's halls. "
 	          		+ "Have I mentioned Zargon? He is a sorcerer who specializes in dark magic. "
-	          		+ "He controls monsters with it "
+	          		+ "He controls monsters with it, "
 	          		+ "and revels in destroying all who dare enter his lair. "
 	          		+ "Fight your way through and survive, or die trying. "
 	          		+ "Good luck, and may the Gods have mercy on your brave soul."
@@ -607,6 +903,7 @@ public enum Strings {
 	          		+ "Then, one player presses \"start game\" "
 	          		+ "and types the number of players in that game. "
 	          		+ "Then everyone selects their characters and start playing!";
+	    	  }
 	      }
 	  }
 }
