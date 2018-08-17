@@ -7,4 +7,4 @@
 
 Java implementation of HeroQuest, with NetgamesNRT by Leonardo Brasil for online communications.
 
-Text, code and documentation in Brazillian Portuguese.
+Documentation in English, code in Brazillian Portuguese, game in both.

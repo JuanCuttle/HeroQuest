@@ -26,7 +26,7 @@ public class LanguageSelector extends JFrame {
 	 */
 	public LanguageSelector(AtorJogador gui) {
 		setTitle(Strings.LANGSELECT.toString());
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 100);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -45,6 +45,7 @@ public class LanguageSelector extends JFrame {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				gui.setLanguage((Languages) comboBox.getSelectedItem());
+				gui.atualizarBotoesLingua();
 				dispose(); // Remove JFrame
 			}
 		});

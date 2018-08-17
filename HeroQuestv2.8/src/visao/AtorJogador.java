@@ -53,6 +53,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	protected JButton botaoProcurarArmadilha;
 	protected JButton botaoProcurarTesouro;
 	protected ArrayList<JButton> botoesCriaturas;
+	protected JMenuBar barraDeMenu;
 
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
 	public MusicThread musicThread;
@@ -99,11 +100,11 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		barraDeMenu = new JMenuBar();
+		setJMenuBar(barraDeMenu);
 
 		JMenu mnHelp = new JMenu(Strings.MENU.toString());
-		menuBar.add(mnHelp);
+		barraDeMenu.add(mnHelp);
 
 		JButton btnInstructions = new JButton(Strings.INSTRUCTIONS.toString());
 		btnInstructions.addActionListener(new ActionListener() {
@@ -129,7 +130,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		mnHelp.add(btnCharSelect);
 
 		JMenu mnSettings = new JMenu(Strings.SETTINGS.toString());
-		menuBar.add(mnSettings);
+		barraDeMenu.add(mnSettings);
 
 		JButton btnMusic = new JButton(Strings.TRIGGERMUSIC.toString());
 		mnSettings.add(btnMusic);
@@ -834,5 +835,16 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	
 	public AtorJogador getThis(){
 		return this;
+	}
+	
+	// Bad, look for alternatives
+	public void atualizarBotoesLingua(){
+		JMenuBar mBar = this.barraDeMenu;
+		mBar.getMenu(0).setText(Strings.MENU.toString());
+		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(0)).setText(Strings.INSTRUCTIONS.toString());
+		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(1)).setText(Strings.SELECTCHAR.toString());
+		mBar.getMenu(1).setText(Strings.SETTINGS.toString());
+		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(0)).setText(Strings.TRIGGERMUSIC.toString());
+		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(1)).setText(Strings.LANGUAGEBUTTON.toString());
 	}
 }
