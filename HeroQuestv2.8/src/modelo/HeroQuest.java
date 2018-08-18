@@ -104,22 +104,22 @@ public class HeroQuest {
 				if (norte instanceof Door){
 					if (!((Door) norte).isSecreta()){
 						portaId.add(""+norte.getRow()+norte.getColumn());
-						portaIds.add("norte");
+						portaIds.add(Strings.NORTH.toString());
 					}
 				} if (leste instanceof Door){
 					if (!((Door) leste).isSecreta()){
 						portaId.add(""+leste.getRow()+leste.getColumn());
-						portaIds.add("leste");
+						portaIds.add(Strings.EAST.toString());
 					}
 				} if (sul instanceof Door){
 					if (!((Door) sul).isSecreta()){
 						portaId.add(""+sul.getRow()+sul.getColumn());
-						portaIds.add("sul");
+						portaIds.add(Strings.SOUTH.toString());
 					}
 				} if (oeste instanceof Door){
 					if (!((Door) oeste).isSecreta()){
 						portaId.add(""+oeste.getRow()+oeste.getColumn());
-						portaIds.add("oeste");
+						portaIds.add(Strings.WEST.toString());
 					}
 				}
 				

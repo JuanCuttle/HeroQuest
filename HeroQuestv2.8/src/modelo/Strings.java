@@ -460,7 +460,7 @@ public enum Strings {
 	      public String toString() {
 	    	  switch(AtorJogador.language){
 	    	  	case Portugues: return "\nMovimento restante: ";
-	    	  	default: return "\nRemaining movement: ";
+	    	  	default: return "\nRemaining Movement: ";
 	    	  }
 	      }
 	  },
@@ -532,7 +532,7 @@ public enum Strings {
 	      public String toString() {
 	    	  switch(AtorJogador.language){
 	    	  	case Portugues: return " de Body points!";
-	    	  	default: return " of Body points!";
+	    	  	default: return " Body points!";
 	    	  }
 	      }
 	  },
@@ -813,6 +813,42 @@ public enum Strings {
 	  DWARF {
 	      public String toString() {
 	          return "Dwarf";
+	      }
+	  },
+	  
+	  NORTH {
+	      public String toString() {
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Norte";
+	    	  	default : return "North";
+	    	  }
+	      }
+	  },
+	  
+	  SOUTH {
+	      public String toString() {
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Sul";
+	    	  	default: return "South";
+	    	  }
+	      }
+	  },
+	  
+	  EAST {
+	      public String toString() {
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Leste";
+	    	  	default: return "East";
+	    	  }
+	      }
+	  },
+	  
+	  WEST {
+	      public String toString() {
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return "Oeste";
+	    	  	default: return "West";
+	    	  }
 	      }
 	  },
 	  

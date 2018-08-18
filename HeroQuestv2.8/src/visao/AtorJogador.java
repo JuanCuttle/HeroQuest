@@ -58,7 +58,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
 	public MusicThread musicThread;
 	
-	public static Languages language = Languages.Portugues;
+	public static Languages language = Languages.English;
 
 	public static Boolean autoConnectToServer = false;
 
