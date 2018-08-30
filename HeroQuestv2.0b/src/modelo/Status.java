@@ -1,5 +1,0 @@
-package modelo;
-
-public enum Status {
-	SLEEPING, CURSED, AGILITY_UP, NEUTRAL, ROCK_SKIN, COURAGE, DEAD, AGILITY_DOWN;
-}
