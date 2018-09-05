@@ -10,7 +10,7 @@ import visao.AtorClientServer;
 import visao.AtorJogador;
 import exceptions.PositionNotEmptyException;
 
-public class HeroQuest {
+public class HeroQuest implements LogicInterface {
 
 	protected Map map;
 	protected ArrayList<Player> players;
@@ -564,7 +564,7 @@ public class HeroQuest {
 		return this.creatureQueue;
 	}
 
-	public boolean calcularSucessoDaMagia(Creature caster, Creature target,
+	private boolean calcularSucessoDaMagia(Creature caster, Creature target,
 			Spell spell) {
 		byte dano;
 		//int probabilidade;
@@ -640,7 +640,7 @@ public class HeroQuest {
 		this.getAtorClienteServidor().enviarJogada(lance);
 	}
 
-	// Melhorar (uso de interface com Jogada?)
+	// Otimizado
 	public void tratarLance(Lance lance) {
 		String tipo = lance.getClass().getSimpleName();
 		switch (tipo ) {
@@ -1187,37 +1187,37 @@ public class HeroQuest {
 		//System.out.println("" + criatura.getClass().getSimpleName());
 	}
 
-	public void sortCreatureQueueByID() {
+	private void sortCreatureQueueByID() {
 		Collections.sort(this.creatureQueue);
 	}
 
-	public void setDwarfAvailable(boolean b) {
+	private void setDwarfAvailable(boolean b) {
 		dwarfAvailable = b;
 	}
 
-	public void setElfAvailable(boolean b) {
+	private void setElfAvailable(boolean b) {
 		elfAvailable = b;
 	}
 
-	public void setWizardAvailable(boolean b) {
+	private void setWizardAvailable(boolean b) {
 		wizardAvailable = b;
 	}
 
-	public void setBarbarianAvailable(boolean b) {
+	private void setBarbarianAvailable(boolean b) {
 		barbarianAvailable = b;
 	}
 
-	public void setZargonAvailable(boolean b) {
+	private void setZargonAvailable(boolean b) {
 		zargonAvailable = b;
 	}
 
-	public Creature removeCreatureFromQueue() {
+	private Creature removeCreatureFromQueue() {
 		Creature criatura = this.creatureQueue.remove(0);
 		this.creatureQueue.trimToSize();
 		return criatura;
 	}
 
-	public void insertCreatureIntoQueue(Creature creature) {
+	private void insertCreatureIntoQueue(Creature creature) {
 		int index = this.creatureQueue.size();
 		this.creatureQueue.add(index, creature);
 	}
@@ -1331,7 +1331,7 @@ public class HeroQuest {
 		}
 	}
 
-	public boolean getZargonAvailable() {
+	private boolean getZargonAvailable() {
 		return zargonAvailable;
 	}
 
@@ -1339,28 +1339,28 @@ public class HeroQuest {
 		return this.players.remove(0);
 	}
 
-	public void insertPlayerIntoQueue(Player player) {
+	private void insertPlayerIntoQueue(Player player) {
 		int index = this.players.size();
 		this.players.add(index, player);
 	}
 
-	public boolean getBarbarianAvailable() {
+	private boolean getBarbarianAvailable() {
 		return barbarianAvailable;
 	}
 
-	public boolean getWizardAvailable() {
+	private boolean getWizardAvailable() {
 		return wizardAvailable;
 	}
 
-	public boolean getElfAvailable() {
+	private boolean getElfAvailable() {
 		return elfAvailable;
 	}
 
-	public boolean getDwarfAvailable() {
+	private boolean getDwarfAvailable() {
 		return dwarfAvailable;
 	}
 
-	public void killCreature(int creatureID) {
+	private void killCreature(int creatureID) {
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
 			Creature criatura = this.creatureQueue.get(i);
 			if (criatura.getID() == creatureID) {
@@ -1439,11 +1439,11 @@ public class HeroQuest {
 		return this.emAndamento;
 	}
 
-	public void setEmAndamento(boolean valor) {
+	private void setEmAndamento(boolean valor) {
 		this.emAndamento = valor;
 	}
 
-	public boolean verificarCondicoesDeVitoria() {
+	private boolean verificarCondicoesDeVitoria() {
 		boolean vitoria = false;
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
 			if (this.creatureQueue.get(i).getID() > 19
@@ -1487,7 +1487,7 @@ public class HeroQuest {
 		this.getAtorClienteServidor().iniciarPartida(numJog);
 	}
 
-	public void encerramentoDaPartida() {
+	private void encerramentoDaPartida() {
 		boolean aventureirosVivos = this.verificarSeJogadoresVivos();
 		if (aventureirosVivos) {
 			boolean condicoesCumpridas = this.verificarCondicoesDeVitoria();
@@ -1501,7 +1501,7 @@ public class HeroQuest {
 		}
 	}
 
-	public boolean verificarSeJogadoresVivos() {
+	private boolean verificarSeJogadoresVivos() {
 		int qtdCriaturas = this.creatureQueue.size();
 		for (int i = 0; i < qtdCriaturas; i++) {
 			Creature criatura = this.creatureQueue.get(i);
@@ -1591,7 +1591,7 @@ public class HeroQuest {
 		creature.setCurrentPosition(this.map.positions[row][column]);
 	}
 	
-	public Creature getCreaturePorID(int creatureID) {
+	private Creature getCreaturePorID(int creatureID) {
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
 			Creature criatura = this.creatureQueue.get(i);
 			if (criatura.getID() == creatureID) {

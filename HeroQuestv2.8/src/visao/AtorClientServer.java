@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import modelo.HeroQuest;
 import modelo.Lance;
-import modelo.LanceAbrirPorta;
 import modelo.Strings;
 import br.ufsc.inf.leobr.cliente.Jogada;
 import br.ufsc.inf.leobr.cliente.OuvidorProxy;
@@ -15,7 +14,7 @@ import br.ufsc.inf.leobr.cliente.exception.NaoConectadoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoJogandoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
 
-public class AtorClientServer implements OuvidorProxy {
+public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 
 	private static final long serialVersionUID = 1L;
 	protected Proxy proxy;
@@ -67,15 +66,6 @@ public class AtorClientServer implements OuvidorProxy {
 	}
 
 	public void enviarJogada(Lance lance) {
-		try {
-			proxy.enviaJogada((Jogada) lance);
-		} catch (NaoJogandoException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-			e.printStackTrace();
-		}
-	}
-	
-	public void enviarJogada(LanceAbrirPorta lance) {
 		try {
 			proxy.enviaJogada((Jogada) lance);
 		} catch (NaoJogandoException e) {

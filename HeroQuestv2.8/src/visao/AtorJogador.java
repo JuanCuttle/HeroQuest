@@ -31,13 +31,13 @@ import modelo.Directions;
 import modelo.Door;
 import modelo.FallingRock;
 import modelo.HeroQuest;
-import modelo.InterfaceGUI;
+import modelo.GUIInterface;
 import modelo.Position;
 import modelo.Spell;
 import modelo.Status;
 import modelo.Strings;
 
-public class AtorJogador extends JFrame implements InterfaceGUI {
+public class AtorJogador extends JFrame implements GUIInterface {
 
 	protected static final long serialVersionUID = 1L;
 	protected JPanel contentPane;
@@ -84,7 +84,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				AtorJogador.class.getResource("/imagens/Wizard.png")));
 		setTitle(Strings.HEROQUEST.toString());
@@ -311,6 +311,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		});
 		this.botaoProcurarTesouro.addKeyListener(listener);
 		this.contentPane.add(this.botaoProcurarTesouro);
+		
+		if (autoConnectToServer) {
+			this.conectar();
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -54,3 +54,5 @@ Can be troublesome with Creature objects (change not made through ID)
 24) Added "your turn" to heroes, (almost) full support for both Portuguese and English (need to update button/jframe titles)
 
 25) Bilingual interface finished (atualizarBotoesLingua() is bad, there has to be a better way)
+
+26) Added NetgamesProxy and Logic interfaces for component-based modelling

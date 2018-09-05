@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 
-public interface InterfaceGUI {
+public interface GUIInterface {
 	
 	public void selecionarPersonagem();
 	
