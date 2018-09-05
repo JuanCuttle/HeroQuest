@@ -31,6 +31,7 @@ import modelo.Directions;
 import modelo.Door;
 import modelo.FallingRock;
 import modelo.HeroQuest;
+<<<<<<< HEAD
 import modelo.GUIInterface;
 import modelo.Position;
 import modelo.Spell;
@@ -315,6 +316,288 @@ public class AtorJogador extends JFrame implements GUIInterface {
 		if (autoConnectToServer) {
 			this.conectar();
 		}
+=======
+import modelo.InterfaceGUI;
+import modelo.Position;
+import modelo.Spell;
+import modelo.Status;
+import modelo.Strings;
+
+public class AtorJogador extends JFrame implements InterfaceGUI {
+
+	protected static final long serialVersionUID = 1L;
+	protected JPanel contentPane;
+	protected HeroQuest heroQuest;
+	protected JButton[][] botoesTabuleiro;
+	protected JButton botaoConectar;
+	protected JButton botaoDesconectar;
+	protected JButton botaoIniciarPartida;
+	protected JButton botaoFinalizarJogada;
+	protected JButton botaoMostrarInventario;
+	protected JButton botaoAtacar;
+	protected JButton botaoUsarMagia;
+	protected JButton botaoProcurarArmadilha;
+	protected JButton botaoProcurarTesouro;
+	protected ArrayList<JButton> botoesCriaturas;
+	protected JMenuBar barraDeMenu;
+
+	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
+	public MusicThread musicThread;
+	
+	public static Languages language = Languages.English;
+
+	public static Boolean autoConnectToServer = false;
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					AtorJogador frame = new AtorJogador();
+					frame.setVisible(true);
+					if (autoConnectToServer) {
+						frame.conectar();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public AtorJogador() {
+		try {
+			createMusic();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+				AtorJogador.class.getResource("/imagens/Wizard.png")));
+		setTitle(Strings.HEROQUEST.toString());
+		// Atributos do AtorJogador
+
+		this.botoesTabuleiro = new JButton[27][50];
+		this.botoesCriaturas = new ArrayList<JButton>();
+		this.heroQuest = new HeroQuest(this);
+		addKeyListener(listener);
+
+		// Configurar a janela
+		setSize(1300, 770);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		barraDeMenu = new JMenuBar();
+		setJMenuBar(barraDeMenu);
+
+		JMenu mnHelp = new JMenu(Strings.MENU.toString());
+		barraDeMenu.add(mnHelp);
+
+		JButton btnInstructions = new JButton(Strings.INSTRUCTIONS.toString());
+		btnInstructions.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Instrucoes instr = null;
+				try {
+					instr = new Instrucoes();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				instr.setVisible(true);
+			}
+		});
+		mnHelp.add(btnInstructions);
+
+		JButton btnCharSelect = new JButton(Strings.SELECTCHAR.toString());
+		btnCharSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				selecionarPersonagem();
+			}
+		});
+
+		mnHelp.add(btnCharSelect);
+
+		JMenu mnSettings = new JMenu(Strings.SETTINGS.toString());
+		barraDeMenu.add(mnSettings);
+
+		JButton btnMusic = new JButton(Strings.TRIGGERMUSIC.toString());
+		mnSettings.add(btnMusic);
+		
+		JButton btnLanguage = new JButton(Strings.LANGUAGEBUTTON.toString());
+		btnLanguage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LanguageSelector ls = new LanguageSelector(getThis());
+				ls.setVisible(true);
+			}
+		});
+		mnSettings.add(btnLanguage);
+		btnMusic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				music();
+			}
+		});
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(null);
+		contentPane.setBackground(Color.BLACK);
+		setContentPane(contentPane);
+		Border invisivel = BorderFactory.createEmptyBorder();
+		setFocusable(true);
+		requestFocusInWindow();
+
+		// Cria os botões do tabuleiro
+		for (int i = 0; i < 27; i++) {
+			for (int j = 0; j < 50; j++) {
+				JButton botao = new JButton();
+				botao.setName("" + i + j);
+				botao.setBounds(150 + (j * 23), 89 + (i * 23), 23, 23);
+				botao.setBorder(invisivel);
+				botao.setVisible(true);
+				botao.addKeyListener(listener);
+				botao.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						abrirPorta(Integer.parseInt(botao.getName()));
+					}
+				});
+				contentPane.add(botao);
+				this.botoesTabuleiro[i][j] = botao;
+			}
+		}
+
+		// Cria os botões "Fila de criaturas"
+		JButton inutil = new JButton("");
+		inutil.setVisible(false);
+		this.botoesCriaturas.add(inutil);
+		for (int i = 1; i <= 23; i++) {
+			JButton botao = new JButton();
+			botao.setName("" + i);
+			botao.setBounds(0, 27 * (i - 1) + 89, 150, 27);
+			botao.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					mostrarInformacoes(Integer.parseInt(botao.getName()));
+				}
+			});
+			botao.addKeyListener(listener);
+			this.botoesCriaturas.add(i, botao);
+			this.contentPane.add(botao);
+		}
+
+		// Cria os outros botões
+		ImageIcon iconeConectar = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoConectar.png"));
+		this.botaoConectar = new JButton(iconeConectar);
+		this.botaoConectar.setBounds(22 * 1 + 120 * 0, 0, 120, 89);
+		this.botaoConectar.setBorder(invisivel);
+		this.botaoConectar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				conectar();
+			}
+		});
+		this.botaoConectar.addKeyListener(listener);
+		this.contentPane.add(this.botaoConectar);
+
+		ImageIcon iconeDesconectar = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoDesconectar.png"));
+		this.botaoDesconectar = new JButton(iconeDesconectar);
+		this.botaoDesconectar.setBounds(22 * 2 + 120 * 1, 0, 120, 89);
+		this.botaoDesconectar.setBorder(invisivel);
+		this.botaoDesconectar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				desconectar();
+			}
+		});
+		this.botaoDesconectar.addKeyListener(listener);
+		this.contentPane.add(this.botaoDesconectar);
+
+		ImageIcon iconeIniciarPartida = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoIniciarPartida.png"));
+		this.botaoIniciarPartida = new JButton(iconeIniciarPartida);
+		this.botaoIniciarPartida.setBounds(22 * 3 + 120 * 2, 0, 120, 89);
+		this.botaoIniciarPartida.setBorder(invisivel);
+		this.botaoIniciarPartida.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				iniciarPartida();
+			}
+		});
+		this.botaoIniciarPartida.addKeyListener(listener);
+		this.contentPane.add(this.botaoIniciarPartida);
+
+		ImageIcon iconeFinalizarJogada = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoFinalizarJogada.png"));
+		this.botaoFinalizarJogada = new JButton(iconeFinalizarJogada);
+		this.botaoFinalizarJogada.setBounds(22 * 4 + 120 * 3, 0, 120, 89);
+		this.botaoFinalizarJogada.setBorder(invisivel);
+		this.botaoFinalizarJogada.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				finalizarJogada();
+			}
+		});
+		this.botaoFinalizarJogada.addKeyListener(listener);
+		this.contentPane.add(this.botaoFinalizarJogada);
+
+		ImageIcon iconeBotaoMostrarInventario = new ImageIcon(getClass()
+				.getResource("/imagens/BotaoMostrarInventario.png"));
+		this.botaoMostrarInventario = new JButton(iconeBotaoMostrarInventario);
+		this.botaoMostrarInventario.setBounds(22 * 5 + 120 * 4, 0, 120, 89);
+		this.botaoMostrarInventario.setBorder(invisivel);
+		this.botaoMostrarInventario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mostrarInventario();
+			}
+		});
+		this.botaoMostrarInventario.addKeyListener(listener);
+		this.contentPane.add(this.botaoMostrarInventario);
+
+		ImageIcon iconeBotaoAtacar = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoAtacar.png"));
+		this.botaoAtacar = new JButton(iconeBotaoAtacar);
+		this.botaoAtacar.setBounds(22 * 6 + 120 * 5, 0, 120, 89);
+		this.botaoAtacar.setBorder(invisivel);
+		this.botaoAtacar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				atacar();
+			}
+		});
+		this.botaoAtacar.addKeyListener(listener);
+		this.contentPane.add(this.botaoAtacar);
+
+		ImageIcon iconeBotaoUsarMagia = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoUsarMagia.png"));
+		this.botaoUsarMagia = new JButton(iconeBotaoUsarMagia);
+		this.botaoUsarMagia.setBounds(22 * 7 + 120 * 6, 0, 120, 89);
+		this.botaoUsarMagia.setBorder(invisivel);
+		this.botaoUsarMagia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				usarMagia();
+			}
+		});
+		this.botaoUsarMagia.addKeyListener(listener);
+		this.contentPane.add(this.botaoUsarMagia);
+
+		ImageIcon iconeBotaoProcurarArmadilha = new ImageIcon(getClass()
+				.getResource("/imagens/BotaoProcurarArmadilha.png"));
+		this.botaoProcurarArmadilha = new JButton(iconeBotaoProcurarArmadilha);
+		this.botaoProcurarArmadilha.setBounds(22 * 8 + 120 * 7, 0, 120, 89);
+		this.botaoProcurarArmadilha.setBorder(invisivel);
+		this.botaoProcurarArmadilha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				procurarArmadilhaOuPortaSecreta();
+			}
+		});
+		this.botaoProcurarArmadilha.addKeyListener(listener);
+		this.contentPane.add(botaoProcurarArmadilha);
+
+		ImageIcon iconeBotaoProcurarTesouro = new ImageIcon(getClass()
+				.getResource("/imagens/BotaoProcurarTesouro.png"));
+		this.botaoProcurarTesouro = new JButton(iconeBotaoProcurarTesouro);
+		this.botaoProcurarTesouro.setBounds(22 * 9 + 120 * 8, 0, 120, 89);
+		this.botaoProcurarTesouro.setBorder(invisivel);
+		this.botaoProcurarTesouro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				procurarTesouro();
+			}
+		});
+		this.botaoProcurarTesouro.addKeyListener(listener);
+		this.contentPane.add(this.botaoProcurarTesouro);
+>>>>>>> branch 'master' of https://github.com/JuanCuttle/HeroQuest.git
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
