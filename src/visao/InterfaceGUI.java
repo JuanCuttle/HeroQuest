@@ -1,8 +1,14 @@
-package modelo;
+package visao;
 
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+
+import modelo.Creature;
+import modelo.Directions;
+import modelo.Position;
+import modelo.Spell;
+import modelo.Status;
 
 public interface InterfaceGUI {
 	

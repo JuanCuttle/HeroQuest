@@ -31,7 +31,6 @@ import modelo.Directions;
 import modelo.Door;
 import modelo.FallingRock;
 import modelo.HeroQuest;
-import modelo.InterfaceGUI;
 import modelo.Position;
 import modelo.Spell;
 import modelo.Status;
