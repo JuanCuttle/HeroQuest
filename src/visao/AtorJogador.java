@@ -59,7 +59,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	
 	public static Languages language = Languages.English;
 
-	public static Boolean autoConnectToServer = false;
+	public static Boolean autoConnectToServer = true;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -310,6 +310,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		});
 		this.botaoProcurarTesouro.addKeyListener(listener);
 		this.contentPane.add(this.botaoProcurarTesouro);
+		
+		if (autoConnectToServer){
+			this.conectar();
+		}
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

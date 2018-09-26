@@ -5,11 +5,11 @@ import modelo.Lance;
 
 public interface NetgamesProxyInterface {
 
-	boolean conectar(String servidor, String nome); // requerida por AtorJogador
+	 boolean conectar(String servidor, String nome); // requerida por AtorJogador
 	
 	 boolean desconectar(); // requerida por AtorJogador
 	 
-	 void iniciarPartida(int numJog); // requerida por AtorJogador e HeroQuest
+	 void iniciarPartida(int numJog); // requerida por AtorJogador e HeroQuest (nao usado neste)
 	 
 	 void enviarJogada(Lance lance); // requerida por HeroQuest
 	 
