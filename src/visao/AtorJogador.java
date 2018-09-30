@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -849,5 +852,117 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		mBar.getMenu(1).setText(Strings.SETTINGS.toString());
 		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(0)).setText(Strings.TRIGGERMUSIC.toString());
 		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(1)).setText(Strings.LANGUAGEBUTTON.toString());
+	}
+	
+	public void writeSaveFile(String playerName, int heroType, int gold) throws IOException{
+		// Retrieve current working directory
+		String currentDir = System.getProperty("user.dir");
+		System.out.println(currentDir);
+				
+		// Create new directory for the save files, if not yet created
+		String saveDir = currentDir + "/HeroQuest_Saves/";
+		boolean dir = new File(saveDir).mkdir();
+		System.out.println(dir);
+				
+		// Write data into file
+		FileWriter fw = new FileWriter(saveDir + playerName + ".txt");
+		fw.write(heroType+"\t");
+		fw.write(gold+"\t");
+		fw.close();
+	}
+	
+	public ArrayList<String> readSaveFile(String playerName) throws IOException{
+		
+		ArrayList<String> returnValues = new ArrayList<String>();
+		
+		ArrayList<String> results = new ArrayList<String>();
+
+		String currentDir = System.getProperty("user.dir");
+		
+		String saveDir = currentDir + "/HeroQuest_Saves/";
+		
+		//																														name.endsWith(".txt")
+		//File[] files = new File(saveDir).listFiles(new FilenameFilter() { @Override public boolean accept(File dir, String name) { return true; } });
+		
+		File[] files = new File(saveDir).listFiles();
+		//If this pathname does not denote a directory, then listFiles() returns null. 
+
+		if (files != null){
+			for (File file : files) {
+			    if (file.isFile()) {
+			        results.add(file.getName());
+			    }
+			}
+			
+			for (int i = 0; i < results.size(); i++){
+				String res = results.get(i);
+				
+				if (res.endsWith(playerName+".txt")){
+					// Open the file at /Saves/
+					FileReader fr = new FileReader(saveDir+res);
+					
+					// Instantiate reading buffer and reads into it
+					char[] cbuf = new char[(int) files[i].length()];
+					fr.read(cbuf);
+					
+					// Close the file
+					fr.close();
+					
+					// Convert buffer to string for splitting
+					String content = "";
+					for (char c : cbuf){
+						content += c;
+					}
+					
+					// Separate values using tab symbol
+					String[] values = content.split("\t");
+					
+					// Retrieve information from file data
+					//gold = Integer.parseInt(values[0]);
+					
+					for (String value : values){
+						returnValues.add(value);
+					}
+					
+					break;
+				}
+			}
+			//System.out.println("Save files found: "+results);
+		}
+		return returnValues;
+	}
+	
+
+	public boolean checkSaveFileExists(String playerName) {
+		ArrayList<String> results = new ArrayList<String>();
+
+		String currentDir = System.getProperty("user.dir");
+		
+		String saveDir = currentDir + "/HeroQuest_Saves/";
+		
+		//																														name.endsWith(".txt")
+		//File[] files = new File(saveDir).listFiles(new FilenameFilter() { @Override public boolean accept(File dir, String name) { return true; } });
+		
+		File[] files = new File(saveDir).listFiles();
+		//If this pathname does not denote a directory, then listFiles() returns null. 
+
+		if (files != null){
+			for (File file : files) {
+			    if (file.isFile()) {
+			        results.add(file.getName());
+			    }
+			}
+			
+			for (int i = 0; i < results.size(); i++){
+				String res = results.get(i);
+				
+				if (res.endsWith(playerName+".txt")){
+					//JOptionPane.showMessageDialog(null, Strings.FILEFOUND);
+					return true;
+				}
+			}
+		}
+		//JOptionPane.showMessageDialog(null, Strings.FILENOTFOUND);
+		return false;
 	}
 }

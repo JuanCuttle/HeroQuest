@@ -56,3 +56,5 @@ Can be troublesome with Creature objects (change not made through ID)
 25) Bilingual interface finished (atualizarBotoesLingua() is bad, there has to be a better way)
 
 26) Added NetgamesProxy and Logic interfaces for component-based modelling
+
+27) Added Save files, containing Hero type (Barbarian, Wizard, Elf, Dwarf) and gold coins in inventory

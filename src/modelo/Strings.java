@@ -941,5 +941,26 @@ public enum Strings {
 	          		+ "Then everyone selects their characters and start playing!";
 	    	  }
 	      }
+	  },
+	  
+	  CONFIRMLOADGAME {
+	      public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "Um arquivo com o seu nome já existe, deseja carregá-lo?";
+	    	  } else {
+	    		  return "A file with your name already exists, do you wish to load it?";
+	    	  }
+	      }
+	  },
+	  
+	  FILENOTFOUND {
+	      public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "Arquivo com não encontrado, criando um novo...";
+	    	  } else {
+	    		  return "File not found, creating new file...";
+	    	  }
+	      }
 	  }
+	  
 }

@@ -1,5 +1,6 @@
 package modelo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -875,6 +876,23 @@ public class HeroQuest implements LogicInterface {
 		Player player;
 		player = lance.getPlayer();
 		this.insertPlayerIntoQueue(player);
+		
+		boolean exists = this.atorJogador.checkSaveFileExists(nomeLocalPlayer);
+		if (exists){
+			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRMLOADGAME);
+			if (choice == 0){
+				ArrayList<String> values = null;
+				try {
+					values = this.atorJogador.readSaveFile(nomeLocalPlayer);
+					//System.out.println(values);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.selecionarPersonagemEscolhida(Integer.parseInt(values.get(0)));
+				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(values.get(1)));
+			}
+		}
 	}
 
 	private void tratarAtaque(LanceAtaque lance) {
@@ -1175,7 +1193,7 @@ public class HeroQuest implements LogicInterface {
 		
 		this.encerramentoDaPartida();
 		
-		Adventurer a = this.localAdventurer; 
+		/*Adventurer a = this.localAdventurer; 
 		if (a != null){
 			String creatureName = a.getPlayableCharacter().getClass().getSimpleName();
 			if (creatureName != null){
@@ -1183,7 +1201,7 @@ public class HeroQuest implements LogicInterface {
 					this.atorJogador.mostrarMensagem(Strings.YOURTURN.toString()+Strings.REMAININGMOVES.toString()+daVez.getMovement());
 				}			
 			}
-		}
+		}*/
 		//System.out.println("" + criatura.getClass().getSimpleName());
 	}
 
@@ -1492,7 +1510,35 @@ public class HeroQuest implements LogicInterface {
 		if (aventureirosVivos) {
 			boolean condicoesCumpridas = this.verificarCondicoesDeVitoria();
 			if (condicoesCumpridas) {
+				// Save player file
+				if (this.localAdventurer != null) {
+					PlayableCharacter character = localAdventurer
+							.getPlayableCharacter();
+					int gold = character.getGold();
+					
+					try {
+						int heroType;
+						PlayableCharacter a = this.localAdventurer.getPlayableCharacter();
+						switch (a.getClass().getSimpleName()){
+							case "Barbarian": heroType = 1;
+											break;
+							case "Wizard": heroType = 2;
+											break;
+							case "Elf": heroType = 3;
+											break;
+							default: heroType = 4;
+											break;
+									
+						}
+						this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, gold);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				// Announce hero victory
 				this.atorJogador.anunciarVitoriaDosJogadores();
+				// End game
 				this.finalizarJogo();
 			}
 		} else {
