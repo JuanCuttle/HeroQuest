@@ -6,7 +6,7 @@ import visao.Languages;
 public enum Strings {
 	 HEROQUEST {
 	      public String toString() {
-	          return "HeroQuestv2.9";
+	          return "HeroQuestv3.0(alfa)";
 	      }
 	  },
 	  
@@ -910,7 +910,10 @@ public enum Strings {
 	    	  			+ "\r\n*Para começar a jogar, conecte se já não estiver conectado. "
 	    	  			+ "Então, UM jogador inicia a partida "
 	    	  			+ "e digita o número de jogadores que irão participar. "
-	    	  			+ "Então todos selecionam seus personagens e começam a jogar!";
+	    	  			+ "Então todos selecionam seus personagens e começam a jogar!"
+	    	  			+ "\nPS: Esta versão contém um protótipo de saves de jogador. Para carregar um save, "
+		          		+ "utilize o mesmo nome que você utilizou no seu último jogo "
+		          		+ "ao conectar, e escolha carregar o save ao selecionar personagem.";
 	    	  	default: return "You are in a dungeon. It is cold, damp and pitch-black. "
 	          		+ "The only sounds are your own heartbeat, "
 	          		+ "breathing and dripping water echoing through the passageways. "
@@ -938,8 +941,11 @@ public enum Strings {
 	          		+ "\r\n\r\n*To start playing, connect if not connected already. "
 	          		+ "Then, one player presses \"start game\" "
 	          		+ "and types the number of players in that game. "
-	          		+ "Then everyone selects their characters and start playing!";
-	    	  }
+	          		+ "Then everyone selects their characters and start playing!"
+	          		+ "\nPS: This version has a prototype of player saves. To load a save file, "
+	          		+ "use the same name you used in your previous playthrough "
+	          		+ "as you connect and choose to load while selecting character";
+	    	  	}
 	      }
 	  },
 	  
