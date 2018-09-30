@@ -156,3 +156,4 @@ $RECYCLE.BIN/
 *.vpp.working-journal
 *.lock
 tmp/*
+/HeroQuest_Saves/

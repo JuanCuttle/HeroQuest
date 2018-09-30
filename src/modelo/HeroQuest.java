@@ -876,23 +876,6 @@ public class HeroQuest implements LogicInterface {
 		Player player;
 		player = lance.getPlayer();
 		this.insertPlayerIntoQueue(player);
-		
-		boolean exists = this.atorJogador.checkSaveFileExists(nomeLocalPlayer);
-		if (exists){
-			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRMLOADGAME);
-			if (choice == 0){
-				ArrayList<String> values = null;
-				try {
-					values = this.atorJogador.readSaveFile(nomeLocalPlayer);
-					//System.out.println(values);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				this.selecionarPersonagemEscolhida(Integer.parseInt(values.get(0)));
-				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(values.get(1)));
-			}
-		}
 	}
 
 	private void tratarAtaque(LanceAtaque lance) {
@@ -1263,7 +1246,26 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void selecionarPersonagem() {
-		this.atorJogador.mostrarOsCincoPersonagens();
+		boolean exists = this.atorJogador.checkSaveFileExists(nomeLocalPlayer);
+		if (exists){
+			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRMLOADGAME);
+			if (choice == 0){
+				ArrayList<String> values = null;
+				try {
+					values = this.atorJogador.readSaveFile(nomeLocalPlayer);
+					//System.out.println(values);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.selecionarPersonagemEscolhida(Integer.parseInt(values.get(0)));
+				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(values.get(1)));
+			} else {
+				this.atorJogador.mostrarOsCincoPersonagens();
+			}
+		} else {
+			this.atorJogador.mostrarOsCincoPersonagens();
+		}
 		//int resultado = this.atorJogador.mostrarOsCincoPersonagens();
 	}
 	
@@ -1512,25 +1514,23 @@ public class HeroQuest implements LogicInterface {
 			if (condicoesCumpridas) {
 				// Save player file
 				if (this.localAdventurer != null) {
-					PlayableCharacter character = localAdventurer
-							.getPlayableCharacter();
-					int gold = character.getGold();
-					
 					try {
 						int heroType;
 						PlayableCharacter a = this.localAdventurer.getPlayableCharacter();
-						switch (a.getClass().getSimpleName()){
-							case "Barbarian": heroType = 1;
-											break;
-							case "Wizard": heroType = 2;
-											break;
-							case "Elf": heroType = 3;
-											break;
-							default: heroType = 4;
-											break;
-									
+						if (a.getStatus() != Status.DEAD){
+							switch (a.getClass().getSimpleName()){
+								case "Barbarian": heroType = 1;
+												break;
+								case "Wizard": heroType = 2;
+												break;
+								case "Elf": heroType = 3;
+												break;
+								default: heroType = 4;
+												break;
+										
+							}
+							this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, a.getGold());
 						}
-						this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, gold);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
