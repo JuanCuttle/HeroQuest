@@ -15,22 +15,24 @@
  */
 package modelo;
 
-import modelo.Corridor;
-import modelo.Door;
-import modelo.Position;
-import modelo.Room;
-import modelo.Wall;
 
 public class Map {
 	
 	protected Position[][] positions; 
 
-	protected byte numberOfRows;
-	protected byte numberOfCollumns;
-	public Map(HeroQuest jogo) {
+	private byte numberOfRows;
+	private byte numberOfColumns;
+
+	private byte[] stairsPosition = new byte[2];
+	protected byte[] barbInitialPosition = new byte[2];
+	protected byte[] wizInitialPosition = new byte[2];
+	protected byte[] elfInitialPosition = new byte[2];
+	protected byte[] dwarfInitialPosition = new byte[2];
+	
+	public Map(HeroQuest jogo){
 		this.numberOfRows = 27;
-		this.numberOfCollumns = 50;
-		positions = new Position[numberOfRows][numberOfCollumns];
+		this.numberOfColumns = 50;
+		positions = new Position[numberOfRows][numberOfColumns];
 		generateCleanMap();
 		generateCorridors();
 		generateRooms();
@@ -38,14 +40,24 @@ public class Map {
 		generateDoors(jogo);
 		generateTraps();
 		generateTreasures();
+		
+		stairsPosition[0] = 24;
+		stairsPosition[1] = 24;
+		barbInitialPosition[0] = 1;
+		barbInitialPosition[1] = 24;
+		wizInitialPosition[0] = 1;
+		wizInitialPosition[1] = 25;
+		elfInitialPosition[0] = 2;
+		elfInitialPosition[1] = 24;
+		dwarfInitialPosition[0] = 2;
+		dwarfInitialPosition[1] = 25;
+		
 	}
-	public Position getPosition(byte row, byte collumn) {
-		return positions[row][collumn]; 
-	}
+
 	public void generateCleanMap() {
 		System.out.println("Debug: initializing map");
 		for(byte i = 0; i < numberOfRows; i++)
-			for(byte j = 0; j < numberOfCollumns; j++) {
+			for(byte j = 0; j < numberOfColumns; j++) {
 				positions[i][j] = new Position(i,j);
 			}
 	}
@@ -81,6 +93,7 @@ public class Map {
 			positions[i][18] = new Wall(i,18); //10
 			positions[i][31] = new Wall(i,31); // 11
 		}
+		// Map borders
 		for (byte i = 0; i < 50; i++) { //Certo, certo
 			positions[0][i] = new Wall(0,i); // 14
 			positions[26][i] = new Wall(26,i); // 16
@@ -89,6 +102,7 @@ public class Map {
 			positions[i][0] = new Wall(i,0); // 17
 			positions[i][49] = new Wall(i,49); // 18
 		}
+		// Rocks
 		for (byte i = 1; i < 3; i++) { //Certo, certo
 			positions[i][15] = new Wall(i,15);
 			positions[i][37] = new Wall(i,37);
@@ -226,5 +240,33 @@ public class Map {
 	}
 	public void atualizarPosicao(Position novaPosicao, byte linha, byte coluna) {
 		this.positions[linha][coluna] = novaPosicao;
+	}
+	
+	public byte getNumberOfRows() {
+		return numberOfRows;
+	}
+
+	public byte getNumberOfColumns() {
+		return numberOfColumns;
+	}
+	
+	public byte[] getStairsPosition() {
+		return stairsPosition;
+	}
+	
+	public byte[] getBarbInitialPosition() {
+		return barbInitialPosition;
+	}
+	public byte[] getWizInitialPosition() {
+		return wizInitialPosition;
+	}
+	public byte[] getElfInitialPosition() {
+		return elfInitialPosition;
+	}
+	public byte[] getDwarfInitialPosition() {
+		return dwarfInitialPosition;
+	}
+	public Position getPosition(byte row, byte collumn) {
+		return positions[row][collumn]; 
 	}
 }

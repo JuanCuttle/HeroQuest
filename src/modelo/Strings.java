@@ -967,6 +967,25 @@ public enum Strings {
 	    		  return "File not found, creating new file...";
 	    	  }
 	      }
-	  }
+	  },
 	  
+	  THETRIAL {
+	      public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "Vocês aprenderam bem, meus amigos. Agora chegou a hora do seu primeiro desafio."
+	    		  		+ " Vocês precisam primeiro entrar nas catacumbas que contém a tumba de Fellmarg."
+	    		  		+ "\nVocês devem localizar e destruir Verag, uma gárgula repugnante que se esconde nas catacumbas."
+	    		  		+ " Esta missão não é fácil e vocês devem trabalhar em equipe se quiserem sobreviver."
+	    		  		+ "\nEstes são seus primeiros passos nas suas jornadas para tornarem-se verdadeiros Herois."
+	    		  		+ " Andem com cautela, meus amigos.";
+	    	  } else {
+	    		  return "You have learned well, my friends. Now has come the time of your first trial."
+	    		  		+ " You must first enter the catacombs which contain Fellmarg's tomb."
+	    		  		+ "\nYou must seek out and destroy Verag, a foul Gargoyle who hides in the catacombs."
+	    		  		+ " This Quest is not easy and you must work together in order to survive."
+	    		  		+ "\nThis is your first step on the road to becoming true Heroes."
+	    		  		+ " Tread carefully my friends.";
+	    	  }
+	      }
+	  }
 }

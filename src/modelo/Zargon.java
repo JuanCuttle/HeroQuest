@@ -2,6 +2,8 @@ package modelo;
 
 import java.util.ArrayList;
 
+import quests.BasicMap;
+
 public class Zargon extends Player {
 
 	private static final long serialVersionUID = 2709851702481435202L;
@@ -24,7 +26,14 @@ public class Zargon extends Player {
 		return this.monsters;
 	}
 	
-	public ArrayList<Monster> createMonsters(HeroQuest jogo) {
+	public ArrayList<Monster> createMonsters(HeroQuest game) {
+		BasicMap map = game.getMap();
+		this.monsters = map.createMonsters(game);
+		return this.monsters;
+	}
+
+	@SuppressWarnings("unused")
+	private void createMonstersDefault(HeroQuest jogo) {
 		Goblin goblin1 = new Goblin();
 		goblin1.setID((byte) 1);
 		jogo.creatureInPosition(goblin1, 11, 19);
@@ -120,7 +129,5 @@ public class Zargon extends Player {
 		polar_Warbear.setID((byte) 19);
 		jogo.creatureInPosition(polar_Warbear, 8, 43);
 		this.monsters.add(polar_Warbear);
-		
-		return this.monsters;
 	}
 }

@@ -7,19 +7,21 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import quests.BasicMap;
+import quests.TheTrial;
 import visao.AtorClientServer;
 import visao.AtorJogador;
 import exceptions.PositionNotEmptyException;
 
 public class HeroQuest implements LogicInterface {
 
-	protected Map map;
+	protected BasicMap map;
 	protected ArrayList<Player> players;
 	protected AtorJogador atorJogador;
 	private AtorClientServer atorClienteServidor;
 	protected Player localPlayer;
 	protected ArrayList<Creature> creatureQueue;
-	protected ArrayList<Door> doors;
+	public ArrayList<Door> doors;
 	protected static boolean zargonAvailable;
 	protected static boolean barbarianAvailable;
 	protected static boolean wizardAvailable;
@@ -48,6 +50,8 @@ public class HeroQuest implements LogicInterface {
 		this.localAdventurer = null;
 		this.localZargon = null;
 		
+		//this.map = new Map(this);
+		this.map = new TheTrial(this);
 	}
 	
 	public void abrirPorta(int idPorta) {
@@ -418,7 +422,7 @@ public class HeroQuest implements LogicInterface {
 		byte coluna = pos.getColumn();
 		for (int i = linha - area; i <= linha + area; i++) {
 			for (int j = coluna - area; j <= coluna + area; j++) {
-				if (i >= 0 && i < 27 && j >= 0 && j < 50) {
+				if (i >= 0 && i < this.map.getNumberOfRows() && j >= 0 && j < this.map.getNumberOfColumns()) {
 					Position posicao = this.map.getPosition((byte)i, (byte)j);
 					if (posicao.getCreature() != null) {
 						possiveisAlvos.add(posicao.getCreature());
@@ -687,6 +691,7 @@ public class HeroQuest implements LogicInterface {
 		PlayableCharacter character;
 		Adventurer playerA;
 		byte personagem = lance.getValue();
+		byte[] position = new byte[2];
 
 		switch (personagem) {
 			case 0:
@@ -709,11 +714,13 @@ public class HeroQuest implements LogicInterface {
 				character = playerA.getPlayableCharacter();
 				this.insertCreatureIntoQueue(character);
 				
-				this.creatureInPosition(character, 1, 24);
-				//this.creatureInPosition(character, 20, 25);
+				
+				position = map.getBarbInitialPosition();
+				this.creatureInPosition(character, position[0], position[1]);
+				//this.creatureInPosition(character, 25, 25);
 				
 				character.setMovement();
-				this.setAreaVisible((byte)1, (byte)24);
+				this.setAreaVisible(position[0], position[1]);
 	
 				break;
 			case 2:			
@@ -725,7 +732,12 @@ public class HeroQuest implements LogicInterface {
 				character = playerA.getPlayableCharacter();
 				((Wizard) character).createSpells();
 				this.insertCreatureIntoQueue(character);
-				this.creatureInPosition(character, 1, 25);
+				position = map.getWizInitialPosition();
+				this.creatureInPosition(character, position[0], position[1]);
+				//this.creatureInPosition(character, 25, 25);
+				
+				character.setMovement();
+				this.setAreaVisible(position[0], position[1]);
 				
 				character.setMovement();
 				this.setAreaVisible((byte)1, (byte)25);
@@ -740,7 +752,12 @@ public class HeroQuest implements LogicInterface {
 				character = playerA.getPlayableCharacter();
 				((Elf) character).createSpells();
 				this.insertCreatureIntoQueue(character);
-				this.creatureInPosition(character, 2, 24);
+				position = map.getElfInitialPosition();
+				this.creatureInPosition(character, position[0], position[1]);
+				//this.creatureInPosition(character, 25, 25);
+				
+				character.setMovement();
+				this.setAreaVisible(position[0], position[1]);
 				
 				character.setMovement();
 				this.setAreaVisible((byte)2, (byte)24);
@@ -755,9 +772,12 @@ public class HeroQuest implements LogicInterface {
 				character = playerA.getPlayableCharacter();
 				this.insertCreatureIntoQueue(character);
 				
-				this.creatureInPosition(character, 2, 25);
-				
+				position = map.getDwarfInitialPosition();
+				this.creatureInPosition(character, position[0], position[1]);
 				//this.creatureInPosition(character, 20, 25);
+				
+				character.setMovement();
+				this.setAreaVisible(position[0], position[1]);
 				
 				character.setMovement();
 				this.setAreaVisible((byte)2, (byte)25);
@@ -783,13 +803,13 @@ public class HeroQuest implements LogicInterface {
 		character = (PlayableCharacter) posicaoAtual.getCreature();
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				if (i >= 0 && i < 27 && j >= 0 && j < 50){
+				if (i >= 0 && i < this.map.getNumberOfRows() && j >= 0 && j < this.map.getNumberOfColumns()){
 					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
 					Treasure tesouro = posicaoAtual.getTreasure();
 					if (tesouro != null) {
 						int gold = tesouro.getGoldAmount();
-						if (gold > 0){
-							tesouro.setGoldAmount(0);
+						if (gold >= 0){
+							tesouro.setGoldAmount(-1);
 							character.increaseGold(gold);
 							foundGold = true;
 						}
@@ -812,7 +832,7 @@ public class HeroQuest implements LogicInterface {
 		boolean removeuArmadilhas = false;
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				if (i >= 0 && i < 27 && j >= 0 && j < 50) {
+				if (i >= 0 && i < this.map.getNumberOfRows() && j >= 0 && j < this.map.getNumberOfColumns()) {
 					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
 					if (posicaoAtual.getTrap() != null) {
 						posicaoAtual.makeTrapVisible();
@@ -1089,7 +1109,7 @@ public class HeroQuest implements LogicInterface {
 
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				if (i >= 0 && j >= 0 && i < 27 && j < 50) {
+				if (i >= 0 && j >= 0 && i < this.map.getNumberOfRows() && j < this.map.getNumberOfColumns()) {
 					Position posicao = this.map.getPosition((byte)i, (byte)j);
 					posicao.setVisible(true);
 					if (posicao.getCreature() != null)
@@ -1308,7 +1328,7 @@ public class HeroQuest implements LogicInterface {
 					break;
 				case 1:
 					character = new Barbarian();
-					character.setID((byte) 20);
+					character.setID((byte) (map.getCreatureQueueSize()-3));//26);
 					playerA.setPlayableCharacter(character);
 					this.localAdventurer = playerA;
 					lance.setAdventurer(playerA);
@@ -1316,7 +1336,7 @@ public class HeroQuest implements LogicInterface {
 					break;
 				case 2:
 					character = new Wizard();
-					character.setID((byte) 21);
+					character.setID((byte) (map.getCreatureQueueSize()-2));//27);
 					playerA.setPlayableCharacter(character);
 					this.localAdventurer = playerA;
 					lance.setAdventurer(playerA);
@@ -1324,7 +1344,7 @@ public class HeroQuest implements LogicInterface {
 					break;
 				case 3:
 					character = new Elf();
-					character.setID((byte) 22);
+					character.setID((byte) (map.getCreatureQueueSize()-1));//28);
 					playerA.setPlayableCharacter(character);
 					this.localAdventurer = playerA;
 					lance.setAdventurer(playerA);
@@ -1332,7 +1352,7 @@ public class HeroQuest implements LogicInterface {
 					break;
 				case 4:
 					character = new Dwarf();
-					character.setID((byte) 23);
+					character.setID((byte) (map.getCreatureQueueSize()));//29);
 					playerA.setPlayableCharacter(character);
 					this.localAdventurer = playerA;
 					lance.setAdventurer(playerA);
@@ -1421,8 +1441,7 @@ public class HeroQuest implements LogicInterface {
 		if (daVez ) {
 			if (caster instanceof Barbarian || caster instanceof Wizard
 					|| caster instanceof Elf || caster instanceof Dwarf){
-				Creature criatura = this.getCriaturaDaVez();
-				Position posicao = criatura.getCurrentPosition();
+				Position posicao = caster.getCurrentPosition();
 				LanceProcArmadilha lance = new LanceProcArmadilha();
 				lance.setSourceC(posicao.getColumn());
 				lance.setSourceL(posicao.getRow());
@@ -1463,24 +1482,6 @@ public class HeroQuest implements LogicInterface {
 		this.emAndamento = valor;
 	}
 
-	private boolean verificarCondicoesDeVitoria() {
-		boolean vitoria = false;
-		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			if (this.creatureQueue.get(i).getID() > 19
-					&& this.creatureQueue.get(i).getID() < 24) {
-				Position pos = this.creatureQueue.get(i).getCurrentPosition();
-				int linha = pos.getRow();
-				int coluna = pos.getColumn();
-				if (linha == 24 && coluna == 24 || linha == 24 && coluna == 25
-						|| linha == 25 && coluna == 24 || linha == 25
-						&& coluna == 25) {
-					vitoria = true;
-				}
-			}
-		}
-		return vitoria;
-	}
-
 	public void finalizarJogo() {
 		//System.exit(0);
 		int option = JOptionPane.showConfirmDialog(null, Strings.ENDGAME.toString());
@@ -1491,7 +1492,9 @@ public class HeroQuest implements LogicInterface {
 
 	public void iniciarNovaPartida(int posicao) {
 		this.setEmAndamento(true);
-		this.map = new Map(this);
+		
+		//this.map = new Map(this);
+		
 		//String idJogador = this.atorJogador.informarNomeJogador();
 		String idJogador = this.nomeLocalPlayer;
 		Player player = this.criarJogador(idJogador);
@@ -1510,7 +1513,7 @@ public class HeroQuest implements LogicInterface {
 	private void encerramentoDaPartida() {
 		boolean aventureirosVivos = this.verificarSeJogadoresVivos();
 		if (aventureirosVivos) {
-			boolean condicoesCumpridas = this.verificarCondicoesDeVitoria();
+			boolean condicoesCumpridas = this.map.verificarCondicoesDeVitoria(this);
 			if (condicoesCumpridas) {
 				// Save player file
 				if (this.localAdventurer != null) {
@@ -1542,7 +1545,9 @@ public class HeroQuest implements LogicInterface {
 				this.finalizarJogo();
 			}
 		} else {
+			// Announce villain victory
 			this.atorJogador.anunciarVitoriaDoZargon();
+			// End game
 			this.finalizarJogo();
 		}
 	}
@@ -1654,6 +1659,10 @@ public class HeroQuest implements LogicInterface {
 
 	public AtorClientServer getAtorClienteServidor() {
 		return atorClienteServidor;
+	}
+	
+	public BasicMap getMap() {
+		return map;
 	}
 	
 }

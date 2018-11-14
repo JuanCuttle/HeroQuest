@@ -58,3 +58,24 @@ Can be troublesome with Creature objects (change not made through ID)
 26) Added NetgamesProxy and Logic interfaces for component-based modelling
 
 27) Added Save files, containing Hero type (Barbarian, Wizard, Elf, Dwarf) and gold coins in inventory
+
+28) Upgrades: New map, almost identical to original board game. New quest: The Trial (first quest in official questbook).
+			  For map testing purposes, Map template created in class BasicMap (Rooms, Corridors and Walls only. no Traps, Treasure, Doors or Creatures).
+			  For map testing purposes, stub for GUI created in class GUIStub.
+			  New Monsters added: Orc and Gargoyle.
+			  GUI improvements for differing number of creatures in Quest, plus handy line/column indicator.
+			  Moved Monster creation to Quest map, to ease comprehension.
+			  Adventurer and stairs positioning moved to Quest for same reason.
+			  Victory conditions also moved to Quest map for changing conditions (slay a certain enemy or find the stairs).
+			  Changing amount of side buttons according to the needs of each Quest.
+			  Adventurer ID automatically adjusted to number of enemies in Quest.
+			  Solution to side buttons understood and explained/documented in code.
+			  General bug-squishing.
+	PROBLEMS: verificaSeJogadorDaVez ArrayIndexOutOfBounds persists.
+			  Solution to side buttons still not ideal. Restart from scratch?
+	Next steps: Quest selection screen.
+				MORE QUESTS!
+				[Permanent] items.
+				Upgrade GUI.
+				Save file selection screen.
+				Map objects (tables, weapon rack, tomb, bookcases, chair etc.).

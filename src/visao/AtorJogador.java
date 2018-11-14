@@ -38,6 +38,8 @@ import modelo.Position;
 import modelo.Spell;
 import modelo.Status;
 import modelo.Strings;
+import quests.BasicMap;
+import quests.TheTrial;
 
 public class AtorJogador extends JFrame implements InterfaceGUI {
 
@@ -70,6 +72,11 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				try {
 					AtorJogador frame = new AtorJogador();
 					frame.setVisible(true);
+					
+					BasicMap map = frame.heroQuest.getMap();
+					if (map instanceof TheTrial){
+						JOptionPane.showMessageDialog(null, Strings.THETRIAL);
+					}
 					if (autoConnectToServer) {
 						frame.conectar();
 					}
@@ -92,13 +99,16 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		setTitle(Strings.HEROQUEST.toString());
 		// Atributos do AtorJogador
 
-		this.botoesTabuleiro = new JButton[27][50];
-		this.botoesCriaturas = new ArrayList<JButton>();
 		this.heroQuest = new HeroQuest(this);
+		BasicMap map = this.heroQuest.getMap();
+		this.botoesTabuleiro = new JButton[map.getNumberOfRows()][map.getNumberOfColumns()];
+		this.botoesCriaturas = new ArrayList<JButton>();
 		addKeyListener(listener);
 
 		// Configurar a janela
-		setSize(1300, 770);
+		// Max size of creature turn viewer
+		int maxCreatureQueueSize = 27 * (map.getCreatureQueueSize() + 2) + 89;
+		setSize(1300, Math.max(835, maxCreatureQueueSize));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -159,12 +169,29 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		setFocusable(true);
 		requestFocusInWindow();
 
+		for (int j = 0; j < map.getNumberOfColumns(); j++) {
+			JButton botao = new JButton();
+			botao.setText(""+j);
+			botao.setBounds(173 + (j * 23), 112 + (-1 * 23), 23, 23);
+			botao.setBorder(invisivel);
+			botao.setVisible(true);
+			contentPane.add(botao);
+		}
+		for (int i = 0; i < map.getNumberOfRows(); i++) {
+			JButton botao = new JButton();
+			botao.setText(""+i);
+			botao.setBounds(173 + (-1 * 23), 112 + (i * 23), 23, 23);
+			botao.setBorder(invisivel);
+			botao.setVisible(true);
+			contentPane.add(botao);
+		}
+		
 		// Cria os botões do tabuleiro
-		for (int i = 0; i < 27; i++) {
-			for (int j = 0; j < 50; j++) {
+		for (int i = 0; i < map.getNumberOfRows(); i++) {
+			for (int j = 0; j < map.getNumberOfColumns(); j++) {
 				JButton botao = new JButton();
 				botao.setName("" + i + j);
-				botao.setBounds(150 + (j * 23), 89 + (i * 23), 23, 23);
+				botao.setBounds(173 + (j * 23), 112 + (i * 23), 23, 23);
 				botao.setBorder(invisivel);
 				botao.setVisible(true);
 				botao.addKeyListener(listener);
@@ -182,7 +209,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		JButton inutil = new JButton("");
 		inutil.setVisible(false);
 		this.botoesCriaturas.add(inutil);
-		for (int i = 1; i <= 23; i++) {
+		for (int i = 1; i <= map.getCreatureQueueSize(); i++) {
 			JButton botao = new JButton();
 			botao.setName("" + i);
 			botao.setBounds(0, 27 * (i - 1) + 89, 150, 27);
@@ -376,9 +403,12 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void atualizarInterfaceGrafica() {
-		for (byte i = 0; i < 27; i++) {
-			for (byte j = 0; j < 50; j++) {
+		for (byte i = 0; i < this.heroQuest.getMap().getNumberOfRows(); i++) {
+			for (byte j = 0; j < this.heroQuest.getMap().getNumberOfColumns(); j++) {
 				Position posicao = this.heroQuest.getPosition(i, j);
+/*				if (posicao.getCreature() != null){
+					posicao.getCreature().setVisible(true);
+				}*/
 				this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
 			}
 		}
@@ -648,14 +678,17 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 					path = "/imagens/" + posicao.getClass().getSimpleName()
 							+ ".png";
 				}
-
-				if (linha == 24 && coluna == 24) {
+				//Map map = this.heroQuest.getMap();
+				BasicMap map = this.heroQuest.getMap();
+				int stairRow = map.getStairsPosition()[0];
+				int stairColumn = map.getStairsPosition()[1];
+				if (linha == stairRow && coluna == stairColumn) {
 					path = "/imagens/2424.png";
-				} else if (linha == 24 && coluna == 25) {
+				} else if (linha == stairRow && coluna == stairColumn+1) {
 					path = "/imagens/2425.png";
-				} else if (linha == 25 && coluna == 24) {
+				} else if (linha == stairRow+1 && coluna == stairColumn) {
 					path = "/imagens/2524.png";
-				} else if (linha == 25 && coluna == 25) {
+				} else if (linha == stairRow+1 && coluna == stairColumn+1) {
 					path = "/imagens/2525.png";
 				}
 			}
@@ -680,11 +713,14 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void exibirCriaturas() {
+		// Each button was assigned to a creature via creature.ID at button initialize
+		// For each creature in the queue, we find its button, and move it to its new position
+		// in the GUI button list
 		ArrayList<Creature> criaturas = this.heroQuest.getCreatureQueue();
 		for (int i = 0; i < criaturas.size(); i++) {
 			Creature criatura = criaturas.get(i);
-			this.atualizarBotao(this.botoesCriaturas.get(criatura.getID()),
-					criatura, i);
+
+			this.atualizarBotao(this.botoesCriaturas.get(criatura.getID()), criatura, i);
 		}
 	}
 
@@ -758,7 +794,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 		for (byte i = (byte) (linha - 2); i <= linha + 2; i++) {
 			for (byte j = (byte) (coluna - 2); j <= coluna + 2; j++) {
-				if (i >= 0 && i < 27 && j >= 0 && j < 50) {
+				if (i >= 0 && i < this.heroQuest.getMap().getNumberOfRows() && j >= 0 && j < this.heroQuest.getMap().getNumberOfColumns()) {
 					Position posicao = this.heroQuest.getPosition(i, j);
 					this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
 				}
@@ -868,6 +904,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		FileWriter fw = new FileWriter(saveDir + playerName + ".txt");
 		fw.write(heroType+"\t");
 		fw.write(gold+"\t");
+		/*fw.write(Status.AGILITY_DOWN+"\t");
+		fw.write(Status.AGILITY_UP+"\t");*/
 		fw.close();
 	}
 	
