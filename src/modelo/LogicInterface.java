@@ -26,9 +26,9 @@ public interface LogicInterface {
 	
 	void procurarTesouro(); // requerida por AtorJogador
 	
-	void selecionarPersonagem(); // requerida por AtorJogador
+	void selecionarPersonagem() throws ClassNotFoundException; // requerida por AtorJogador
 	
-	void selecionarPersonagemEscolhida(int resultado); // requerida por AtorJogador
+	void selecionarPersonagemEscolhida(int resultado) throws ClassNotFoundException; // requerida por AtorJogador
 	
 	void procurarArmadilhaOuPortaSecreta(); // requerida por AtorJogador
 	

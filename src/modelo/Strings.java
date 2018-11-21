@@ -199,7 +199,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  UKNOWN {
+	  UNKNOWN {
 	      public String toString() {
 	          return "???????";
 	      }

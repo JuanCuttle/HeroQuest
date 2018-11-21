@@ -6,9 +6,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -33,6 +35,7 @@ import modelo.Creature;
 import modelo.Directions;
 import modelo.Door;
 import modelo.FallingRock;
+import modelo.Furniture;
 import modelo.HeroQuest;
 import modelo.Position;
 import modelo.Spell;
@@ -41,23 +44,26 @@ import modelo.Strings;
 import quests.BasicMap;
 import quests.TheTrial;
 
+import java.awt.TextArea;
+
 public class AtorJogador extends JFrame implements InterfaceGUI {
 
 	protected static final long serialVersionUID = 1L;
 	protected JPanel contentPane;
 	protected HeroQuest heroQuest;
-	protected JButton[][] botoesTabuleiro;
-	protected JButton botaoConectar;
-	protected JButton botaoDesconectar;
-	protected JButton botaoIniciarPartida;
-	protected JButton botaoFinalizarJogada;
-	protected JButton botaoMostrarInventario;
-	protected JButton botaoAtacar;
-	protected JButton botaoUsarMagia;
-	protected JButton botaoProcurarArmadilha;
-	protected JButton botaoProcurarTesouro;
-	protected ArrayList<JButton> botoesCriaturas;
-	protected JMenuBar barraDeMenu;
+	protected JButton[][] boardButtons;
+	protected JButton connectButton;
+	protected JButton disconnectButton;
+	protected JButton startGameButton;
+	protected JButton endTurnButton;
+	protected JButton showInventoryButton;
+	protected JButton attackButton;
+	protected JButton useSpellButton;
+	protected JButton searchForTrapsButton;
+	protected JButton searchForTreasureButton;
+	protected ArrayList<JButton> creatureButtons;
+	protected JMenuBar menuBar;
+	protected TextArea textArea;
 
 	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
 	public MusicThread musicThread;
@@ -72,10 +78,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				try {
 					AtorJogador frame = new AtorJogador();
 					frame.setVisible(true);
-					
 					BasicMap map = frame.heroQuest.getMap();
 					if (map instanceof TheTrial){
-						JOptionPane.showMessageDialog(null, Strings.THETRIAL);
+						frame.textArea.setText(Strings.THETRIAL.toString());
+						//JOptionPane.showMessageDialog(null, Strings.THETRIAL);
 					}
 					if (autoConnectToServer) {
 						frame.conectar();
@@ -97,26 +103,26 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
 				AtorJogador.class.getResource("/imagens/Wizard.png")));
 		setTitle(Strings.HEROQUEST.toString());
-		// Atributos do AtorJogador
-
+		
+		// GUI attributes
 		this.heroQuest = new HeroQuest(this);
 		BasicMap map = this.heroQuest.getMap();
-		this.botoesTabuleiro = new JButton[map.getNumberOfRows()][map.getNumberOfColumns()];
-		this.botoesCriaturas = new ArrayList<JButton>();
+		this.boardButtons = new JButton[map.getNumberOfRows()][map.getNumberOfColumns()];
+		this.creatureButtons = new ArrayList<JButton>();
 		addKeyListener(listener);
 
-		// Configurar a janela
+		// Configure the window
 		// Max size of creature turn viewer
 		int maxCreatureQueueSize = 27 * (map.getCreatureQueueSize() + 2) + 89;
 		setSize(1300, Math.max(835, maxCreatureQueueSize));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		barraDeMenu = new JMenuBar();
-		setJMenuBar(barraDeMenu);
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
 
 		JMenu mnHelp = new JMenu(Strings.MENU.toString());
-		barraDeMenu.add(mnHelp);
+		menuBar.add(mnHelp);
 
 		JButton btnInstructions = new JButton(Strings.INSTRUCTIONS.toString());
 		btnInstructions.addActionListener(new ActionListener() {
@@ -135,14 +141,19 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		JButton btnCharSelect = new JButton(Strings.SELECTCHAR.toString());
 		btnCharSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				selecionarPersonagem();
+				try {
+					selecionarPersonagem();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
 		mnHelp.add(btnCharSelect);
 
 		JMenu mnSettings = new JMenu(Strings.SETTINGS.toString());
-		barraDeMenu.add(mnSettings);
+		menuBar.add(mnSettings);
 
 		JButton btnMusic = new JButton(Strings.TRIGGERMUSIC.toString());
 		mnSettings.add(btnMusic);
@@ -169,6 +180,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		setFocusable(true);
 		requestFocusInWindow();
 
+		// Create Column and Row index buttons, to orient the player
 		for (int j = 0; j < map.getNumberOfColumns(); j++) {
 			JButton botao = new JButton();
 			botao.setText(""+j);
@@ -186,7 +198,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 			contentPane.add(botao);
 		}
 		
-		// Cria os botões do tabuleiro
+		// Create game board buttons
 		for (int i = 0; i < map.getNumberOfRows(); i++) {
 			for (int j = 0; j < map.getNumberOfColumns(); j++) {
 				JButton botao = new JButton();
@@ -201,14 +213,14 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 					}
 				});
 				contentPane.add(botao);
-				this.botoesTabuleiro[i][j] = botao;
+				this.boardButtons[i][j] = botao;
 			}
 		}
 
-		// Cria os botões "Fila de criaturas"
-		JButton inutil = new JButton("");
-		inutil.setVisible(false);
-		this.botoesCriaturas.add(inutil);
+		// Create creature queue buttons
+		JButton useless = new JButton("");
+		useless.setVisible(false);
+		this.creatureButtons.add(useless);
 		for (int i = 1; i <= map.getCreatureQueueSize(); i++) {
 			JButton botao = new JButton();
 			botao.setName("" + i);
@@ -219,136 +231,156 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				}
 			});
 			botao.addKeyListener(listener);
-			this.botoesCriaturas.add(i, botao);
+			this.creatureButtons.add(i, botao);
 			this.contentPane.add(botao);
 		}
 
-		// Cria os outros botões
-		ImageIcon iconeConectar = new ImageIcon(getClass().getResource(
-				"/imagens/BotaoConectar.png"));
-		this.botaoConectar = new JButton(iconeConectar);
-		this.botaoConectar.setBounds(22 * 1 + 120 * 0, 0, 120, 89);
-		this.botaoConectar.setBorder(invisivel);
-		this.botaoConectar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				conectar();
-			}
-		});
-		this.botaoConectar.addKeyListener(listener);
-		this.contentPane.add(this.botaoConectar);
-
-		ImageIcon iconeDesconectar = new ImageIcon(getClass().getResource(
-				"/imagens/BotaoDesconectar.png"));
-		this.botaoDesconectar = new JButton(iconeDesconectar);
-		this.botaoDesconectar.setBounds(22 * 2 + 120 * 1, 0, 120, 89);
-		this.botaoDesconectar.setBorder(invisivel);
-		this.botaoDesconectar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				desconectar();
-			}
-		});
-		this.botaoDesconectar.addKeyListener(listener);
-		this.contentPane.add(this.botaoDesconectar);
-
-		ImageIcon iconeIniciarPartida = new ImageIcon(getClass().getResource(
-				"/imagens/BotaoIniciarPartida.png"));
-		this.botaoIniciarPartida = new JButton(iconeIniciarPartida);
-		this.botaoIniciarPartida.setBounds(22 * 3 + 120 * 2, 0, 120, 89);
-		this.botaoIniciarPartida.setBorder(invisivel);
-		this.botaoIniciarPartida.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				iniciarPartida();
-			}
-		});
-		this.botaoIniciarPartida.addKeyListener(listener);
-		this.contentPane.add(this.botaoIniciarPartida);
-
-		ImageIcon iconeFinalizarJogada = new ImageIcon(getClass().getResource(
-				"/imagens/BotaoFinalizarJogada.png"));
-		this.botaoFinalizarJogada = new JButton(iconeFinalizarJogada);
-		this.botaoFinalizarJogada.setBounds(22 * 4 + 120 * 3, 0, 120, 89);
-		this.botaoFinalizarJogada.setBorder(invisivel);
-		this.botaoFinalizarJogada.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				finalizarJogada();
-			}
-		});
-		this.botaoFinalizarJogada.addKeyListener(listener);
-		this.contentPane.add(this.botaoFinalizarJogada);
-
-		ImageIcon iconeBotaoMostrarInventario = new ImageIcon(getClass()
-				.getResource("/imagens/BotaoMostrarInventario.png"));
-		this.botaoMostrarInventario = new JButton(iconeBotaoMostrarInventario);
-		this.botaoMostrarInventario.setBounds(22 * 5 + 120 * 4, 0, 120, 89);
-		this.botaoMostrarInventario.setBorder(invisivel);
-		this.botaoMostrarInventario.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				mostrarInventario();
-			}
-		});
-		this.botaoMostrarInventario.addKeyListener(listener);
-		this.contentPane.add(this.botaoMostrarInventario);
-
-		ImageIcon iconeBotaoAtacar = new ImageIcon(getClass().getResource(
-				"/imagens/BotaoAtacar.png"));
-		this.botaoAtacar = new JButton(iconeBotaoAtacar);
-		this.botaoAtacar.setBounds(22 * 6 + 120 * 5, 0, 120, 89);
-		this.botaoAtacar.setBorder(invisivel);
-		this.botaoAtacar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				atacar();
-			}
-		});
-		this.botaoAtacar.addKeyListener(listener);
-		this.contentPane.add(this.botaoAtacar);
-
-		ImageIcon iconeBotaoUsarMagia = new ImageIcon(getClass().getResource(
-				"/imagens/BotaoUsarMagia.png"));
-		this.botaoUsarMagia = new JButton(iconeBotaoUsarMagia);
-		this.botaoUsarMagia.setBounds(22 * 7 + 120 * 6, 0, 120, 89);
-		this.botaoUsarMagia.setBorder(invisivel);
-		this.botaoUsarMagia.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				usarMagia();
-			}
-		});
-		this.botaoUsarMagia.addKeyListener(listener);
-		this.contentPane.add(this.botaoUsarMagia);
-
-		ImageIcon iconeBotaoProcurarArmadilha = new ImageIcon(getClass()
-				.getResource("/imagens/BotaoProcurarArmadilha.png"));
-		this.botaoProcurarArmadilha = new JButton(iconeBotaoProcurarArmadilha);
-		this.botaoProcurarArmadilha.setBounds(22 * 8 + 120 * 7, 0, 120, 89);
-		this.botaoProcurarArmadilha.setBorder(invisivel);
-		this.botaoProcurarArmadilha.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				procurarArmadilhaOuPortaSecreta();
-			}
-		});
-		this.botaoProcurarArmadilha.addKeyListener(listener);
-		this.contentPane.add(botaoProcurarArmadilha);
-
-		ImageIcon iconeBotaoProcurarTesouro = new ImageIcon(getClass()
-				.getResource("/imagens/BotaoProcurarTesouro.png"));
-		this.botaoProcurarTesouro = new JButton(iconeBotaoProcurarTesouro);
-		this.botaoProcurarTesouro.setBounds(22 * 9 + 120 * 8, 0, 120, 89);
-		this.botaoProcurarTesouro.setBorder(invisivel);
-		this.botaoProcurarTesouro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				procurarTesouro();
-			}
-		});
-		this.botaoProcurarTesouro.addKeyListener(listener);
-		this.contentPane.add(this.botaoProcurarTesouro);
+		// Create user action buttons
+		//generateActionButtons();
+		
+		this.textArea = new TextArea();
+		textArea.setBounds(0, 0, 1294, 89);
+		contentPane.add(textArea);
 		
 		if (autoConnectToServer){
 			this.conectar();
 		}
 	}
+	
+	@SuppressWarnings("unused")
+	private void generateActionButtons(){
+		Border invisivel = BorderFactory.createEmptyBorder();
+		
+		ImageIcon iconeConectar = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoConectar.png"));
+		this.connectButton = new JButton(iconeConectar);
+		connectButton.setEnabled(false);
+		this.connectButton.setBounds(22 * 1 + 120 * 0, 0, 120, 89);
+		this.connectButton.setBorder(invisivel);
+		this.connectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				conectar();
+			}
+		});
+		this.connectButton.addKeyListener(listener);
+		this.contentPane.add(this.connectButton);
+
+		ImageIcon iconeDesconectar = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoDesconectar.png"));
+		this.disconnectButton = new JButton(iconeDesconectar);
+		disconnectButton.setEnabled(false);
+		this.disconnectButton.setBounds(22 * 2 + 120 * 1, 0, 120, 89);
+		this.disconnectButton.setBorder(invisivel);
+		this.disconnectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				desconectar();
+			}
+		});
+		this.disconnectButton.addKeyListener(listener);
+		this.contentPane.add(this.disconnectButton);
+
+		ImageIcon iconeIniciarPartida = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoIniciarPartida.png"));
+		this.startGameButton = new JButton(iconeIniciarPartida);
+		startGameButton.setEnabled(false);
+		this.startGameButton.setBounds(22 * 3 + 120 * 2, 0, 120, 89);
+		this.startGameButton.setBorder(invisivel);
+		this.startGameButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				iniciarPartida();
+			}
+		});
+		this.startGameButton.addKeyListener(listener);
+		this.contentPane.add(this.startGameButton);
+
+		ImageIcon iconeFinalizarJogada = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoFinalizarJogada.png"));
+		this.endTurnButton = new JButton(iconeFinalizarJogada);
+		endTurnButton.setEnabled(false);
+		this.endTurnButton.setBounds(22 * 4 + 120 * 3, 0, 120, 89);
+		this.endTurnButton.setBorder(invisivel);
+		this.endTurnButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				finalizarJogada();
+			}
+		});
+		this.endTurnButton.addKeyListener(listener);
+		this.contentPane.add(this.endTurnButton);
+
+		ImageIcon iconeBotaoMostrarInventario = new ImageIcon(getClass()
+				.getResource("/imagens/BotaoMostrarInventario.png"));
+		this.showInventoryButton = new JButton(iconeBotaoMostrarInventario);
+		showInventoryButton.setEnabled(false);
+		this.showInventoryButton.setBounds(22 * 5 + 120 * 4, 0, 120, 89);
+		this.showInventoryButton.setBorder(invisivel);
+		this.showInventoryButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mostrarInventario();
+			}
+		});
+		this.showInventoryButton.addKeyListener(listener);
+		this.contentPane.add(this.showInventoryButton);
+
+		ImageIcon iconeBotaoAtacar = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoAtacar.png"));
+		this.attackButton = new JButton(iconeBotaoAtacar);
+		attackButton.setEnabled(false);
+		this.attackButton.setBounds(22 * 6 + 120 * 5, 0, 120, 89);
+		this.attackButton.setBorder(invisivel);
+		this.attackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				atacar();
+			}
+		});
+		this.attackButton.addKeyListener(listener);
+		this.contentPane.add(this.attackButton);
+
+		ImageIcon iconeBotaoUsarMagia = new ImageIcon(getClass().getResource(
+				"/imagens/BotaoUsarMagia.png"));
+		this.useSpellButton = new JButton(iconeBotaoUsarMagia);
+		useSpellButton.setEnabled(false);
+		this.useSpellButton.setBounds(22 * 7 + 120 * 6, 0, 120, 89);
+		this.useSpellButton.setBorder(invisivel);
+		this.useSpellButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				usarMagia();
+			}
+		});
+		this.useSpellButton.addKeyListener(listener);
+		this.contentPane.add(this.useSpellButton);
+
+		ImageIcon iconeBotaoProcurarArmadilha = new ImageIcon(getClass()
+				.getResource("/imagens/BotaoProcurarArmadilha.png"));
+		this.searchForTrapsButton = new JButton(iconeBotaoProcurarArmadilha);
+		searchForTrapsButton.setEnabled(false);
+		this.searchForTrapsButton.setBounds(22 * 8 + 120 * 7, 0, 120, 89);
+		this.searchForTrapsButton.setBorder(invisivel);
+		this.searchForTrapsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				procurarArmadilhaOuPortaSecreta();
+			}
+		});
+		this.searchForTrapsButton.addKeyListener(listener);
+		this.contentPane.add(searchForTrapsButton);
+
+		ImageIcon iconeBotaoProcurarTesouro = new ImageIcon(getClass()
+				.getResource("/imagens/BotaoProcurarTesouro.png"));
+		this.searchForTreasureButton = new JButton(iconeBotaoProcurarTesouro);
+		searchForTreasureButton.setEnabled(false);
+		this.searchForTreasureButton.setBounds(22 * 9 + 120 * 8, 0, 120, 89);
+		this.searchForTreasureButton.setBorder(invisivel);
+		this.searchForTreasureButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				procurarTesouro();
+			}
+		});
+		this.searchForTreasureButton.addKeyListener(listener);
+		this.contentPane.add(this.searchForTreasureButton);
+	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void selecionarPersonagem() {
+	public void selecionarPersonagem() throws ClassNotFoundException {
 		this.heroQuest.selecionarPersonagem();
 	}
 
@@ -361,11 +393,13 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void mostrarMensagem(String msg) {
+		//this.textArea.setText(msg);
 		JOptionPane.showMessageDialog(null, msg);
 	}
 
 	public void reportarErro(String msg) {
-		JOptionPane.showMessageDialog(null, msg);
+		this.textArea.setText(msg);
+		//JOptionPane.showMessageDialog(null, msg);
 	}
 
 	public void movimentar(Directions direcao) {
@@ -409,7 +443,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 /*				if (posicao.getCreature() != null){
 					posicao.getCreature().setVisible(true);
 				}*/
-				this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
+				this.atualizarBotao(this.boardButtons[i][j], posicao);
 			}
 		}
 		this.exibirCriaturas();
@@ -525,7 +559,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 			mensagem = "";
 			break;
 		}
-		JOptionPane.showMessageDialog(null, mensagem);
+		this.textArea.setText(mensagem);
+		//JOptionPane.showMessageDialog(null, mensagem);
 	}
 
 	public String obterDadosConexao() {
@@ -582,13 +617,15 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void anunciarVitoriaDosJogadores() {
-		JOptionPane.showMessageDialog(null,
-				Strings.HEROWIN.toString());
+		this.textArea.setText(Strings.HEROWIN.toString());
+		//JOptionPane.showMessageDialog(null,
+			//	Strings.HEROWIN.toString());
 	}
 
 	public void anunciarVitoriaDoZargon() {
-		JOptionPane.showMessageDialog(null,
-				Strings.ZARGONWIN.toString());
+		this.textArea.setText(Strings.ZARGONWIN.toString());
+		/*JOptionPane.showMessageDialog(null,
+				Strings.ZARGONWIN.toString());*/
 	}
 
 	public String informarNomeJogador() {
@@ -602,8 +639,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void mostrarInventario(int gold) {
-		JOptionPane.showMessageDialog(null, Strings.YOUHAVE.toString() + gold
+		this.textArea.setText(Strings.YOUHAVE.toString() + gold
 				+ Strings.INVYCOINS.toString());
+		/*JOptionPane.showMessageDialog(null, Strings.YOUHAVE.toString() + gold
+				+ Strings.INVYCOINS.toString());*/
 	}
 
 	public void mostrarInformacoes(int characterID) {
@@ -621,7 +660,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				output += Strings.TTW.toString() + roundsToSleep;
 			}
 		}
-		JOptionPane.showMessageDialog(null, output);
+		this.textArea.setText(output);
+		//JOptionPane.showMessageDialog(null, output);
 	}
 
 	public int informarQuantidadeDePlayers() {
@@ -691,6 +731,18 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				} else if (linha == stairRow+1 && coluna == stairColumn+1) {
 					path = "/imagens/2525.png";
 				}
+				
+				if (map.getPosition((byte)linha, (byte)coluna) instanceof Furniture){
+					byte[] tblpos = map.getTable1Position();
+					if (tblpos != null){
+						path = tablePath(map, linha, coluna, tblpos);
+					}
+					tblpos = map.getTable2Position();
+					if (tblpos != null && path == ""){
+						path = tablePath(map, linha, coluna, tblpos);
+					}
+				}
+				
 			}
 		}
 		img = new ImageIcon(getClass().getResource(path));
@@ -698,6 +750,44 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		botao.invalidate();
 		botao.revalidate();
 		botao.repaint();
+	}
+
+	private String tablePath(BasicMap map, int linha, int coluna, byte[] tblpos) {
+		String path = "";
+
+		int tableRow = tblpos[1];
+		int tableCol = tblpos[2];
+		
+		if (tblpos[0] == 0){
+			if (linha == tableRow && coluna == tableCol) {
+				path = "/imagens/TableH00.png";
+			} else if (linha == tableRow && coluna == tableCol+1) {
+				path = "/imagens/TableH01.png";
+			} else if (linha == tableRow && coluna == tableCol+2) {
+				path = "/imagens/TableH02.png";
+			} else if (linha == tableRow+1 && coluna == tableCol) {
+				path = "/imagens/TableH10.png";
+			} else if (linha == tableRow+1 && coluna == tableCol+1) {
+				path = "/imagens/TableH11.png";
+			} else if (linha == tableRow+1 && coluna == tableCol+2) {
+				path = "/imagens/TableH12.png";
+			}
+		} else {
+			if (linha == tableRow && coluna == tableCol) {
+				path = "/imagens/TableV00.png";
+			} else if (linha == tableRow && coluna == tableCol+1) {
+				path = "/imagens/TableV01.png";
+			} else if (linha == tableRow+1 && coluna == tableCol) {
+				path = "/imagens/TableV10.png";
+			} else if (linha == tableRow+1 && coluna == tableCol+1) {
+				path = "/imagens/TableV11.png";
+			} else if (linha == tableRow+2 && coluna == tableCol) {
+				path = "/imagens/TableV20.png";
+			} else if (linha == tableRow+2 && coluna == tableCol+1) {
+				path = "/imagens/TableV21.png";
+			}
+		}
+		return path;
 	}
 
 	private void atualizarBotao(JButton botao, Creature criatura,
@@ -720,70 +810,102 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		for (int i = 0; i < criaturas.size(); i++) {
 			Creature criatura = criaturas.get(i);
 
-			this.atualizarBotao(this.botoesCriaturas.get(criatura.getID()), criatura, i);
+			this.atualizarBotao(this.creatureButtons.get(criatura.getID()), criatura, i);
 		}
 	}
 
 	public void mostrarAcaoTrap(byte dano, Creature criatura) {
-		JOptionPane
-				.showMessageDialog(null, Strings.OHNO.toString()
+		this.textArea.setText(Strings.OHNO.toString()
 						+ criatura.getClass().getSimpleName()
 						+ Strings.ACTIVATEDTRAP.toString() + dano
 						+ Strings.OFBP.toString());
+/*		JOptionPane
+				.showMessageDialog(null, Strings.OHNO.toString()
+						+ criatura.getClass().getSimpleName()
+						+ Strings.ACTIVATEDTRAP.toString() + dano
+						+ Strings.OFBP.toString());*/
 	}
 
 	public void mostrarDano(Creature alvo, byte dano, boolean seAtacou) {
 		if (!seAtacou) {
-			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
+			this.textArea.setText(Strings.THECREATURE.toString()
 					+ alvo.getClass().getSimpleName() + Strings.RECEIVED.toString() + dano
 					+ Strings.OFDAMAGE.toString());
+/*			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
+					+ alvo.getClass().getSimpleName() + Strings.RECEIVED.toString() + dano
+					+ Strings.OFDAMAGE.toString());*/
 		} else {
-			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
+			this.textArea.setText(Strings.THECREATURE.toString()
 					+ alvo.getClass().getSimpleName()
 					+ Strings.ATTEMPTSSEPPUKU.toString() + dano + Strings.OFDAMAGE.toString());
+/*			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
+					+ alvo.getClass().getSimpleName()
+					+ Strings.ATTEMPTSSEPPUKU.toString() + dano + Strings.OFDAMAGE.toString());*/
 		}
 	}
 
 	public void anunciarMorteDeCriatura(Creature alvo) {
-		JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
+		this.textArea.setText(Strings.THECREATURE.toString()
 				+ alvo.getClass().getSimpleName()
 				+ Strings.DIEDHONORABLY.toString());
+/*		JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
+				+ alvo.getClass().getSimpleName()
+				+ Strings.DIEDHONORABLY.toString());*/
 	}
 
 	public void anunciarUsoDeMagia(Creature caster, Spell magia, Creature alvo,
 			byte dano, Status status) {
 		if (status != null) {
-			JOptionPane.showMessageDialog(null, Strings.THE.toString()
+			this.textArea.setText(Strings.THE.toString()
 					+ caster.getClass().getSimpleName()
 					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
 					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
 					+ Strings.MODIFIEDIN.toString() + dano
 					+ Strings.BPMODSTATUS.toString() + status
 					+ Strings.EXCLMARK.toString());
+/*			JOptionPane.showMessageDialog(null, Strings.THE.toString()
+					+ caster.getClass().getSimpleName()
+					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
+					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
+					+ Strings.MODIFIEDIN.toString() + dano
+					+ Strings.BPMODSTATUS.toString() + status
+					+ Strings.EXCLMARK.toString());*/
 		} else {
-			JOptionPane.showMessageDialog(null, Strings.THE.toString()
+			this.textArea.setText(Strings.THE.toString()
 					+ caster.getClass().getSimpleName()
 					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
 					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
 					+ Strings.MODIFIEDIN.toString() + dano + Strings.BPMODSNOTATUS.toString());
+/*			JOptionPane.showMessageDialog(null, Strings.THE.toString()
+					+ caster.getClass().getSimpleName()
+					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
+					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
+					+ Strings.MODIFIEDIN.toString() + dano + Strings.BPMODSNOTATUS.toString());*/
 		}
 
 	}
 
 	public void anunciarMorteDesafortunada(Creature criatura) {
-		JOptionPane.showMessageDialog(null, Strings.OHNO.toString()+" "+Strings.THECREATURE.toString()
+		this.textArea.setText(Strings.OHNO.toString()+" "+Strings.THECREATURE.toString()
 				+ criatura.getClass().getSimpleName()
 				+ Strings.DIEDONTRAP.toString());
+/*		JOptionPane.showMessageDialog(null, Strings.OHNO.toString()+" "+Strings.THECREATURE.toString()
+				+ criatura.getClass().getSimpleName()
+				+ Strings.DIEDONTRAP.toString());*/
 	}
 
 	public void anunciarDaVez(Creature criatura) {
 		Position posicaoCriatura = criatura.getCurrentPosition();
 		int linha = posicaoCriatura.getRow();
 		int coluna = posicaoCriatura.getColumn();
-		JOptionPane.showMessageDialog(null, Strings.CREATURESTURN.toString()
+		this.textArea.setText(Strings.CREATURESTURN.toString()
 				+ criatura.getClass().getSimpleName()
 				+ Strings.ONLINE.toString() + linha + Strings.COMMACOLUMN.toString() + coluna
 				+ Strings.OFGAMEBOARD.toString());
+/*		JOptionPane.showMessageDialog(null, Strings.CREATURESTURN.toString()
+				+ criatura.getClass().getSimpleName()
+				+ Strings.ONLINE.toString() + linha + Strings.COMMACOLUMN.toString() + coluna
+				+ Strings.OFGAMEBOARD.toString());*/
 	}
 
 	public void atualizarArredoresJogador() {
@@ -796,7 +918,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 			for (byte j = (byte) (coluna - 2); j <= coluna + 2; j++) {
 				if (i >= 0 && i < this.heroQuest.getMap().getNumberOfRows() && j >= 0 && j < this.heroQuest.getMap().getNumberOfColumns()) {
 					Position posicao = this.heroQuest.getPosition(i, j);
-					this.atualizarBotao(this.botoesTabuleiro[i][j], posicao);
+					this.atualizarBotao(this.boardButtons[i][j], posicao);
 				}
 			}
 		}
@@ -852,7 +974,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	}
 
 	public void mostrarRemocaoTrap() {
-		JOptionPane.showMessageDialog(null, Strings.DWARFDISARMEDTRAPS.toString());
+		this.textArea.setText(Strings.DWARFDISARMEDTRAPS.toString());
+		//JOptionPane.showMessageDialog(null, Strings.DWARFDISARMEDTRAPS.toString());
 	}
 
 	public byte mostrarOpcoesFallingRock() {
@@ -881,7 +1004,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	
 	// Bad, look for alternatives
 	public void atualizarBotoesLingua(){
-		JMenuBar mBar = this.barraDeMenu;
+		JMenuBar mBar = this.menuBar;
 		mBar.getMenu(0).setText(Strings.MENU.toString());
 		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(0)).setText(Strings.INSTRUCTIONS.toString());
 		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(1)).setText(Strings.SELECTCHAR.toString());
@@ -900,16 +1023,22 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		boolean dir = new File(saveDir).mkdir();
 		System.out.println(dir);
 				
-		// Write data into file
+		FileOutputStream fos = new FileOutputStream(saveDir + playerName + ".txt");
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(new SaveFile(heroType, gold));
+		oos.close();
+		fos.close();
+		
+/*		// Write data into file
 		FileWriter fw = new FileWriter(saveDir + playerName + ".txt");
 		fw.write(heroType+"\t");
 		fw.write(gold+"\t");
-		/*fw.write(Status.AGILITY_DOWN+"\t");
-		fw.write(Status.AGILITY_UP+"\t");*/
-		fw.close();
+		fw.write(Status.AGILITY_DOWN+"\t");
+		fw.write(Status.AGILITY_UP+"\t");
+		fw.close();*/
 	}
 	
-	public ArrayList<String> readSaveFile(String playerName) throws IOException{
+	public ArrayList<String> readSaveFile(String playerName) throws IOException, ClassNotFoundException{
 		
 		ArrayList<String> returnValues = new ArrayList<String>();
 		
@@ -936,7 +1065,17 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				String res = results.get(i);
 				
 				if (res.endsWith(playerName+".txt")){
-					// Open the file at /Saves/
+					
+					 FileInputStream fis = new FileInputStream(saveDir+res);
+			         ObjectInputStream ois = new ObjectInputStream(fis);
+			         SaveFile sf = (SaveFile) ois.readObject();
+			         ois.close();
+			         fis.close();
+			         
+			         returnValues.add(sf.getCharClass()+"");
+			         returnValues.add(sf.getGold()+"");
+			            
+					/*// Open the file at /Saves/
 					FileReader fr = new FileReader(saveDir+res);
 					
 					// Instantiate reading buffer and reads into it
@@ -960,7 +1099,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 					
 					for (String value : values){
 						returnValues.add(value);
-					}
+					}*/
 					
 					break;
 				}

@@ -79,3 +79,10 @@ Can be troublesome with Creature objects (change not made through ID)
 				Upgrade GUI.
 				Save file selection screen.
 				Map objects (tables, weapon rack, tomb, bookcases, chair etc.).
+
+29) Upgrades: Quest specific walls are now Rubble, more similar to the original game.
+			  Save Files are now objects, for ease of usage.
+			  Initial furniture (Tables) now created, and Creatures cannot pass through them.
+			  UI buttons substituted for JTextArea.
+			  New Furniture class added, to stop players from climbing on furniture while not being of type Wall.
+			  General optimizations.

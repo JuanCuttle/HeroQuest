@@ -51,7 +51,7 @@ public class HeroQuest implements LogicInterface {
 		this.localZargon = null;
 		
 		//this.map = new Map(this);
-		this.map = new TheTrial(this);
+		this.map = new TheTrial(this); // Uncomment to make game work, comment to make stub work
 	}
 	
 	public void abrirPorta(int idPorta) {
@@ -375,6 +375,7 @@ public class HeroQuest implements LogicInterface {
 		}
 		if (novaPosicao.getCreature() != null
 				|| novaPosicao instanceof Wall
+				|| novaPosicao instanceof Furniture
 				|| (novaPosicao instanceof Door && !((Door) novaPosicao)
 						.getPortaEstaAberta())
 				|| (novaPosicao.getTrap() != null && novaPosicao.getTrap() instanceof FallingRock && novaPosicao.getTrap().getTriggered())) {
@@ -818,7 +819,7 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 		if (foundGold){
-			JOptionPane.showMessageDialog(null, Strings.THEPLAYER.toString()
+			this.atorJogador.mostrarMensagem(Strings.THEPLAYER.toString()
 					+ character.getClass().getSimpleName()
 					+ Strings.FOUNDGOLD.toString());
 		}
@@ -1265,7 +1266,7 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	public void selecionarPersonagem() {
+	public void selecionarPersonagem() throws ClassNotFoundException {
 		boolean exists = this.atorJogador.checkSaveFileExists(nomeLocalPlayer);
 		if (exists){
 			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRMLOADGAME);
@@ -1289,7 +1290,7 @@ public class HeroQuest implements LogicInterface {
 		//int resultado = this.atorJogador.mostrarOsCincoPersonagens();
 	}
 	
-	public void selecionarPersonagemEscolhida(int resultado){
+	public void selecionarPersonagemEscolhida(int resultado) throws ClassNotFoundException{
 		boolean disponivel = false;
 		Zargon playerZ = new Zargon(this);
 		Adventurer playerA = new Adventurer();
@@ -1606,7 +1607,7 @@ public class HeroQuest implements LogicInterface {
 			this.atorJogador.mostrarInformacoes(body, mind, movement, status,
 					linha, coluna, roundsToSleep);
 		} else {
-			JOptionPane.showMessageDialog(null, Strings.UKNOWN.toString());
+			this.atorJogador.mostrarMensagem(Strings.UNKNOWN.toString());
 		}
 	}
 
@@ -1663,6 +1664,10 @@ public class HeroQuest implements LogicInterface {
 	
 	public BasicMap getMap() {
 		return map;
+	}
+
+	public void setMap(BasicMap map) {
+		this.map = map;
 	}
 	
 }

@@ -12,7 +12,7 @@ import modelo.Status;
 
 public interface InterfaceGUI {
 	
-	public void selecionarPersonagem();
+	public void selecionarPersonagem() throws ClassNotFoundException;
 	
 	public void abrirPorta(int idPorta);
 	

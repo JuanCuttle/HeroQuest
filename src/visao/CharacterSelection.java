@@ -68,7 +68,12 @@ public class CharacterSelection extends JFrame {
 							|| personagemEscolhida.equals("3")
 							|| personagemEscolhida.equals("4")){
 						int escolhida = Integer.parseInt(personagemEscolhida);
-						atorJogador.heroQuest.selecionarPersonagemEscolhida(escolhida);
+						try {
+							atorJogador.heroQuest.selecionarPersonagemEscolhida(escolhida);
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						dispose();
 					}
 				}

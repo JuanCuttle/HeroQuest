@@ -28,6 +28,8 @@ public class BasicMap {
 	protected byte[] dwarfInitialPosition;
 	
 	protected byte[] stairsPosition;
+	protected byte[] table1Position; // first index is orientation: 0 horizontal, 1 vertical
+	protected byte[] table2Position;
 	
 	protected int numberOfCreatures;
 	
@@ -510,6 +512,14 @@ public class BasicMap {
 	}
 	public byte[] getDwarfInitialPosition() {
 		return dwarfInitialPosition;
+	}
+	
+	public byte[] getTable1Position() {
+		return table1Position;
+	}
+
+	public byte[] getTable2Position() {
+		return table2Position;
 	}
 
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {

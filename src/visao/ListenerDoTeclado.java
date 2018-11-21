@@ -49,7 +49,12 @@ public class ListenerDoTeclado implements KeyListener {
 				break;
 			case KeyEvent.VK_O: this.ator.abrirPortaTeclado();
 				break;
-			case KeyEvent.VK_P: this.ator.selecionarPersonagem();
+			case KeyEvent.VK_P: try {
+				this.ator.selecionarPersonagem();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 				break;
 			case KeyEvent.VK_M: this.ator.music();
 				break;

@@ -5,25 +5,27 @@ import java.util.ArrayList;
 import modelo.ChaosWarrior;
 import modelo.Creature;
 import modelo.Door;
+import modelo.FallingRock;
 import modelo.Fimir;
+import modelo.Furniture;
 import modelo.Gargoyle;
 import modelo.Goblin;
 import modelo.HeroQuest;
 import modelo.Monster;
 import modelo.Mummy;
 import modelo.Orc;
+import modelo.Position;
 import modelo.Skeleton;
 import modelo.Status;
 import modelo.Treasure;
-import modelo.Wall;
 import modelo.Zombie;
 
 
 public class TheTrial extends BasicMap {
 	
-	public TheTrial(HeroQuest jogo){
+	public TheTrial(HeroQuest game){
 		super();
-		generateDoors(jogo);
+		generateDoors(game);
 		generateTreasures();
 		stairsPosition[0] = 21;
 		stairsPosition[1] = 4;
@@ -37,19 +39,87 @@ public class TheTrial extends BasicMap {
 		dwarfInitialPosition[1] = 7;
 		
 		numberOfCreatures = 25;
+		
+		table1Position = new byte[]{0, 14, 17};
+		
+		generateFurniture();
 	}
 	
+	// Converts positions where there is furniture into class Furniture, so that they become solid
+	private void generateFurniture() {
+		generateTables();
+	}
+
+	private void generateTables() {
+		// Table 1
+		if (table1Position != null){
+			int i = table1Position[1];
+			int j = table1Position[2];
+			if (table1Position[0] == 0){ // if horizontal
+				for (int x = 0; x < 2; x++){
+					for (int y = 0; y < 3; y++){
+						i = table1Position[1]+x;
+						j = table1Position[2]+y;
+						this.positions[i][j] = new Furniture((byte)i, (byte)j);
+					}
+				}
+			} else { // if vertical
+				for (int x = 0; x < 3; x++){
+					for (int y = 0; y < 2; y++){
+						i = table1Position[1]+x;
+						j = table1Position[2]+y;
+						this.positions[i][j] = new Furniture((byte)i, (byte)j);
+					}
+				}
+			}
+		}
+		// Table 2
+		if (table2Position != null){
+			int i = table2Position[1];
+			int j = table2Position[2];
+			if (table2Position[0] == 0){ // if horizontal
+				for (int x = 0; x < 2; x++){
+					for (int y = 0; y < 3; y++){
+						i = table2Position[1]+x;
+						j = table2Position[2]+y;
+						this.positions[i][j] = new Furniture((byte)i, (byte)j);
+					}
+				}
+			} else { // if vertical
+				for (int x = 0; x < 3; x++){
+					for (int y = 0; y < 2; y++){
+						i = table2Position[1]+x;
+						j = table2Position[2]+y;
+						this.positions[i][j] = new Furniture((byte)i, (byte)j);
+					}
+				}
+			}
+		}
+	}
+
 	public void generateRocks(){
 		// Rocks
 		for (byte i = 1; i < 3; i++){
-			positions[3][i] = new Wall(3,i);
+			positions[3][i] = new Position(3,i);
+			positions[3][i].setTrap(new FallingRock());
+			positions[3][i].makeTrapVisible();
+			positions[3][i].makeTrapTriggered();
 		}
 		for (byte i = 18; i < 20; i++){
-			positions[9][i] = new Wall(9,i);
+			positions[9][i] = new Position(9,i);
+			positions[9][i].setTrap(new FallingRock());
+			positions[9][i].makeTrapVisible();
+			positions[9][i].makeTrapTriggered();
 		}
-		positions[14][24] = new Wall(14,24);
+		positions[14][24] = new Position(14,24);
+		positions[14][24].setTrap(new FallingRock());
+		positions[14][24].makeTrapVisible();
+		positions[14][24].makeTrapTriggered();
 		for (byte i = 26; i < 28; i++){
-			positions[i][20] = new Wall(i,20);
+			positions[i][20] = new Position(i,20);
+			positions[i][20].setTrap(new FallingRock());
+			positions[i][20].makeTrapVisible();
+			positions[i][20].makeTrapTriggered();
 		}
 	}
 	
