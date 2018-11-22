@@ -2,6 +2,8 @@ package visao;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,8 +45,6 @@ import modelo.Status;
 import modelo.Strings;
 import quests.BasicMap;
 import quests.TheTrial;
-
-import java.awt.TextArea;
 
 public class AtorJogador extends JFrame implements InterfaceGUI {
 
@@ -239,6 +239,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		//generateActionButtons();
 		
 		this.textArea = new TextArea();
+		textArea.setFont(new Font("Viner Hand ITC", Font.BOLD, 15));
 		textArea.setBounds(0, 0, 1294, 89);
 		contentPane.add(textArea);
 		
@@ -735,11 +736,41 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				if (map.getPosition((byte)linha, (byte)coluna) instanceof Furniture){
 					byte[] tblpos = map.getTable1Position();
 					if (tblpos != null){
-						path = tablePath(map, linha, coluna, tblpos);
+						path = tablePath(map, linha, coluna, tblpos, path);
 					}
 					tblpos = map.getTable2Position();
-					if (tblpos != null && path == ""){
-						path = tablePath(map, linha, coluna, tblpos);
+					if (tblpos != null){
+						path = tablePath(map, linha, coluna, tblpos, path);
+					}
+					
+					byte[] rackpos = map.getRackPosition();
+					if (rackpos != null){
+						path = rackPath(map, linha, coluna, rackpos, path);
+					}
+					
+					byte[] botpos = map.getBookOnTablePosition();
+					if (botpos != null){
+						path = botPath(map, linha, coluna, botpos, path);
+					}
+					
+					byte[] tombpos = map.getTombPosition();
+					if (tombpos != null){
+						path = tombPath(map, linha, coluna, tombpos, path);
+					}
+					
+					byte[] thronepos = map.getThronePosition();
+					if (thronepos != null){
+						path = thronePath(map, linha, coluna, thronepos, path);
+					}
+					
+					byte[] weprackpos = map.getWepRackPosition();
+					if (weprackpos != null){
+						path = wepRackPath(map, linha, coluna, weprackpos, path);
+					}
+					
+					byte[] deskpos = map.getDeskPosition();
+					if (deskpos != null){
+						path = deskPath(map, linha, coluna, deskpos, path);
 					}
 				}
 				
@@ -752,39 +783,228 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		botao.repaint();
 	}
 
-	private String tablePath(BasicMap map, int linha, int coluna, byte[] tblpos) {
-		String path = "";
+	private String tablePath(BasicMap map, int linha, int coluna, byte[] tblpos, String path) {
 
 		int tableRow = tblpos[1];
 		int tableCol = tblpos[2];
 		
 		if (tblpos[0] == 0){
 			if (linha == tableRow && coluna == tableCol) {
-				path = "/imagens/TableH00.png";
+				path = "/imagens/tables/TableH00.png";
 			} else if (linha == tableRow && coluna == tableCol+1) {
-				path = "/imagens/TableH01.png";
+				path = "/imagens/tables/TableH01.png";
 			} else if (linha == tableRow && coluna == tableCol+2) {
-				path = "/imagens/TableH02.png";
+				path = "/imagens/tables/TableH02.png";
 			} else if (linha == tableRow+1 && coluna == tableCol) {
-				path = "/imagens/TableH10.png";
+				path = "/imagens/tables/TableH10.png";
 			} else if (linha == tableRow+1 && coluna == tableCol+1) {
-				path = "/imagens/TableH11.png";
+				path = "/imagens/tables/TableH11.png";
 			} else if (linha == tableRow+1 && coluna == tableCol+2) {
-				path = "/imagens/TableH12.png";
+				path = "/imagens/tables/TableH12.png";
 			}
 		} else {
 			if (linha == tableRow && coluna == tableCol) {
-				path = "/imagens/TableV00.png";
+				path = "/imagens/tables/TableV00.png";
 			} else if (linha == tableRow && coluna == tableCol+1) {
-				path = "/imagens/TableV01.png";
+				path = "/imagens/tables/TableV01.png";
 			} else if (linha == tableRow+1 && coluna == tableCol) {
-				path = "/imagens/TableV10.png";
+				path = "/imagens/tables/TableV10.png";
 			} else if (linha == tableRow+1 && coluna == tableCol+1) {
-				path = "/imagens/TableV11.png";
+				path = "/imagens/tables/TableV11.png";
 			} else if (linha == tableRow+2 && coluna == tableCol) {
-				path = "/imagens/TableV20.png";
+				path = "/imagens/tables/TableV20.png";
 			} else if (linha == tableRow+2 && coluna == tableCol+1) {
-				path = "/imagens/TableV21.png";
+				path = "/imagens/tables/TableV21.png";
+			}
+		}
+		return path;
+	}
+	
+	private String rackPath(BasicMap map, int linha, int coluna, byte[] rackpos, String path) {
+
+		int rackRow = rackpos[1];
+		int rackCol = rackpos[2];
+		
+		if (rackpos[0] == 0){
+			if (linha == rackRow && coluna == rackCol) {
+				path = "/imagens/racks/RackH00.png";
+			} else if (linha == rackRow && coluna == rackCol+1) {
+				path = "/imagens/racks/RackH01.png";
+			} else if (linha == rackRow && coluna == rackCol+2) {
+				path = "/imagens/racks/RackH02.png";
+			} else if (linha == rackRow+1 && coluna == rackCol) {
+				path = "/imagens/racks/RackH10.png";
+			} else if (linha == rackRow+1 && coluna == rackCol+1) {
+				path = "/imagens/racks/RackH11.png";
+			} else if (linha == rackRow+1 && coluna == rackCol+2) {
+				path = "/imagens/racks/RackH12.png";
+			}
+		} else {
+			if (linha == rackRow && coluna == rackCol) {
+				path = "/imagens/racks/RackV00.png";
+			} else if (linha == rackRow && coluna == rackCol+1) {
+				path = "/imagens/racks/RackV01.png";
+			} else if (linha == rackRow+1 && coluna == rackCol) {
+				path = "/imagens/racks/RackV10.png";
+			} else if (linha == rackRow+1 && coluna == rackCol+1) {
+				path = "/imagens/racks/RackV11.png";
+			} else if (linha == rackRow+2 && coluna == rackCol) {
+				path = "/imagens/racks/RackV20.png";
+			} else if (linha == rackRow+2 && coluna == rackCol+1) {
+				path = "/imagens/racks/RackV21.png";
+			}
+		}
+		return path;
+	}
+	
+	private String botPath(BasicMap map, int linha, int coluna, byte[] botpos, String path) {
+
+		int botRow = botpos[1];
+		int botCol = botpos[2];
+		
+		if (botpos[0] == 0){
+			if (linha == botRow && coluna == botCol) { // Change if and when there is this piece horizontally
+				path = "/imagens/bookOnTable/RackH00.png";
+			} else if (linha == botRow && coluna == botCol+1) {
+				path = "/imagens/bookOnTable/RackH01.png";
+			} else if (linha == botRow && coluna == botCol+2) {
+				path = "/imagens/bookOnTable/RackH02.png";
+			} else if (linha == botRow+1 && coluna == botCol) {
+				path = "/imagens/bookOnTable/RackH10.png";
+			} else if (linha == botRow+1 && coluna == botCol+1) {
+				path = "/imagens/bookOnTable/RackH11.png";
+			} else if (linha == botRow+1 && coluna == botCol+2) {
+				path = "/imagens/bookOnTable/RackH12.png";
+			}
+		} else {
+			if (linha == botRow && coluna == botCol) {
+				path = "/imagens/bookOnTable/BookOnTable00.png";
+			} else if (linha == botRow && coluna == botCol+1) {
+				path = "/imagens/bookOnTable/BookOnTable01.png";
+			} else if (linha == botRow+1 && coluna == botCol) {
+				path = "/imagens/bookOnTable/BookOnTable10.png";
+			} else if (linha == botRow+1 && coluna == botCol+1) {
+				path = "/imagens/bookOnTable/BookOnTable11.png";
+			} else if (linha == botRow+2 && coluna == botCol) {
+				path = "/imagens/bookOnTable/BookOnTable20.png";
+			} else if (linha == botRow+2 && coluna == botCol+1) {
+				path = "/imagens/bookOnTable/BookOnTable21.png";
+			}
+		}
+		return path;
+	}
+	
+	private String tombPath(BasicMap map, int linha, int coluna, byte[] tombpos, String path) {
+
+		int tombRow = tombpos[1];
+		int tombCol = tombpos[2];
+		
+		if (tombpos[0] == 0){
+			if (linha == tombRow && coluna == tombCol) { // Change if and when there is this piece horizontally
+				path = "/imagens/tomb/RackH00.png";
+			} else if (linha == tombRow && coluna == tombCol+1) {
+				path = "/imagens/tomb/RackH01.png";
+			} else if (linha == tombRow && coluna == tombCol+2) {
+				path = "/imagens/tomb/RackH02.png";
+			} else if (linha == tombRow+1 && coluna == tombCol) {
+				path = "/imagens/tomb/RackH10.png";
+			} else if (linha == tombRow+1 && coluna == tombCol+1) {
+				path = "/imagens/tomb/RackH11.png";
+			} else if (linha == tombRow+1 && coluna == tombCol+2) {
+				path = "/imagens/tomb/RackH12.png";
+			}
+		} else {
+			if (linha == tombRow && coluna == tombCol) {
+				path = "/imagens/tomb/Tomb00.png";
+			} else if (linha == tombRow && coluna == tombCol+1) {
+				path = "/imagens/tomb/Tomb01.png";
+			} else if (linha == tombRow+1 && coluna == tombCol) {
+				path = "/imagens/tomb/Tomb10.png";
+			} else if (linha == tombRow+1 && coluna == tombCol+1) {
+				path = "/imagens/tomb/Tomb11.png";
+			} else if (linha == tombRow+2 && coluna == tombCol) {
+				path = "/imagens/tomb/Tomb20.png";
+			} else if (linha == tombRow+2 && coluna == tombCol+1) {
+				path = "/imagens/tomb/Tomb21.png";
+			}
+		}
+		return path;
+	}
+	
+	private String thronePath(BasicMap map, int linha, int coluna, byte[] thronepos, String path) {
+
+		int throneRow = thronepos[1];
+		int throneCol = thronepos[2];
+		
+		if (thronepos[0] == 0){
+			if (linha == throneRow && coluna == throneCol) {
+				path = "/imagens/ThroneR.png";
+			}
+		} else {
+			if (linha == throneRow && coluna == throneCol) {
+				path = "/imagens/ThroneL.png";
+			}
+		}
+		return path;
+	}
+	
+	private String wepRackPath(BasicMap map, int linha, int coluna, byte[] wepRackpos, String path) {
+
+		int wepRackRow = wepRackpos[1];
+		int wepRackCol = wepRackpos[2];
+		
+		if (wepRackpos[0] == 0){
+			if (linha == wepRackRow && coluna == wepRackCol) {
+				path = "/imagens/wepRack/WepRackR0.png";
+			} else if(linha == wepRackRow+1 && coluna == wepRackCol){
+				path = "/imagens/wepRack/WepRackR1.png";
+			} else if(linha == wepRackRow+2 && coluna == wepRackCol){
+				path = "/imagens/wepRack/WepRackR2.png";
+			}
+		} else {
+			if (linha == wepRackRow && coluna == wepRackCol) {
+				path = "/imagens/wepRack/WepRackL0.png";
+			} else if(linha == wepRackRow+1 && coluna == wepRackCol){
+				path = "/imagens/wepRack/WepRackL1.png";
+			} else if(linha == wepRackRow+2 && coluna == wepRackCol){
+				path = "/imagens/wepRack/WepRackL2.png";
+			}
+		}
+		return path;
+	}
+	
+	private String deskPath(BasicMap map, int linha, int coluna, byte[] deskpos, String path) {
+
+		int deskRow = deskpos[1];
+		int deskCol = deskpos[2];
+		
+		if (deskpos[0] == 0){ // facing right
+			if (linha == deskRow && coluna == deskCol) {
+				path = "/imagens/desk/DeskR00.png";
+			} else if (linha == deskRow && coluna == deskCol+1) {
+				path = "/imagens/desk/DeskR01.png";
+			} else if (linha == deskRow+1 && coluna == deskCol) {
+				path = "/imagens/desk/DeskR10.png";
+			} else if (linha == deskRow+1 && coluna == deskCol+1) {
+				path = "/imagens/desk/DeskR11.png";
+			} else if (linha == deskRow+2 && coluna == deskCol) {
+				path = "/imagens/desk/DeskR20.png";
+			} else if (linha == deskRow+2 && coluna == deskCol+1) {
+				path = "/imagens/desk/DeskR21.png";
+			}
+		} else {
+			if (linha == deskRow && coluna == deskCol) {
+				path = "/imagens/desk/DeskL00.png";
+			} else if (linha == deskRow && coluna == deskCol+1) {
+				path = "/imagens/desk/DeskL01.png";
+			} else if (linha == deskRow+1 && coluna == deskCol) {
+				path = "/imagens/desk/DeskL10.png";
+			} else if (linha == deskRow+1 && coluna == deskCol+1) {
+				path = "/imagens/desk/DeskL11.png";
+			} else if (linha == deskRow+2 && coluna == deskCol) {
+				path = "/imagens/desk/DeskL20.png";
+			} else if (linha == deskRow+2 && coluna == deskCol+1) {
+				path = "/imagens/desk/DeskL21.png";
 			}
 		}
 		return path;

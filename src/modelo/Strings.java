@@ -6,7 +6,7 @@ import visao.Languages;
 public enum Strings {
 	 HEROQUEST {
 	      public String toString() {
-	          return "HeroQuestv3.0(alfa)";
+	          return "HeroQuestv3.0(alpha)";
 	      }
 	  },
 	  

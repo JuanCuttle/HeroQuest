@@ -86,3 +86,5 @@ Can be troublesome with Creature objects (change not made through ID)
 			  UI buttons substituted for JTextArea.
 			  New Furniture class added, to stop players from climbing on furniture while not being of type Wall.
 			  General optimizations.
+			  
+30) Upgrades: Added more furniture (Tomb, Table with Book, Torture Rack, Desk, Throne and Weapon Rack)

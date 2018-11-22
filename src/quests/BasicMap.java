@@ -27,10 +27,18 @@ public class BasicMap {
 	protected byte[] elfInitialPosition;
 	protected byte[] dwarfInitialPosition;
 	
+	protected byte[] thronePosition;
+	protected byte[] wepRackPosition;
+
 	protected byte[] stairsPosition;
 	protected byte[] table1Position; // first index is orientation: 0 horizontal, 1 vertical
 	protected byte[] table2Position;
+	protected byte[] rackPosition; // Only vertical
+	protected byte[] bookOnTablePosition; // Only vertical
+	protected byte[] tombPosition;
+	protected byte[] deskPosition;
 	
+
 	protected int numberOfCreatures;
 	
 	public BasicMap() {
@@ -520,6 +528,30 @@ public class BasicMap {
 
 	public byte[] getTable2Position() {
 		return table2Position;
+	}
+	
+	public byte[] getRackPosition() {
+		return rackPosition;
+	}
+	
+	public byte[] getBookOnTablePosition() {
+		return bookOnTablePosition;
+	}
+	
+	public byte[] getTombPosition() {
+		return tombPosition;
+	}
+	
+	public byte[] getThronePosition() {
+		return thronePosition;
+	}
+	
+	public byte[] getWepRackPosition() {
+		return wepRackPosition;
+	}
+	
+	public byte[] getDeskPosition() {
+		return deskPosition;
 	}
 
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {

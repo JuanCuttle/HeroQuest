@@ -42,54 +42,79 @@ public class TheTrial extends BasicMap {
 		
 		table1Position = new byte[]{0, 14, 17};
 		
+		table2Position = new byte[]{0, 9, 10};
+		
+		rackPosition = new byte[]{1, 16, 5};
+		
+		bookOnTablePosition = new byte[]{1, 9, 4};
+		
+		tombPosition = new byte[]{1, 4, 15};
+		
+		thronePosition = new byte[]{0, 13, 16}; // 0 to face right, 1 to face left
+		
+		wepRackPosition = new byte[]{0, 22, 16};
+		
+		deskPosition = new byte[]{0, 22, 9};
+		
 		generateFurniture();
 	}
 	
 	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
-		generateTables();
+		generate1x1(thronePosition);
+		generate3x1(wepRackPosition);
+		generate2x3(table1Position);
+		generate2x3(table2Position);
+		generate2x3(rackPosition);
+		generate2x3(bookOnTablePosition);
+		generate2x3(tombPosition);
+		generate2x3LR(deskPosition);
 	}
-
-	private void generateTables() {
-		// Table 1
-		if (table1Position != null){
-			int i = table1Position[1];
-			int j = table1Position[2];
-			if (table1Position[0] == 0){ // if horizontal
-				for (int x = 0; x < 2; x++){
-					for (int y = 0; y < 3; y++){
-						i = table1Position[1]+x;
-						j = table1Position[2]+y;
-						this.positions[i][j] = new Furniture((byte)i, (byte)j);
-					}
-				}
-			} else { // if vertical
-				for (int x = 0; x < 3; x++){
-					for (int y = 0; y < 2; y++){
-						i = table1Position[1]+x;
-						j = table1Position[2]+y;
-						this.positions[i][j] = new Furniture((byte)i, (byte)j);
-					}
-				}
+	
+	private void generate2x3LR(byte[] furniture) {
+		int i = furniture[1];
+		int j = furniture[2];
+		for (int x = 0; x < 3; x++){
+			for (int y = 0; y < 2; y++){
+				i = furniture[1]+x;
+				j = furniture[2]+y;
+				this.positions[i][j] = new Furniture((byte)i, (byte)j);
 			}
 		}
-		// Table 2
-		if (table2Position != null){
-			int i = table2Position[1];
-			int j = table2Position[2];
-			if (table2Position[0] == 0){ // if horizontal
+	}
+
+	private void generate3x1(byte[] furniture) {
+		int i = furniture[1];
+		int j = furniture[2];
+		for (int x = 0; x < 3; x++){
+			i = furniture[1]+x;
+			this.positions[i][j] = new Furniture((byte)i, (byte)j);
+		}
+	}
+
+	private void generate1x1(byte[] furniture) {
+		int i = furniture[1];
+		int j = furniture[2];
+		this.positions[i][j] = new Furniture((byte)i, (byte)j);
+	}
+
+	private void generate2x3(byte[] furniture){
+		if (furniture != null){
+			int i = furniture[1];
+			int j = furniture[2];
+			if (furniture[0] == 0){ // if horizontal
 				for (int x = 0; x < 2; x++){
 					for (int y = 0; y < 3; y++){
-						i = table2Position[1]+x;
-						j = table2Position[2]+y;
+						i = furniture[1]+x;
+						j = furniture[2]+y;
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
 			} else { // if vertical
 				for (int x = 0; x < 3; x++){
 					for (int y = 0; y < 2; y++){
-						i = table2Position[1]+x;
-						j = table2Position[2]+y;
+						i = furniture[1]+x;
+						j = furniture[2]+y;
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
@@ -177,7 +202,7 @@ public class TheTrial extends BasicMap {
 			
 			Goblin goblin4 = new Goblin();
 			goblin4.setID((byte) 4);
-			game.creatureInPosition(goblin4, 17, 5);
+			game.creatureInPosition(goblin4, 19, 5);
 			monsters.add(goblin4);
 			
 			Goblin goblin5 = new Goblin();
@@ -249,7 +274,7 @@ public class TheTrial extends BasicMap {
 			
 			Orc orc4 = new Orc();
 			orc4.setID((byte) 18);
-			game.creatureInPosition(orc4, 18, 5);
+			game.creatureInPosition(orc4, 19, 6);
 			monsters.add(orc4);
 			
 			Orc orc5 = new Orc();
