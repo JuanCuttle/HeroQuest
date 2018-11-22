@@ -40,7 +40,7 @@ public class TheTrial extends BasicMap {
 		
 		numberOfCreatures = 25;
 		
-		table1Position = new byte[]{0, 14, 17};
+		table1Position = new byte[]{0, 14, 17}; // 0 for horizontal, 1 for vertical
 		
 		table2Position = new byte[]{0, 9, 10};
 		
@@ -50,11 +50,19 @@ public class TheTrial extends BasicMap {
 		
 		tombPosition = new byte[]{1, 4, 15};
 		
+		bookcase1Position = new byte[]{0, 20, 9};
+		
+		bookcase2Position = new byte[]{0, 20, 22};
+		
+		bookcase3Position = new byte[]{0, 24, 22};
+		
 		thronePosition = new byte[]{0, 13, 16}; // 0 to face right, 1 to face left
 		
 		wepRackPosition = new byte[]{0, 22, 16};
 		
 		deskPosition = new byte[]{0, 22, 9};
+		
+		fireplacePosition = new byte[]{0, 12, 18}; // 0 to face down, 1 to face up
 		
 		generateFurniture();
 	}
@@ -63,6 +71,10 @@ public class TheTrial extends BasicMap {
 	private void generateFurniture() {
 		generate1x1(thronePosition);
 		generate3x1(wepRackPosition);
+		generate1x3(fireplacePosition);
+		generate1x3(bookcase1Position);
+		generate1x3(bookcase2Position);
+		generate1x3(bookcase3Position);
 		generate2x3(table1Position);
 		generate2x3(table2Position);
 		generate2x3(rackPosition);
@@ -71,6 +83,15 @@ public class TheTrial extends BasicMap {
 		generate2x3LR(deskPosition);
 	}
 	
+	private void generate1x3(byte[] furniture) {
+		int i = furniture[1];
+		int j = furniture[2];
+		for (int y = 0; y < 3; y++){
+			j = furniture[2]+y;
+			this.positions[i][j] = new Furniture((byte)i, (byte)j);
+		}
+	}
+
 	private void generate2x3LR(byte[] furniture) {
 		int i = furniture[1];
 		int j = furniture[2];

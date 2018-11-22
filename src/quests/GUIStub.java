@@ -167,43 +167,64 @@ public class GUIStub extends JFrame {
 				}
 				
 				if (map.getPosition((byte)linha, (byte)coluna) instanceof Furniture){
-					byte[] tblpos = map.getTable1Position();
-					if (tblpos != null){
-						path = tablePath(map, linha, coluna, tblpos, path);
+					
+					byte[] pos = map.getTable1Position();
+					if (pos != null){
+						path = tablePath(map, linha, coluna, pos, path);
 					}
-					tblpos = map.getTable2Position();
-					if (tblpos != null){
-						path = tablePath(map, linha, coluna, tblpos, path);
+					pos = map.getTable2Position();
+					if (pos != null){
+						path = tablePath(map, linha, coluna, pos, path);
 					}
 					
-					byte[] rackpos = map.getRackPosition();
-					if (rackpos != null){
-						path = rackPath(map, linha, coluna, rackpos, path);
+					pos = map.getRackPosition();
+					if (pos != null){
+						path = rackPath(map, linha, coluna, pos, path);
 					}
 					
-					byte[] botpos = map.getBookOnTablePosition();
-					if (botpos != null){
-						path = botPath(map, linha, coluna, botpos, path);
+					pos = map.getBookOnTablePosition();
+					if (pos != null){
+						path = botPath(map, linha, coluna, pos, path);
 					}
 					
-					byte[] tombpos = map.getTombPosition();
-					if (tombpos != null){
-						path = tombPath(map, linha, coluna, tombpos, path);
+					pos = map.getTombPosition();
+					if (pos != null){
+						path = tombPath(map, linha, coluna, pos, path);
 					}
 					
-					byte[] thronepos = map.getThronePosition();
-					if (thronepos != null){
-						path = thronePath(map, linha, coluna, thronepos, path);
+					pos = map.getThronePosition();
+					if (pos != null){
+						path = thronePath(map, linha, coluna, pos, path);
 					}
 					
-					byte[] weprackpos = map.getWepRackPosition();
-					if (weprackpos != null){
-						path = wepRackPath(map, linha, coluna, weprackpos, path);
+					pos = map.getWepRackPosition();
+					if (pos != null){
+						path = wepRackPath(map, linha, coluna, pos, path);
 					}
 					
-					byte[] deskpos = map.getDeskPosition();
-					if (deskpos != null){
-						path = deskPath(map, linha, coluna, deskpos, path);
+					pos = map.getDeskPosition();
+					if (pos != null){
+						path = deskPath(map, linha, coluna, pos, path);
+					}
+					
+					pos = map.getFireplacePosition();
+					if (pos != null){
+						path = fireplacePath(map, linha, coluna, pos, path);
+					}
+					
+					pos = map.getBookcase1Position();
+					if (pos != null){
+						path = bcPath(map, linha, coluna, pos, path);
+					}
+					
+					pos = map.getBookcase2Position();
+					if (pos != null){
+						path = bcPath(map, linha, coluna, pos, path);
+					}
+					
+					pos = map.getBookcase3Position();
+					if (pos != null){
+						path = bcPath(map, linha, coluna, pos, path);
 					}
 				}
 				
@@ -439,6 +460,56 @@ public class GUIStub extends JFrame {
 				path = "/imagens/desk/DeskL20.png";
 			} else if (linha == deskRow+2 && coluna == deskCol+1) {
 				path = "/imagens/desk/DeskL21.png";
+			}
+		}
+		return path;
+	}
+	
+	private String fireplacePath(BasicMap map, int linha, int coluna, byte[] fireplacepos, String path) {
+
+		int fireplaceRow = fireplacepos[1];
+		int fireplaceCol = fireplacepos[2];
+		
+		if (fireplacepos[0] == 0){ // facing down
+			if (linha == fireplaceRow && coluna == fireplaceCol) {
+				path = "/imagens/fireplace/FireplaceD0.png";
+			} else if(linha == fireplaceRow && coluna == fireplaceCol+1){
+				path = "/imagens/fireplace/FireplaceD1.png";
+			} else if(linha == fireplaceRow && coluna == fireplaceCol+2){
+				path = "/imagens/fireplace/FireplaceD2.png";
+			}
+		} else {
+			if (linha == fireplaceRow && coluna == fireplaceCol) {
+				path = "/imagens/fireplace/FireplaceU0.png";
+			} else if(linha == fireplaceRow && coluna == fireplaceCol+1){
+				path = "/imagens/fireplace/FireplaceU1.png";
+			} else if(linha == fireplaceRow && coluna == fireplaceCol+2){
+				path = "/imagens/fireplace/FireplaceU2.png";
+			}
+		}
+		return path;
+	}
+	
+	private String bcPath(BasicMap map, int linha, int coluna, byte[] bcpos, String path) {
+
+		int bcRow = bcpos[1];
+		int bcCol = bcpos[2];
+		
+		if (bcpos[0] == 0){ // horizontal
+			if (linha == bcRow && coluna == bcCol) {
+				path = "/imagens/bookcase/BookcaseH0.png";
+			} else if(linha == bcRow && coluna == bcCol+1){
+				path = "/imagens/bookcase/BookcaseH1.png";
+			} else if(linha == bcRow && coluna == bcCol+2){
+				path = "/imagens/bookcase/BookcaseH2.png";
+			}
+		} else { // vertical
+			if (linha == bcRow && coluna == bcCol) {
+				path = "/imagens/bookcase/BookcaseV0.png";
+			} else if(linha == bcRow+1 && coluna == bcCol){
+				path = "/imagens/bookcase/BookcaseV1.png";
+			} else if(linha == bcRow+2 && coluna == bcCol){
+				path = "/imagens/bookcase/BookcaseV2.png";
 			}
 		}
 		return path;

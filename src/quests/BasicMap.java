@@ -29,6 +29,10 @@ public class BasicMap {
 	
 	protected byte[] thronePosition;
 	protected byte[] wepRackPosition;
+	protected byte[] fireplacePosition;
+	protected byte[] bookcase1Position;
+	protected byte[] bookcase2Position;
+	protected byte[] bookcase3Position;
 
 	protected byte[] stairsPosition;
 	protected byte[] table1Position; // first index is orientation: 0 horizontal, 1 vertical
@@ -552,6 +556,22 @@ public class BasicMap {
 	
 	public byte[] getDeskPosition() {
 		return deskPosition;
+	}
+	
+	public byte[] getFireplacePosition() {
+		return fireplacePosition;
+	}
+	
+	public byte[] getBookcase1Position() {
+		return bookcase1Position;
+	}
+
+	public byte[] getBookcase2Position() {
+		return bookcase2Position;
+	}
+
+	public byte[] getBookcase3Position() {
+		return bookcase3Position;
 	}
 
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
