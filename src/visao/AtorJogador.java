@@ -44,7 +44,6 @@ import modelo.Spell;
 import modelo.Status;
 import modelo.Strings;
 import quests.BasicMap;
-import quests.TheTrial;
 
 public class AtorJogador extends JFrame implements InterfaceGUI {
 
@@ -76,16 +75,14 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AtorJogador frame = new AtorJogador();
+					new QuestSelector();
+/*					AtorJogador frame = new AtorJogador();
 					frame.setVisible(true);
 					BasicMap map = frame.heroQuest.getMap();
 					if (map instanceof TheTrial){
 						frame.textArea.setText(Strings.THETRIAL.toString());
 						//JOptionPane.showMessageDialog(null, Strings.THETRIAL);
-					}
-					if (autoConnectToServer) {
-						frame.conectar();
-					}
+					}*/
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -93,7 +90,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		});
 	}
 
-	public AtorJogador() {
+	public AtorJogador(HeroQuest game) {
 		try {
 			createMusic();
 		} catch (Exception e) {
@@ -105,7 +102,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		setTitle(Strings.HEROQUEST.toString());
 		
 		// GUI attributes
-		this.heroQuest = new HeroQuest(this);
+		game.setAtorJogador(this);
+		this.heroQuest = game;//new HeroQuest(this);
 		BasicMap map = this.heroQuest.getMap();
 		this.boardButtons = new JButton[map.getNumberOfRows()][map.getNumberOfColumns()];
 		this.creatureButtons = new ArrayList<JButton>();
@@ -511,6 +509,8 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				this.heroQuest.estabelecerConectado(true);
 
 				this.heroQuest.setNomeLocalPlayerAndServer(idUsuario, servidor);
+				
+				//this.selectQuest(heroQuest);
 
 				notificarResultado(0);
 			} else {
@@ -723,14 +723,16 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				BasicMap map = this.heroQuest.getMap();
 				int stairRow = map.getStairsPosition()[0];
 				int stairColumn = map.getStairsPosition()[1];
-				if (linha == stairRow && coluna == stairColumn) {
-					path = "/imagens/2424.png";
-				} else if (linha == stairRow && coluna == stairColumn+1) {
-					path = "/imagens/2425.png";
-				} else if (linha == stairRow+1 && coluna == stairColumn) {
-					path = "/imagens/2524.png";
-				} else if (linha == stairRow+1 && coluna == stairColumn+1) {
-					path = "/imagens/2525.png";
+				if (stairRow != 0){
+					if (linha == stairRow && coluna == stairColumn) {
+						path = "/imagens/2424.png";
+					} else if (linha == stairRow && coluna == stairColumn+1) {
+						path = "/imagens/2425.png";
+					} else if (linha == stairRow+1 && coluna == stairColumn) {
+						path = "/imagens/2524.png";
+					} else if (linha == stairRow+1 && coluna == stairColumn+1) {
+						path = "/imagens/2525.png";
+					}
 				}
 				
 				if (map.getPosition((byte)linha, (byte)coluna) instanceof Furniture){
@@ -1433,4 +1435,5 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		//JOptionPane.showMessageDialog(null, Strings.FILENOTFOUND);
 		return false;
 	}
+
 }

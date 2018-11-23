@@ -34,8 +34,8 @@ public class GUIStub extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					HeroQuest game = new HeroQuest(null);
-					BasicMap map = new TheTrial(game);
+					HeroQuest game = new HeroQuest();
+					BasicMap map = new TheRescueOfSirRagnar(game);
 					GUIStub frame = new GUIStub(map);
 					game.setMap(map);
 					frame.setVisible(true);
@@ -156,14 +156,16 @@ public class GUIStub extends JFrame {
 				}
 				int stairRow = map.getStairsPosition()[0];
 				int stairColumn = map.getStairsPosition()[1];
-				if (linha == stairRow && coluna == stairColumn) {
-					path = "/imagens/2424.png";
-				} else if (linha == stairRow && coluna == stairColumn+1) {
-					path = "/imagens/2425.png";
-				} else if (linha == stairRow+1 && coluna == stairColumn) {
-					path = "/imagens/2524.png";
-				} else if (linha == stairRow+1 && coluna == stairColumn+1) {
-					path = "/imagens/2525.png";
+				if (stairRow != 0){
+					if (linha == stairRow && coluna == stairColumn) {
+						path = "/imagens/2424.png";
+					} else if (linha == stairRow && coluna == stairColumn+1) {
+						path = "/imagens/2425.png";
+					} else if (linha == stairRow+1 && coluna == stairColumn) {
+						path = "/imagens/2524.png";
+					} else if (linha == stairRow+1 && coluna == stairColumn+1) {
+						path = "/imagens/2525.png";
+					}
 				}
 				
 				if (map.getPosition((byte)linha, (byte)coluna) instanceof Furniture){

@@ -34,9 +34,10 @@ public class HeroQuest implements LogicInterface {
 	public String nomeLocalPlayer = "";
 
 
-	public HeroQuest(AtorJogador ator) {
+	//public HeroQuest(AtorJogador ator) {
+	public HeroQuest(){
 		this.players = new ArrayList<Player>();
-		this.atorJogador = ator;
+		//this.atorJogador = ator; // link later
 		this.atorClienteServidor = new AtorClientServer(this);
 		this.creatureQueue = new ArrayList<Creature>();
 		this.doors = new ArrayList<Door>();
@@ -51,7 +52,8 @@ public class HeroQuest implements LogicInterface {
 		this.localZargon = null;
 		
 		//this.map = new Map(this);
-		this.map = new TheTrial(this); // Uncomment to make game work, comment to make stub work
+		//this.atorJogador.selectQuest(this);
+		//this.map = new TheTrial(this); // Uncomment to make game work, comment to make stub work
 	}
 	
 	public void abrirPorta(int idPorta) {
@@ -1669,5 +1671,8 @@ public class HeroQuest implements LogicInterface {
 	public void setMap(BasicMap map) {
 		this.map = map;
 	}
-	
+
+	public void setAtorJogador(AtorJogador atorJogador) {
+		this.atorJogador = atorJogador;
+	}
 }

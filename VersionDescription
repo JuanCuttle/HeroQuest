@@ -91,3 +91,7 @@ Can be troublesome with Creature objects (change not made through ID)
 
 31) Upgrades: Added Fireplace and Bookcases.
 			  Thanks to this, I proudly announce the first official HeroQuest Quest is live!!!!
+			  
+32) Upgrades: You can now CHOOSE YOUR ADVENTURE!
+			  New Quest added: The Rescue of Sir Ragnar
+			  Tweaks to BasicMap to make quest creation code simpler.

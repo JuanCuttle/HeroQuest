@@ -53,8 +53,10 @@ public class TelaInicial extends JFrame {
 		btnNewButton.setBounds(402, 270, 200, 50);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AtorJogador frame = new AtorJogador();
+			/*	AtorJogador frame = new AtorJogador(); // Change for new init
 				frame.setVisible(true);
+*/				
+				new QuestSelector();
 
 				dispose(); // Exits initial window
 			}
