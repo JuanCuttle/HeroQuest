@@ -93,14 +93,24 @@ public class Creature implements Jogada, Comparable<Creature> {
 	}
 	
 	public void setMovement() {
-		Random rand = new Random();
-		int movement = rand.nextInt(12 - 2 + 1) + 2;
-		if (this.status == Status.AGILITY_DOWN){
-			movement /= 2;
-			this.status = Status.NEUTRAL;
-		} else if (this.status == Status.AGILITY_UP){
-			movement *= 2;
-			this.status = Status.NEUTRAL;
+		int movement = 0;
+		if (!(this.getClass().getSuperclass().getSimpleName().equals("Monster"))){
+			Random rand = new Random();
+			movement = rand.nextInt(12 - 2 + 1) + 2; // 12 max vaue, + 2 because of minimum roll
+			if (this.status == Status.AGILITY_DOWN){
+				movement /= 2;
+				this.status = Status.NEUTRAL;
+			} else if (this.status == Status.AGILITY_UP){
+				movement *= 2;
+				this.status = Status.NEUTRAL;
+			}
+		} else {
+			if (this instanceof SirRagnar) {
+				Random rand = new Random();
+				movement = rand.nextInt(6) + 1; // Hurt ally
+			} else {
+				movement = this.getMonsterMovement();
+			}
 		}
 		this.movement = (byte) movement;
 	}
@@ -142,5 +152,31 @@ public class Creature implements Jogada, Comparable<Creature> {
 
 	public void setRoundsToSleep(byte roundsToSleep) {
 		this.roundsToSleep = roundsToSleep;
+	}
+	
+	public int getMonsterMovement(){
+		int movement = 0;
+		switch(this.getClass().getSimpleName()){
+			case "Goblin": movement = 10;
+				break;
+			case "Orc": movement = 8;
+				break;
+			case "Fimir": movement = 6;
+				break;
+			case "Skeleton": movement = 6;
+				break;			
+			case "Zombie": movement = 4;
+				break;
+			case "Mummy": movement = 4;
+				break;
+			case "ChaosWarrior": movement = 6;
+				break;
+			case "Gargoyle": movement = 6;
+				break;
+			case "PolarWarbear": movement = 6;
+				break;
+			default: movement = 5;
+		}
+		return movement;
 	}
 }

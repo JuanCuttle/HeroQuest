@@ -14,6 +14,7 @@ import modelo.Mummy;
 import modelo.Orc;
 import modelo.Skeleton;
 import modelo.Status;
+import modelo.Strings;
 import modelo.Treasure;
 import modelo.Zombie;
 
@@ -22,6 +23,7 @@ public class TheTrial extends BasicMap {
 	
 	public TheTrial(HeroQuest game){
 		super();
+		description = Strings.THETRIAL.toString();
 		generateDoors(game);
 		generateTreasures();
 		stairsPosition[0] = 21;

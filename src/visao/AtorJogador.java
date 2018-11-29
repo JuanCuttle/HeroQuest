@@ -39,6 +39,7 @@ import modelo.Door;
 import modelo.FallingRock;
 import modelo.Furniture;
 import modelo.HeroQuest;
+import modelo.Items;
 import modelo.Position;
 import modelo.Spell;
 import modelo.Status;
@@ -513,6 +514,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				//this.selectQuest(heroQuest);
 
 				notificarResultado(0);
+				
+				// Quest message
+				this.textArea.setText(this.heroQuest.getMap().description);
+				
 			} else {
 				notificarResultado(2);
 			}
@@ -1306,7 +1311,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(1)).setText(Strings.LANGUAGEBUTTON.toString());
 	}
 	
-	public void writeSaveFile(String playerName, int heroType, int gold) throws IOException{
+	public void writeSaveFile(String playerName, int heroType, int gold, ArrayList<Items> items) throws IOException{
 		// Retrieve current working directory
 		String currentDir = System.getProperty("user.dir");
 		System.out.println(currentDir);
@@ -1318,7 +1323,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				
 		FileOutputStream fos = new FileOutputStream(saveDir + playerName + ".txt");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(new SaveFile(heroType, gold));
+		oos.writeObject(new SaveFile(heroType, gold, items));
 		oos.close();
 		fos.close();
 		
@@ -1367,6 +1372,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 			         
 			         returnValues.add(sf.getCharClass()+"");
 			         returnValues.add(sf.getGold()+"");
+			         returnValues.add(sf.getItems()+"");
 			            
 					/*// Open the file at /Saves/
 					FileReader fr = new FileReader(saveDir+res);

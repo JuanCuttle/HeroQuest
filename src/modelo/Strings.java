@@ -145,6 +145,15 @@ public enum Strings {
 	      }
 	  },
 	  
+	  FOUNDITEM {
+	      public String toString() {
+	    	  switch(AtorJogador.language){
+	    	  	case Portugues: return " encontrou o item: ";
+	    	  	default: return " has found the item: ";
+	    	  }
+	      }
+	  },
+	  
 	  THECREATURE {
 	      public String toString() {
 	    	  switch(AtorJogador.language){
@@ -985,6 +994,36 @@ public enum Strings {
 	    		  		+ " This Quest is not easy and you must work together in order to survive."
 	    		  		+ "\nThis is your first step on the road to becoming true Heroes."
 	    		  		+ " Tread carefully my friends.";
+	    	  }
+	      }
+	  },
+	  
+	  THERESCUEOFSIRRAGNAR {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "Sir Ragnar, um dos mais poderosos guerreiros do Imperados, foi raptado. "
+	    		  		+ "\nEle está prisioneiro de Ulag, o General dos Orcs. Você deve localizar "
+	    		  		+ "Sir Ragnar e trazê-lo de volta à segurança, o Príncipe Magnus irá "
+	    		  		+ "pagar 200 gold para o personagem que resgatar Sir Ragnar. \nA recompensa "
+	    		  		+ "poderá ser dividida entre múltiplos aventureiros, porém, nenhuma recompensa "
+	    		  		+ "será paga se o Sir Ragnar for morto durante a fuga.";
+	    	  } else {
+	    		  return "Sir Ragnar, one of the Emperor's most powerful Knights, has been kidnapped. "
+	    		  		+ "\nHe is being held prisoner by Ulag, the Orc Warlord. You are to find "
+	    		  		+ "Sir Ragnar and bring him back to safety, Prince Magnus will pay 200 "
+	    		  		+ "gold coins to the character who rescues Sir Ragnar. \nThe reward may "
+	    		  		+ "be split between several adventurers, but no reward will be paid if "
+	    		  		+ "Sir Ragnar is killed whilst escaping.";
+	    	  }
+	      }
+	  },
+	  
+	  DISARMTREASURETRAP {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "O aventureiro desarmou uma armadilha em um tesouro!";
+	    	  } else {
+	    		  return "The adventurer has disarmed a trap in a treasure chest!";
 	    	  }
 	      }
 	  }

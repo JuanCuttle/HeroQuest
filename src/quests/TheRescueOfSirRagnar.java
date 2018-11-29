@@ -6,8 +6,12 @@ import modelo.Fimir;
 import modelo.Furniture;
 import modelo.Goblin;
 import modelo.HeroQuest;
+import modelo.Items;
 import modelo.Monster;
 import modelo.Orc;
+import modelo.Position;
+import modelo.SirRagnar;
+import modelo.Strings;
 import modelo.Treasure;
 
 
@@ -15,6 +19,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	
 	public TheRescueOfSirRagnar(HeroQuest game){
 		super();
+		description = Strings.THERESCUEOFSIRRAGNAR.toString();
 		generateDoors(game);
 		generateTreasures();
 		stairsPosition[0] = 12;
@@ -28,7 +33,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		dwarfInitialPosition[0] = 13;
 		dwarfInitialPosition[1] = 19;
 		
-		numberOfCreatures = 13;
+		numberOfCreatures = 14;
 		
 		table1Position = new byte[]{0, 4, 26}; // 0 for horizontal, 1 for vertical
 		
@@ -46,27 +51,6 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		generate2x3(table2Position);
 	}
 	
-	private void generate1x3(byte[] furniture) {
-		int i = furniture[1];
-		int j = furniture[2];
-		for (int y = 0; y < 3; y++){
-			j = furniture[2]+y;
-			this.positions[i][j] = new Furniture((byte)i, (byte)j);
-		}
-	}
-
-	private void generate2x3LR(byte[] furniture) {
-		int i = furniture[1];
-		int j = furniture[2];
-		for (int x = 0; x < 3; x++){
-			for (int y = 0; y < 2; y++){
-				i = furniture[1]+x;
-				j = furniture[2]+y;
-				this.positions[i][j] = new Furniture((byte)i, (byte)j);
-			}
-		}
-	}
-
 	private void generate3x1(byte[] furniture) {
 		int i = furniture[1];
 		int j = furniture[2];
@@ -74,12 +58,6 @@ public class TheRescueOfSirRagnar extends BasicMap {
 			i = furniture[1]+x;
 			this.positions[i][j] = new Furniture((byte)i, (byte)j);
 		}
-	}
-
-	private void generate1x1(byte[] furniture) {
-		int i = furniture[1];
-		int j = furniture[2];
-		this.positions[i][j] = new Furniture((byte)i, (byte)j);
 	}
 
 	private void generate2x3(byte[] furniture){
@@ -136,9 +114,11 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	}
 	
 	public void generateTreasures(){
-		positions[8][15].setTreasure(new Treasure(84));
-		positions[12][17].setTreasure(new Treasure(120));
-		positions[23][24].setTreasure(new Treasure(0));
+		Treasure t = new Treasure(-1);
+		t.setAsTrap(true);
+		t.setItem(Items.PotionOfHealing);
+		positions[19][5].setTreasure(t);
+		positions[12][27].setTreasure(new Treasure(50)); // And potion of healing (4 bp)
 	}
 	
 	public ArrayList<Monster> createMonsters(HeroQuest game){
@@ -160,10 +140,25 @@ public class TheRescueOfSirRagnar extends BasicMap {
 			generateMonster(game, monsters, new Orc(), ++i, 22, 11);
 			generateMonster(game, monsters, new Fimir(), ++i, 17, 11);
 			
+			generateMonster(game, monsters, new SirRagnar(), ++i, 17, 8); // Sir Ragnar
+			
 			return monsters;
 	}
 	
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+		
+		Position p = game.getCreaturePorID(14).getCurrentPosition(); // Sir Ragnar
+		
+		int row = p.getRow();
+		int column = p.getColumn();
+		
+		// If Sir Ragnar is on stairs
+		if ((row == stairsPosition[0] && column == stairsPosition[1])
+				| (row == stairsPosition[0]+1 && column == stairsPosition[1])
+				| (row == stairsPosition[0] && column == stairsPosition[1]+1)
+				| (row == stairsPosition[0]+1 && column == stairsPosition[1]+1)){
+			return true;
+		}
 		return false;
 	}
 }

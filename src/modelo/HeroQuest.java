@@ -8,7 +8,6 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 import quests.BasicMap;
-import quests.TheTrial;
 import visao.AtorClientServer;
 import visao.AtorJogador;
 import exceptions.PositionNotEmptyException;
@@ -796,6 +795,8 @@ public class HeroQuest implements LogicInterface {
 
 	private void tratarProcurarTesouro(LanceProcTesouro lance) {
 		boolean foundGold = false;
+		boolean foundItem = false;
+		String itemName = "";
 		
 		PlayableCharacter character;
 		byte linha = lance.getSourceL();
@@ -811,11 +812,27 @@ public class HeroQuest implements LogicInterface {
 					Treasure tesouro = posicaoAtual.getTreasure();
 					if (tesouro != null) {
 						int gold = tesouro.getGoldAmount();
-						if (gold >= 0){
-							tesouro.setGoldAmount(-1);
-							character.increaseGold(gold);
-							foundGold = true;
+						Items item = tesouro.getItem();
+						
+						// Has a trap
+						if (tesouro.isTrap()){
+							character.decreaseBody((byte) 1);
+							tesouro.setAsTrap(false);
+							this.atorJogador.mostrarAcaoTrap((byte) 1, character);
+						} else {
+							if (gold >= 0){
+								tesouro.setGoldAmount(-1);
+								character.increaseGold(gold);
+								foundGold = true;
+							}
+							if (item != null){
+								character.addItemToBag(item);
+								foundItem = true;
+								itemName = item.name();
+							}
 						}
+						
+
 					}
 				}
 			}
@@ -824,6 +841,11 @@ public class HeroQuest implements LogicInterface {
 			this.atorJogador.mostrarMensagem(Strings.THEPLAYER.toString()
 					+ character.getClass().getSimpleName()
 					+ Strings.FOUNDGOLD.toString());
+		}
+		if (foundItem){
+			this.atorJogador.mostrarMensagem(Strings.THEPLAYER.toString()
+					+ character.getClass().getSimpleName()
+					+ Strings.FOUNDITEM.toString()+itemName);
 		}
 	}
 
@@ -840,18 +862,25 @@ public class HeroQuest implements LogicInterface {
 					if (posicaoAtual.getTrap() != null) {
 						posicaoAtual.makeTrapVisible();
 						
-						// Se eh pit e estah visivel, desarma
+						// If Pit and visible, disarm it
 						if (posicaoAtual.getTrap() instanceof Pit){
 							posicaoAtual.getTrap().setTriggered(true);
 						}
 						
-						// Se eh dwarf, desativa as armadilhas
+						// If dwarf, disarm the traps
 						if (this.getPosition((byte)linha, (byte)coluna).getCreature() instanceof Dwarf){
 							//posicaoAtual.makeTrapTriggered();
 							posicaoAtual.removeTrap();
 							removeuArmadilhas = true;
 						}
 						
+					}
+					// If found a trap in a treasure chest
+					if (posicaoAtual.getTreasure() != null){
+						if (posicaoAtual.getTreasure().isTrap()){
+							posicaoAtual.getTreasure().setAsTrap(false);
+							this.atorJogador.mostrarMensagem(Strings.DISARMTREASURETRAP.toString());
+						}
 					}
 					if (posicaoAtual instanceof Door){
 						if (((Door) posicaoAtual).isSecreta()){
@@ -1535,7 +1564,7 @@ public class HeroQuest implements LogicInterface {
 												break;
 										
 							}
-							this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, a.getGold());
+							this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, a.getGold(), a.getItems());
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

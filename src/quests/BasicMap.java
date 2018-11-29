@@ -15,6 +15,9 @@ import modelo.Treasure;
 import modelo.Wall;
 
 public class BasicMap {
+	
+	public String description;
+	
 	public Position[][] positions; 
 
 	protected byte numberOfRows;

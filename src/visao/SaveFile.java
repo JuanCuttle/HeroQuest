@@ -1,6 +1,9 @@
 package visao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
+import modelo.Items;
 
 public class SaveFile implements Serializable {
 	/**
@@ -9,11 +12,12 @@ public class SaveFile implements Serializable {
 	private static final long serialVersionUID = -1215397092889062634L;
 	private int charClass;
 	private int gold;
-	//private Item[] items;
+	private ArrayList<Items> items;
 	
-	public SaveFile(int heroType, int gold2){
+	public SaveFile(int heroType, int gold, ArrayList<Items> items){
 		this.charClass = heroType;
-		this.gold = gold2;
+		this.gold = gold;
+		this.items = items;
 	}
 	
 	public int getCharClass() {
@@ -27,6 +31,14 @@ public class SaveFile implements Serializable {
 	}
 	public void setGold(byte gold) {
 		this.gold = gold;
+	}
+
+	public ArrayList<Items> getItems() {
+		return items;
+	}
+	
+	public void setItems(ArrayList<Items> items) {
+		this.items = items;
 	}
 	
 }

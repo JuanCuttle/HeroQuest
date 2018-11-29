@@ -95,3 +95,11 @@ Can be troublesome with Creature objects (change not made through ID)
 32) Upgrades: You can now CHOOSE YOUR ADVENTURE!
 			  New Quest added: The Rescue of Sir Ragnar
 			  Tweaks to BasicMap to make quest creation code simpler.
+			  
+33) Upgrades: Finished The Rescue of Sir Ragnar quest. Sir Ragnar is controlled by Zargon, but is to act as an adventurer would.
+			  Creature movement adapted to resemble original (Monsters have fixed movement per turn, depending on species).
+			  Items added as Enum, saveable in player file.
+			  Quest opening descriptions added.
+	Next Steps: Add effect to drinking potion of healing (4 body points).
+				Allow for some way of viewing inventory Items.
+				When you find Sir Ragnar, make everything visible.
