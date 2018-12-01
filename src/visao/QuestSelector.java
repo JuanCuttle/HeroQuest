@@ -14,8 +14,7 @@ import modelo.HeroQuest;
 import modelo.Strings;
 import quests.BasicMap;
 import quests.Quest;
-import quests.TheRescueOfSirRagnar;
-import quests.TheTrial;
+import quests.*;
 
 public class QuestSelector extends JFrame {
 
@@ -68,6 +67,8 @@ public class QuestSelector extends JFrame {
 				try {
 					switch(quest){
 						case TheTrial: selectMap(new TheTrial(game));
+									break;
+						case TheMaze: selectMap(new TheMaze(game));
 									break;
 						case TheRescueOfSirRagnar: selectMap(new TheRescueOfSirRagnar(game));
 									break;

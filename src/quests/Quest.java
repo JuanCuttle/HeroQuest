@@ -1,5 +1,5 @@
 package quests;
 
 public enum Quest {
-	TheTrial, TheRescueOfSirRagnar
+	TheTrial, TheMaze, TheRescueOfSirRagnar
 }

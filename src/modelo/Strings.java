@@ -705,6 +705,16 @@ public enum Strings {
 	      }
 	  },
 	  
+	  DISARMTREASURETRAP {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "O aventureiro desarmou uma armadilha em um tesouro!";
+	    	  } else {
+	    		  return "The adventurer has disarmed a trap in a treasure chest!";
+	    	  }
+	      }
+	  },
+	  
 	  ROCKFALL {
 	      public String toString() {
 	    	  switch(AtorJogador.language){
@@ -1018,12 +1028,19 @@ public enum Strings {
 	      }
 	  },
 	  
-	  DISARMTREASURETRAP {
+	  THEMAZE {
 		  public String toString() {
 	    	  if(AtorJogador.language == Languages.Portugues){
-	    		  return "O aventureiro desarmou uma armadilha em um tesouro!";
+	    		  return "Este será seu último teste antes de seguir adiante. \nAtente para usar as "
+	    		  		+ "habilidades que foram ensinadas a você. Você deve tentar encontrar a saída. "
+	    		  		+ "\n Vários Monstros foram posicionados no Labirinto. Eles tentarão impedi-lo, então tenha cuidado. "
+	    		  		+ "\nQuem encontrar a saída primeiro será recompensado em 100 moedas de ouro."
+	    		  		+ "\nIsto poderá ser utilizado para comprar Equipamentos para as aventuras que estão por vir.";
 	    	  } else {
-	    		  return "The adventurer has disarmed a trap in a treasure chest!";
+	    		  return "This will be your final test before you set forth. \nBe sure to use the skills "
+	    		  		+ "that you have been taught. You must attempt to find your way out. \nSeveral Monsters "
+	    		  		+ "have been placed in the Maze. They will try to stop you, so take care. \nWhoever finds his way out "
+	    		  		+ "first will be rewarded with 100 gold coins. \nThis may be used to buy Equipment for the adventures to come.";
 	    	  }
 	      }
 	  }
