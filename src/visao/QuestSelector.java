@@ -72,7 +72,8 @@ public class QuestSelector extends JFrame {
 									break;
 						case TheRescueOfSirRagnar: selectMap(new TheRescueOfSirRagnar(game));
 									break;
-						
+						case LairOfTheOrcWarlord: selectMap(new LairOfTheOrcWarlord(game));
+									break;
 						default: selectMap(new TheTrial(game));
 									break;
 					}

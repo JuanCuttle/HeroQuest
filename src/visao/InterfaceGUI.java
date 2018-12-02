@@ -6,6 +6,7 @@ import javax.swing.JButton;
 
 import modelo.Creature;
 import modelo.Directions;
+import modelo.Items;
 import modelo.Position;
 import modelo.Spell;
 import modelo.Status;
@@ -62,7 +63,7 @@ public interface InterfaceGUI {
 	
 	public void mostrarInventario();
 	
-	public void mostrarInventario(int gold); // requerida por HeroQuest
+	public void mostrarInventario(int gold, ArrayList<Items> items); // requerida por HeroQuest
 	
 	public void mostrarInformacoes(int characterID);
 	

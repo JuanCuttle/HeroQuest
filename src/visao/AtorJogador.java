@@ -644,9 +644,13 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.heroQuest.mostrarInventario();
 	}
 
-	public void mostrarInventario(int gold) {
+	public void mostrarInventario(int gold, ArrayList<Items> items) {
+		String itemString = Strings.ITEMSOWNED.toString();
+		for (Items item : items){
+			itemString += item + "\n";
+		}
 		this.textArea.setText(Strings.YOUHAVE.toString() + gold
-				+ Strings.INVYCOINS.toString());
+				+ Strings.INVYCOINS.toString()+itemString);
 		/*JOptionPane.showMessageDialog(null, Strings.YOUHAVE.toString() + gold
 				+ Strings.INVYCOINS.toString());*/
 	}

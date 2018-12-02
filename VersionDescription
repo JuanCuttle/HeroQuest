@@ -105,3 +105,8 @@ Can be troublesome with Creature objects (change not made through ID)
 				When you find Sir Ragnar, make everything visible.
 				
 34) Upgrades: New Quest, The Maze!
+35) Upgrades: New Quest, Lair of The Orc Warlord!
+			  When you find Sir Ragnar, everything becomes visible and doors are open!
+			  Added Spear (if owned, adventurer can attack diagonally!).
+			  Fixed abusable bug in Lair of The Orc Warlord.
+			  Added movement modifier for certain bosses.

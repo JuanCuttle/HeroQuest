@@ -189,13 +189,22 @@ public class HeroQuest implements LogicInterface {
 		return null;
 	}
 
-	private boolean verificaSeDistanciaPossivel(Position pos1, Position pos2) {
+	private boolean verificaSeDistanciaPossivel(Position pos1, Position pos2, boolean hasSpear) {
 		int linhaAtacante, colunaAtacante, linhaAlvo, colunaAlvo;
 		linhaAtacante = pos1.getRow();
 		colunaAtacante = pos1.getColumn();
 		linhaAlvo = pos2.getRow();
 		colunaAlvo = pos2.getColumn();
-		return (linhaAtacante == linhaAlvo && colunaAtacante == colunaAlvo - 1)
+		boolean result = false;
+		if (hasSpear){
+			// add diagonal
+			result = (linhaAtacante == linhaAlvo-1 && colunaAtacante == colunaAlvo-1)
+					|| (linhaAtacante == linhaAlvo+1 && colunaAtacante == colunaAlvo+1)
+					|| (linhaAtacante == linhaAlvo+1 && colunaAtacante == colunaAlvo-1)
+					|| (linhaAtacante == linhaAlvo-1 && colunaAtacante == colunaAlvo+1);
+		}
+		return result
+				|| (linhaAtacante == linhaAlvo && colunaAtacante == colunaAlvo - 1)
 				|| (linhaAtacante == linhaAlvo && colunaAtacante == colunaAlvo + 1)
 				|| (colunaAtacante == colunaAlvo && linhaAtacante == linhaAlvo - 1)
 				|| (colunaAtacante == colunaAlvo && linhaAtacante == linhaAlvo + 1)
@@ -395,12 +404,18 @@ public class HeroQuest implements LogicInterface {
 				this.atorJogador.reportarErro(Strings.SLEEPNOATT.toString());
 			} else{
 				Position posicaoAtacante = atacante.getCurrentPosition();
+				boolean hasSpear = false;
+				// If its an adventurer and has a spear, can attack diagonally
+				if (!(atacante.getClass().getSuperclass().getSimpleName().equals("Monster")) &&
+						((PlayableCharacter) atacante).getItems().contains(Items.Spear)){
+					hasSpear = true;
+				}
 				ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1,
 						posicaoAtacante);
 				Creature alvo = this.atorJogador.selecionarAlvo(possiveisAlvos);
 				Position posicaoAlvo = alvo.getCurrentPosition();
 				boolean possivel = this.verificaSeDistanciaPossivel(
-						posicaoAtacante, posicaoAlvo);
+						posicaoAtacante, posicaoAlvo, hasSpear);
 				if (possivel) {
 					byte dano = this.calcularDanoDoAtaque(atacante, alvo);
 					LanceAtaque lance = new LanceAtaque();
@@ -1226,6 +1241,8 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 		
+		this.map.specialOcurrence(this); // For TheRescueOfSirRagnar
+		
 		this.encerramentoDaPartida();
 		
 		/*Adventurer a = this.localAdventurer; 
@@ -1617,7 +1634,8 @@ public class HeroQuest implements LogicInterface {
 			PlayableCharacter character = localAdventurer
 					.getPlayableCharacter();
 			int gold = character.getGold();
-			this.atorJogador.mostrarInventario(gold);
+			ArrayList<Items> items = character.getItems();
+			this.atorJogador.mostrarInventario(gold, items);
 		} else {
 			this.atorJogador.reportarErro(Strings.ZARGONNOGOLD.toString());
 		}
@@ -1703,5 +1721,9 @@ public class HeroQuest implements LogicInterface {
 
 	public void setAtorJogador(AtorJogador atorJogador) {
 		this.atorJogador = atorJogador;
+	}
+
+	public AtorJogador getAtorJogador() {
+		return atorJogador;
 	}
 }

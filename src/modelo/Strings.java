@@ -1043,5 +1043,31 @@ public enum Strings {
 	    		  		+ "first will be rewarded with 100 gold coins. \nThis may be used to buy Equipment for the adventures to come.";
 	    	  }
 	      }
+	  },
+	  
+	  LAIROFTHEORCWARLORD {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "O Príncipe Magnus ordenou que o General dos Orcs, Ulag, que foi responsável "
+	    		  		+ "\npelo sequestro do Sir Ragnar, deve ser localizado e eliminado. Aquele que "
+	    		  		+ "\nmatar Ulag será recompensado em 100 moedas de ouro. Qualquer tesouro encontrado "
+	    		  		+ "\nna fortaleza também poderá ser guardado.";
+	    	  } else {
+	    		  return "Prince Magnus has ordered that the Orc Warlord Ulag, who was responsible for "
+	    		  		+ "\nthe kidnapping of Sir Ragnar, should be sought out and killed. Whoever kills "
+	    		  		+ "\nUlag will be rewarded with 100 gold coins. Any treasure found in Ulag's "
+	    		  		+ "\nstronghold may also be kept.";
+	    	  }
+	      }
+	  },
+	  
+	  ITEMSOWNED {
+		  public String toString(){
+			  if(AtorJogador.language == Languages.Portugues){
+				  return "\nVocê também possui os seguintes itens: \n";
+			  } else {
+				  return "\nYou also own the following items: \n";
+			  }
+		  }
 	  }
 }

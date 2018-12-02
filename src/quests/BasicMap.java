@@ -622,4 +622,8 @@ public class BasicMap {
 	public int getCreatureQueueSize() {
 		return this.numberOfCreatures + 4; // Monsters plus up to 4 adventurers
 	}
+
+	public void specialOcurrence(HeroQuest game) {
+		
+	}
 }

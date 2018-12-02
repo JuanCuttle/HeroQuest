@@ -2,6 +2,8 @@ package quests;
 
 import java.util.ArrayList;
 
+import modelo.Creature;
+import modelo.Door;
 import modelo.Fimir;
 import modelo.Furniture;
 import modelo.Goblin;
@@ -16,6 +18,8 @@ import modelo.Treasure;
 
 
 public class TheRescueOfSirRagnar extends BasicMap {
+	
+	private boolean foundRagnar = false;
 	
 	public TheRescueOfSirRagnar(HeroQuest game){
 		super();
@@ -160,5 +164,29 @@ public class TheRescueOfSirRagnar extends BasicMap {
 			return true;
 		}
 		return false;
+	}
+	
+	public void specialOcurrence(HeroQuest game){
+		if (!foundRagnar){ // If haven't found yet
+			if (game.getCreaturePorID(14).isVisible()){ // found him
+				foundRagnar = true;
+				ArrayList<Door> doors = game.doors;
+				for (Door d : doors){
+					d.abrirPorta();
+				}
+				
+				for (Position[] p : this.positions){
+					for (Position pos : p){
+						pos.setVisible(true);
+					}
+				}
+				
+				for (Creature c : game.getCreatureQueue()){
+					c.setVisible(true);
+				}
+				
+				game.getAtorJogador().atualizarInterfaceGrafica();
+			}
+		}
 	}
 }

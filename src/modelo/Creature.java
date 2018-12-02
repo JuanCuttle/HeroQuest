@@ -19,6 +19,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 	
 	protected boolean isVisible;
 	protected byte roundsToSleep;
+	protected byte movementModifier; // For bosses
 
 	
 	public boolean isVisible() {
@@ -36,6 +37,8 @@ public class Creature implements Jogada, Comparable<Creature> {
 		this.status = Status.NEUTRAL;
 		this.attackDiceAmount = (byte) atk;
 		this.defenceDiceAmount = (byte) def;
+		
+		this.movementModifier = 0;
 		
 		this.isVisible = false;
 	}
@@ -154,6 +157,14 @@ public class Creature implements Jogada, Comparable<Creature> {
 		this.roundsToSleep = roundsToSleep;
 	}
 	
+	public byte getMovementModifier() {
+		return movementModifier;
+	}
+
+	public void setMovementModifier(byte movementModifier) {
+		this.movementModifier = movementModifier;
+	}
+	
 	public int getMonsterMovement(){
 		int movement = 0;
 		switch(this.getClass().getSimpleName()){
@@ -177,6 +188,6 @@ public class Creature implements Jogada, Comparable<Creature> {
 				break;
 			default: movement = 5;
 		}
-		return movement;
+		return movement+movementModifier;
 	}
 }
