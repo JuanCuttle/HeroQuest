@@ -1,5 +1,5 @@
 package quests;
 
 public enum Quest {
-	TheTrial, TheMaze, TheRescueOfSirRagnar, LairOfTheOrcWarlord, PrinceMagnusGold
+	TheTrial, TheMaze, TheRescueOfSirRagnar, LairOfTheOrcWarlord, PrinceMagnusGold, MelarsMaze
 }

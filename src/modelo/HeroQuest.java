@@ -8,6 +8,7 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 import quests.BasicMap;
+import quests.MelarsMaze;
 import visao.AtorClientServer;
 import visao.AtorJogador;
 import exceptions.PositionNotEmptyException;
@@ -841,7 +842,8 @@ public class HeroQuest implements LogicInterface {
 								foundGold = true;
 							}
 							if (item != null){
-								character.addItemToBag(item);
+								character.addItemToBag(item); // add item
+								tesouro.setItem(null); // remove item
 								foundItem = true;
 								itemName = item.name();
 							}
@@ -900,6 +902,11 @@ public class HeroQuest implements LogicInterface {
 					if (posicaoAtual instanceof Door){
 						if (((Door) posicaoAtual).isSecreta()){
 							((Door) posicaoAtual).setSecreta(false);
+						}
+						if (this.map instanceof MelarsMaze){
+							if (((Door) posicaoAtual).getID() == 118){ // Throne room door
+								((MelarsMaze) map).moveThrone(this);	
+							}
 						}
 					}
 				}

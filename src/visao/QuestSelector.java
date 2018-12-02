@@ -74,6 +74,8 @@ public class QuestSelector extends JFrame {
 									break;
 						case PrinceMagnusGold : selectMap(new PrinceMagnusGold(game));
 									break;
+						case MelarsMaze : selectMap(new MelarsMaze(game));
+									break;
 						default: selectMap(new TheTrial(game));
 									break;
 					}

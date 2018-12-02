@@ -715,6 +715,16 @@ public enum Strings {
 	      }
 	  },
 	  
+	  REVEALEDTHRONEPASSAGE {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "O trono se moveu para revelar uma passagem secreta!";
+	    	  } else {
+	    		  return "The throne moved to reveal a hidden passage!";
+	    	  }
+	      }
+	  },
+	  
 	  ROCKFALL {
 	      public String toString() {
 	    	  switch(AtorJogador.language){
@@ -1084,6 +1094,28 @@ public enum Strings {
 	    		  		+ "\nA reward of 200 gold coins has been offered to anyone who can return "
 	    		  		+ "\nthe chest and ALL the gold. The thieves are known to be a band of Orcs "
 	    		  		+ "\nhiding in the Black Mountains. They are led by Gulthor, a Chaos Warrior.";
+	    	  }
+	      }
+	  },
+	  
+	  MELARSMAZE {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "Há muito tempo, um poderoso feiticeiro chamado Melar criou um Talismã o qual "
+	    		  		+ "\npodia aumentar o conhecimento de magia do usuário. Ele guardava o Talismã "
+	    		  		+ "\ncom ele em todos os momentos, temendo que ele poderia ser roubado e usado "
+	    		  		+ "\npelos aliados de Zargon. Dizem que ele deixou o Talismã em seu Laboratório "
+	    		  		+ "\nno coração do seu Labirinto. O Labirinto de Melar é defendido por muitas "
+	    		  		+ "\narmadilhas e guardiões mágicos. Também há rumores de que ele é assombrado "
+	    		  		+ "\npor aqueles que buscaram o Talismã e morreram na tentativa...";
+	    	  } else {
+	    		  return "Long ago, a powerful sorcerer by the name of Melar created a Talisman which "
+	    		  		+ "\ncould enhance the wearer's understanding of magic. He kept the Talisman "
+	    		  		+ "\nwith him at all times, fearing it might be stolen and used by the allies "
+	    		  		+ "\nof Zargon. It is said that he left the Talisman in his Laboratory at the "
+	    		  		+ "\nheart of his Maze. Melar's Maze is guarded by many traps and magical guardians. "
+	    		  		+ "\nIt is also rumored to be haunted by those who have sought the Talisman and "
+	    		  		+ "\nperished in the attempt...";
 	    	  }
 	      }
 	  }

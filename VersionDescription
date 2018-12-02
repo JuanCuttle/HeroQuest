@@ -111,3 +111,5 @@ Can be troublesome with Creature objects (change not made through ID)
 			  Fixed abusable bug in Lair of The Orc Warlord.
 			  Added movement modifier for certain bosses.
 36) Upgrades: New Quest, Prince Magnus' gold!
+37) Upgrades: New Quest, Melar's Maze!
+			  Fixed old glitch, where item could be obtained multiple times.
