@@ -35,7 +35,7 @@ public class GUIStub extends JFrame {
 			public void run() {
 				try {
 					HeroQuest game = new HeroQuest();
-					BasicMap map = new LairOfTheOrcWarlord(game);
+					BasicMap map = new PrinceMagnusGold(game);
 					GUIStub frame = new GUIStub(map);
 					game.setMap(map);
 					frame.setVisible(true);

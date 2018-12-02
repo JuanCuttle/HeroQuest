@@ -12,8 +12,6 @@ import javax.swing.border.EmptyBorder;
 
 import modelo.HeroQuest;
 import modelo.Strings;
-import quests.BasicMap;
-import quests.Quest;
 import quests.*;
 
 public class QuestSelector extends JFrame {
@@ -73,6 +71,8 @@ public class QuestSelector extends JFrame {
 						case TheRescueOfSirRagnar: selectMap(new TheRescueOfSirRagnar(game));
 									break;
 						case LairOfTheOrcWarlord: selectMap(new LairOfTheOrcWarlord(game));
+									break;
+						case PrinceMagnusGold : selectMap(new PrinceMagnusGold(game));
 									break;
 						default: selectMap(new TheTrial(game));
 									break;

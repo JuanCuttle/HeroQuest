@@ -131,7 +131,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 		tr2.setAsTrap(true);
 		positions[16][11].setTreasure(tr2);
 		
-		Treasure spear = new Treasure(0);
+		Treasure spear = new Treasure(-1);
 		spear.setItem(Items.Spear);
 		positions[6][6].setTreasure(spear); // Spear
 	}

@@ -1069,5 +1069,22 @@ public enum Strings {
 				  return "\nYou also own the following items: \n";
 			  }
 		  }
+	  },
+	  
+	  PRINCEMAGNUSGOLD {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "Três baús de tesouro foram roubados enquanto eram levados ao Imperador."
+	    		  		+ "\nUma recompensa de 200 moedas de ouro foi oferecida a qualquer um que "
+	    		  		+ "\npossa retornar o baú com TODO o ouro. Os ladrões são conhecidos como um "
+	    		  		+ "\nbando de Orcs, cujo esconderijo encontra-se nas Montanhas Negras. "
+	    		  		+ "\nEles são liderados por Gulthor, um Chaos Warrior.";
+	    	  } else {
+	    		  return "Three treasure chests have been stolen whilst being taken to the Emperor."
+	    		  		+ "\nA reward of 200 gold coins has been offered to anyone who can return "
+	    		  		+ "\nthe chest and ALL the gold. The thieves are known to be a band of Orcs "
+	    		  		+ "\nhiding in the Black Mountains. They are led by Gulthor, a Chaos Warrior.";
+	    	  }
+	      }
 	  }
 }
