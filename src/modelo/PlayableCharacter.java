@@ -2,6 +2,9 @@ package modelo;
 
 import java.util.ArrayList;
 
+import quests.BasicMap;
+import quests.LegacyOfTheOrcWarlord;
+
 public class PlayableCharacter extends Creature {
 
 	private static final long serialVersionUID = -1118331420839898080L;
@@ -25,7 +28,10 @@ public class PlayableCharacter extends Creature {
 		this.items.add(item);
 	}
 	
-	public ArrayList<Items> getItems(){
+	public ArrayList<Items> getItems(BasicMap map){
+		if (map instanceof LegacyOfTheOrcWarlord && !((LegacyOfTheOrcWarlord) map).foundEquipment()){
+			return new ArrayList<Items>();
+		}
 		return this.items;
 	}
 }

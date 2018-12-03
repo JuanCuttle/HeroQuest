@@ -97,7 +97,7 @@ public class TheMaze extends BasicMap {
 		
 		public boolean verificarCondicoesDeVitoria(HeroQuest game) {
 			
-			boolean vitoria = false;
+			boolean victory = false;
 			ArrayList<Creature> creatureQueue = game.getCreatureQueue();
 			for (int i = 0; i < creatureQueue.size(); i++) {
 				if (creatureQueue.get(i).getID() > this.numberOfCreatures
@@ -110,11 +110,11 @@ public class TheMaze extends BasicMap {
 					if (linha == stairsRow && coluna == stairsColumn || linha == stairsRow && coluna == stairsColumn+1
 							|| linha == stairsRow+1 && coluna == stairsColumn || linha == stairsRow+1
 							&& coluna == stairsColumn+1) {
-						vitoria = true;
+						victory = true;
 					}
 				}
 			}
-			return vitoria;
+			return victory;
 		}
 
 }

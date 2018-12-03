@@ -10,6 +10,7 @@ import modelo.HeroQuest;
 import modelo.Monster;
 import modelo.Orc;
 import modelo.Pit;
+import modelo.Spear;
 import modelo.Strings;
 import modelo.Treasure;
 
@@ -108,6 +109,7 @@ public class PrinceMagnusGold extends BasicMap {
 	}
 	
 	public void generateTraps(){
+		positions[10][14].setTrap(new Spear());
 		positions[11][14].setTrap(new Pit());
 		positions[11][23].setTrap(new Pit());
 		positions[14][10].setTrap(new Pit());
@@ -141,7 +143,7 @@ public class PrinceMagnusGold extends BasicMap {
 			generateMonster(game, monsters, new Orc(), ++i, 17, 5);
 			generateMonster(game, monsters, new Orc(), ++i, 23, 6);
 			generateMonster(game, monsters, new Orc(), ++i, 23, 7);
-			generateMonster(game, monsters, new Orc(), ++i, 26, 6);
+			generateMonster(game, monsters, new Orc(), ++i, 26, 5);
 			generateMonster(game, monsters, new Fimir(), ++i, 14, 18);
 			generateMonster(game, monsters, new ChaosWarrior(), ++i, 14, 17);// Gulthor
 			

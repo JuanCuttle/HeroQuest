@@ -1118,5 +1118,25 @@ public enum Strings {
 	    		  		+ "\nperished in the attempt...";
 	    	  }
 	      }
+	  },
+	  
+	  LEGACYOFTHEORCWARLORD {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "O horrendo filho de Ulag, Grak, jurou vingança contra aqueles que mataram seu pai."
+	    		  		+ "\nApesar de ter levado vários meses, ele finalmente conseguiu localizar você "
+	    		  		+ "e o capturou em uma emboscada. Agora você está sendo mantido prisioneiro nas suas "
+	    		  		+ "catacumbas enquanto ele quebra a cabeça pensando numa terrível punição para você. "
+	    		  		+ "\nEnquanto o guarda dorme, porém, você conseguiu abrir o cadeado da sua cela com "
+	    		  		+ "um velho osso de rato. Você deve encontrar seu equipamento e escapar.";
+	    	  } else {
+	    		  return "Ulag's foul offspring, Grak, has sworn revenge on those who killed his father."
+	    		  		+ "\nAlthough it has taken him several months, he has finally tracked you down "
+	    		  		+ "\nand captured you in an ambush. Now you are held prisoner in his dungeons "
+	    		  		+ "\nwhile he racks his brains to devise a terrible punishment for you. While "
+	    		  		+ "\nthe guard sleeps, however, you manage to pick the lock of your cell with "
+	    		  		+ "\nan old rat bone. You must find your equipment and escape.";
+	    	  }
+	      }		  
 	  }
 }

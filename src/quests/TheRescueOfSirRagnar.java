@@ -99,7 +99,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		
 		for (byte i = 26; i < 28; i++){
 			generateBlockade(i, 14);
-			generateBlockade(i, 21);
+			generateBlockade(i, 20);
 		}
 	}
 	
@@ -133,7 +133,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 			generateMonster(game, monsters, new Goblin(), ++i, 10, 21);
 			generateMonster(game, monsters, new Goblin(), ++i, 10, 23);
 			generateMonster(game, monsters, new Goblin(), ++i, 14, 5);
-			generateMonster(game, monsters, new Goblin(), ++i, 14, 32);
+			generateMonster(game, monsters, new Goblin(), ++i, 14, 33);
 			generateMonster(game, monsters, new Goblin(), ++i, 18, 23);
 			generateMonster(game, monsters, new Orc(), ++i, 7, 21);
 			generateMonster(game, monsters, new Orc(), ++i, 6, 22);

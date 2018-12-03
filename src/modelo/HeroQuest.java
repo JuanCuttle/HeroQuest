@@ -17,6 +17,7 @@ public class HeroQuest implements LogicInterface {
 
 	protected BasicMap map;
 	protected ArrayList<Player> players;
+
 	protected AtorJogador atorJogador;
 	private AtorClientServer atorClienteServidor;
 	protected Player localPlayer;
@@ -408,7 +409,7 @@ public class HeroQuest implements LogicInterface {
 				boolean hasSpear = false;
 				// If its an adventurer and has a spear, can attack diagonally
 				if (!(atacante.getClass().getSuperclass().getSimpleName().equals("Monster")) &&
-						((PlayableCharacter) atacante).getItems().contains(Items.Spear)){
+						((PlayableCharacter) atacante).getItems(this.map).contains(Items.Spear)){
 					hasSpear = true;
 				}
 				ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1,
@@ -756,9 +757,6 @@ public class HeroQuest implements LogicInterface {
 				
 				character.setMovement();
 				this.setAreaVisible(position[0], position[1]);
-				
-				character.setMovement();
-				this.setAreaVisible((byte)1, (byte)25);
 	
 				break;
 			case 3:
@@ -777,9 +775,6 @@ public class HeroQuest implements LogicInterface {
 				character.setMovement();
 				this.setAreaVisible(position[0], position[1]);
 				
-				character.setMovement();
-				this.setAreaVisible((byte)2, (byte)24);
-				
 				break;
 			case 4:
 				this.setDwarfAvailable(false);
@@ -796,9 +791,6 @@ public class HeroQuest implements LogicInterface {
 				
 				character.setMovement();
 				this.setAreaVisible(position[0], position[1]);
-				
-				character.setMovement();
-				this.setAreaVisible((byte)2, (byte)25);
 				
 				break;
 			default:
@@ -1588,7 +1580,7 @@ public class HeroQuest implements LogicInterface {
 												break;
 										
 							}
-							this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, a.getGold(), a.getItems());
+							this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, a.getGold(), a.getItems(this.map));
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -1641,7 +1633,7 @@ public class HeroQuest implements LogicInterface {
 			PlayableCharacter character = localAdventurer
 					.getPlayableCharacter();
 			int gold = character.getGold();
-			ArrayList<Items> items = character.getItems();
+			ArrayList<Items> items = character.getItems(this.map);
 			this.atorJogador.mostrarInventario(gold, items);
 		} else {
 			this.atorJogador.reportarErro(Strings.ZARGONNOGOLD.toString());

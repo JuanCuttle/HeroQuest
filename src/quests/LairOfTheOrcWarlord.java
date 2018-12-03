@@ -106,7 +106,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 			generateBlockade(3, i);
 			generateBlockade(15, i);
 		}
-		generateBlockade(14, 12);
+		generateBlockade(14, 11);
 	}
 	
 	public void generateDoors(HeroQuest game){
