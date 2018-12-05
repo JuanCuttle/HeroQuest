@@ -115,3 +115,7 @@ Can be troublesome with Creature objects (change not made through ID)
 			  Fixed old glitch, where item could be obtained multiple times.
 			  
 38) Upgrades: New Quest, Legacy of the Orc Warlord! Can you survive Grak's revenge?
+39) Upgrades: The Stone Hunter and The Fire Mage Quests live!
+	Net Steps: Add Fire Spells to Balur (The Fire Mage).
+			   Take Spells away from players until found, in Legacy of the Orc Warlord.
+			   Implement items.

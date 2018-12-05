@@ -23,8 +23,8 @@ public class PrinceMagnusGold extends BasicMap {
 		generateTraps();
 		stairsPosition[0] = 21;
 		stairsPosition[1] = 27;
-		barbInitialPosition[0] = 12;//21;
-		barbInitialPosition[1] = 18;//27;
+		barbInitialPosition[0] = 21;
+		barbInitialPosition[1] = 27;
 		wizInitialPosition[0] = 21;
 		wizInitialPosition[1] = 28;
 		elfInitialPosition[0] = 22;

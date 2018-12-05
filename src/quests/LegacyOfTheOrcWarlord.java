@@ -37,7 +37,7 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 		dwarfInitialPosition[0] = 18;
 		dwarfInitialPosition[1] = 9;
 		
-		numberOfCreatures = 0;//19;
+		numberOfCreatures = 19;
 		
 		table1Position = new byte[]{1, 13, 18}; // 0 for horizontal, 1 for vertical
 		
@@ -154,7 +154,7 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 			grak.setAttackDiceAmount((byte) 4);
 			grak.setDefenceDiceAmount((byte) 4);
 			
-			return new ArrayList<Monster>();//monsters;
+			return monsters;
 	}
 	
 	public boolean foundEquipment(){
@@ -176,22 +176,14 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 				if (criatura instanceof Barbarian || criatura instanceof Wizard
 						|| criatura instanceof Elf || criatura instanceof Dwarf) {
 					// If there is an adventurer who isn't on stairs, game is not finished yet
-					if (!onStairs(criatura.getCurrentPosition(), stairsRow, stairsColumn))
+					if (!onStairs(criatura.getCurrentPosition(), stairsRow, stairsColumn)){
 						stairs = false;
+						break;
+					}
 				}
 		}
 		
 		return foundEquipment && stairs; // If collected equipment and found exit
 	}
 	
-	private boolean onStairs(Position p, int stairsRow, int stairsColumn){
-		int row = p.getRow();
-		int column = p.getColumn();
-		if (row == stairsRow && column == stairsColumn || row == stairsRow && column == stairsColumn+1
-				|| row == stairsRow+1 && column == stairsColumn || row == stairsRow+1
-				&& column == stairsColumn+1) {
-			return true;
-		}
-		return false;
-	}
 }

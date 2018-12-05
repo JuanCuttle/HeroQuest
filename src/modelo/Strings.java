@@ -1138,5 +1138,52 @@ public enum Strings {
 	    		  		+ "\nan old rat bone. You must find your equipment and escape.";
 	    	  }
 	      }		  
+	  },
+	  
+	  THESTONEHUNTER {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "O Mago pessoal do Imperador, Karlen, desapareceu. O Imperador teme que ou ele "
+	    		  		+ "\nfoi assassinado ou sucumbiu às tentações da magia do Chaos. Você deve descobrir "
+	    		  		+ "\no que houve com Karlen e, caso ele esteja vivo, trazê-lo de volta à segurança."
+	    		  		+ "\n Vocês serão pagos 100 moedas de ouro cada ao retornarem.";
+	    	  } else {
+	    		  return "The Emperor's personal Wizard, Karlen has disappeared. The Emperor fears that "
+	    		  		+ "\neither he has been murdered or has succumbed to the lures of Chaos magic. "
+	    		  		+ "\nYou are to find out what has happened to Karlen and, if he is alive, bring "
+	    		  		+ "\nhim to safety. You will be paid 100 gold coins each upon returning.";
+	    	  }
+	      }		
+	  },
+	  
+	  FOUNDKARLEN {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "O Zumbi nesta sala é Karlne. Enquanto trabalhava em uma magia de Chaos ele foi consumido "
+	    		  		+ "\npela magia que ele criou e foi transformado em um Zumbi lobotomizado.";
+	    	  } else {
+	    		  return "The Zombie in this room is Karlen. Whilst working on a Chaos spell he was consumed "
+	    		  		+ "\nby the magic he created and was turned into a mindless Zombie.";
+	    	  }
+	      }		
+	  },
+	  
+	  THEFIREMAGE {
+		  public String toString() {
+	    	  if(AtorJogador.language == Languages.Portugues){
+	    		  return "Os Orcs das Montanhas Negras têm usado magias de Fogo em seus ataques. Balur, "
+	    		  		+ "\no Mago do Fogo, é quem pensamos ser responsável por ajudá-los. Nenhuma magia "
+	    		  		+ "\nde Fogo pode feri-lo, e os Magos do Imperador foram incapazes de combater "
+	    		  		+ "\nseus feitiços. Você foi então escolhido para entrar em seu esconderijo, "
+	    		  		+ "\nnas profundezas do Rochedo do Fogo Negro. O Imperador irá recompensá-los com "
+	    		  		+ "\n150 moedas de ouro cada, pela destruição de Balur.";
+	    	  } else {
+	    		  return "The Orcs of the Black Mountains have been using Fire magic in their raids. Balur, "
+	    		  		+ "\nthe Fire Mage, is thought to be responsible for helping them. No Fire magic can "
+	    		  		+ "\nharm him, and the Emperor's Wizards are unable to counter his spells. You have "
+	    		  		+ "\ntherefore been chosen to enter his lair, deep beneath Black Fire Crag. The "
+	    		  		+ "\nEmperor will reward you with 150 gold coins each for Balur's destruction.";
+	    	  }
+	      }		
 	  }
 }

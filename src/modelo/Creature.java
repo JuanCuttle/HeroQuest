@@ -186,6 +186,8 @@ public class Creature implements Jogada, Comparable<Creature> {
 				break;
 			case "PolarWarbear": movement = 6;
 				break;
+			case "ChaosSorcerer": movement = 8;
+				break;
 			default: movement = 5;
 		}
 		return movement+movementModifier;

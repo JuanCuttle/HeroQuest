@@ -626,4 +626,15 @@ public class BasicMap {
 	public void specialOcurrence(HeroQuest game) {
 		
 	}
+	
+	protected boolean onStairs(Position p, int stairsRow, int stairsColumn){
+		int row = p.getRow();
+		int column = p.getColumn();
+		if (row == stairsRow && column == stairsColumn || row == stairsRow && column == stairsColumn+1
+				|| row == stairsRow+1 && column == stairsColumn || row == stairsRow+1
+				&& column == stairsColumn+1) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -1,5 +1,5 @@
 package modelo;
 
 public enum Items {
-	PotionOfHealing, Spear, TalismanOfLore
+	PotionOfHealing, Spear, TalismanOfLore, BorinsArmour, WandOfRecall
 }

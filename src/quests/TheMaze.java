@@ -2,12 +2,15 @@ package quests;
 
 import java.util.ArrayList;
 
+import modelo.Barbarian;
 import modelo.Creature;
+import modelo.Dwarf;
+import modelo.Elf;
 import modelo.HeroQuest;
 import modelo.Monster;
 import modelo.Orc;
-import modelo.Position;
 import modelo.Strings;
+import modelo.Wizard;
 
 public class TheMaze extends BasicMap {
 		
@@ -96,25 +99,24 @@ public class TheMaze extends BasicMap {
 		}
 		
 		public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+			int stairsRow = stairsPosition[0];
+			int stairsColumn = stairsPosition[1];
 			
-			boolean victory = false;
+			boolean stairs = true;
 			ArrayList<Creature> creatureQueue = game.getCreatureQueue();
+			// Goes through creatures
 			for (int i = 0; i < creatureQueue.size(); i++) {
-				if (creatureQueue.get(i).getID() > this.numberOfCreatures
-						&& creatureQueue.get(i).getID() < this.numberOfCreatures+5) {
-					Position pos = creatureQueue.get(i).getCurrentPosition();
-					int linha = pos.getRow();
-					int coluna = pos.getColumn();
-					int stairsRow = stairsPosition[0];
-					int stairsColumn = stairsPosition[1];
-					if (linha == stairsRow && coluna == stairsColumn || linha == stairsRow && coluna == stairsColumn+1
-							|| linha == stairsRow+1 && coluna == stairsColumn || linha == stairsRow+1
-							&& coluna == stairsColumn+1) {
-						victory = true;
+					Creature criatura = creatureQueue.get(i);
+					if (criatura instanceof Barbarian || criatura instanceof Wizard
+							|| criatura instanceof Elf || criatura instanceof Dwarf) {
+						// If there is an adventurer who isn't on stairs, game is not finished yet
+						if (!onStairs(criatura.getCurrentPosition(), stairsRow, stairsColumn)){
+							stairs = false;
+							break;
+						}
 					}
-				}
 			}
-			return victory;
+			return stairs;
 		}
 
 }

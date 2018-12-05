@@ -1240,7 +1240,7 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 		
-		this.map.specialOcurrence(this); // For TheRescueOfSirRagnar
+		this.map.specialOcurrence(this); // For TheRescueOfSirRagnar and TheStoneHunter
 		
 		this.encerramentoDaPartida();
 		

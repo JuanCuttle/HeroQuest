@@ -78,6 +78,10 @@ public class QuestSelector extends JFrame {
 									break;
 						case LegacyOfTheOrcWarlord : selectMap(new LegacyOfTheOrcWarlord(game));
 									break;
+						case TheStoneHunter : selectMap(new TheStoneHunter(game));
+									break;
+						case TheFireMage : selectMap(new TheFireMage(game));
+									break;
 						default: selectMap(new TheTrial(game));
 									break;
 					}
