@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
-import entities.Strings;
+import entities.utils.Strings;
 
 public class Instrucoes extends JFrame {
 

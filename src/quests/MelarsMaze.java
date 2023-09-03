@@ -2,20 +2,20 @@ package quests;
 
 import java.util.ArrayList;
 
-import entities.FallingRock;
-import entities.Furniture;
-import entities.Gargoyle;
+import entities.tiles.FallingRock;
+import entities.tiles.Furniture;
+import entities.enemies.Gargoyle;
 import entities.HeroQuest;
 import entities.Items;
-import entities.Monster;
-import entities.Mummy;
-import entities.Pit;
-import entities.Room;
-import entities.Skeleton;
-import entities.Spear;
-import entities.Strings;
-import entities.Treasure;
-import entities.Zombie;
+import entities.enemies.Monster;
+import entities.enemies.Mummy;
+import entities.tiles.Pit;
+import entities.tiles.Room;
+import entities.enemies.Skeleton;
+import entities.tiles.Spear;
+import entities.utils.Strings;
+import entities.tiles.Treasure;
+import entities.enemies.Zombie;
 
 public class MelarsMaze extends BasicMap {
 	

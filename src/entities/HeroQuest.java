@@ -6,7 +6,16 @@ import java.util.Collections;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
+import entities.actions.*;
+import entities.enemies.Monster;
+import entities.players.Barbarian;
+import entities.players.Dwarf;
+import entities.players.Elf;
+import entities.players.Wizard;
+import entities.tiles.*;
+import entities.utils.Strings;
 import quests.BasicMap;
 import quests.MelarsMaze;
 import view.AtorClientServer;
@@ -73,8 +82,8 @@ public class HeroQuest implements LogicInterface {
 					if (perto) {
 						//boolean aberta = porta.getPortaEstaAberta();
 						
-							LanceAbrirPorta lance = new LanceAbrirPorta();
-							lance.setObjectID(idPorta);
+							OpenDoor lance = new OpenDoor();
+							lance.setDoorId(idPorta);
 							this.tratarLance(lance);
 							this.enviarLance(lance);
 							
@@ -143,8 +152,8 @@ public class HeroQuest implements LogicInterface {
 							(PlayableCharacter) criatura, porta);*/
 					//if (perto) {
 					
-						LanceAbrirPorta lance = new LanceAbrirPorta();
-						lance.setObjectID(idPorta);
+						OpenDoor lance = new OpenDoor();
+						lance.setDoorId(idPorta);
 						this.tratarLance(lance);
 						this.enviarLance(lance);
 		 
@@ -243,19 +252,19 @@ public class HeroQuest implements LogicInterface {
 					Position novaPosicao;
 					try {
 						novaPosicao = this.getNovaPosicao(direcao, linha, coluna);
-						LanceMovimento lance = new LanceMovimento();
+						Move lance = new Move();
 					
 					
-						lance.setSourceL(linha);
-						lance.setSourceC(coluna);
-						lance.setDestinationL(novaPosicao.getRow());
-						lance.setDestinationC(novaPosicao.getColumn());
+						lance.setSourceRow(linha);
+						lance.setSourceColumn(coluna);
+						lance.setDestinationRow(novaPosicao.getRow());
+						lance.setDestinationColumn(novaPosicao.getColumn());
 
 						Trap trap = novaPosicao.getTrap();
 					
 						if (trap != null) {
 							byte dano = trap.getDeliveredDamage();
-							lance.setDano(dano);
+							lance.setDamage(dano);
 							
 							if (trap instanceof FallingRock){
 								byte opcao = this.atorJogador.mostrarOpcoesFallingRock();
@@ -263,7 +272,7 @@ public class HeroQuest implements LogicInterface {
 								
 								switch(direcao){
 								case UP: {	if (opcao == 0){
-												novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+												novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 												if (novaPosicao instanceof Wall){
 													opcao = 1;
 												}
@@ -271,7 +280,7 @@ public class HeroQuest implements LogicInterface {
 											break;
 											}
 								case DOWN: {if (opcao == 0){
-												novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+												novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 												if (novaPosicao instanceof Wall){
 													opcao = 1;
 												}
@@ -279,7 +288,7 @@ public class HeroQuest implements LogicInterface {
 											break;
 											}
 								case LEFT: {if (opcao == 0){
-												novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+												novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
 												if (novaPosicao instanceof Wall){
 													opcao = 1;
 												}
@@ -287,7 +296,7 @@ public class HeroQuest implements LogicInterface {
 											break;
 											}
 								default: {if (opcao == 0){
-												novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+												novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 												if (novaPosicao instanceof Wall){
 													opcao = 1;
 												}
@@ -306,7 +315,7 @@ public class HeroQuest implements LogicInterface {
 									
 									switch(direcao){
 									case UP: {	if (opcao == 0){
-													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 													if (novaPosicao instanceof Wall){
 														opcao = 1;
 													}
@@ -314,7 +323,7 @@ public class HeroQuest implements LogicInterface {
 												break;
 												}
 									case DOWN: {if (opcao == 0){
-													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 													if (novaPosicao instanceof Wall){
 														opcao = 1;
 													}
@@ -322,7 +331,7 @@ public class HeroQuest implements LogicInterface {
 												break;
 												}
 									case LEFT: {if (opcao == 0){
-													novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
 													if (novaPosicao instanceof Wall){
 														opcao = 1;
 													}
@@ -330,7 +339,7 @@ public class HeroQuest implements LogicInterface {
 												break;
 												}
 									default: {if (opcao == 0){
-													novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 													if (novaPosicao instanceof Wall){
 														opcao = 1;
 													}
@@ -420,7 +429,7 @@ public class HeroQuest implements LogicInterface {
 						posicaoAtacante, posicaoAlvo, hasSpear);
 				if (possivel) {
 					byte dano = this.calcularDanoDoAtaque(atacante, alvo);
-					LanceAtaque lance = new LanceAtaque();
+					Attack lance = new Attack();
 					lance.setValue(dano);
 					lance.setTargetID(alvo.getID()); ///////////////////////////////////////////
 					this.tratarLance(lance);
@@ -528,7 +537,7 @@ public class HeroQuest implements LogicInterface {
 					boolean sucesso = this.calcularSucessoDaMagia(atacante,
 							alvo, magia);
 					if (sucesso) {
-						LanceMagia lance = new LanceMagia();
+						CastSpell lance = new CastSpell();
 						if (magia.getStatus() == Status.SLEEPING){ // determinar o numero de rodadas a dormir
 							byte roundsToSleep = 0;
 							byte dado = 0;
@@ -567,7 +576,7 @@ public class HeroQuest implements LogicInterface {
 					boolean sucesso = this.calcularSucessoDaMagia(atacante,
 							alvo, magia);
 					if (sucesso) {
-						LanceMagia lance = new LanceMagia();
+						CastSpell lance = new CastSpell();
 						lance.setSpell(magia);
 						lance.setTargetID(alvo.getID());
 						this.tratarLance(lance);
@@ -660,53 +669,52 @@ public class HeroQuest implements LogicInterface {
 		return success;
 	}
 
-	public void enviarLance(Lance lance) {
-		this.getAtorClienteServidor().enviarJogada(lance);
+	public void enviarLance(Action action) {
+		this.getAtorClienteServidor().enviarJogada(action);
 	}
 
-	// Melhorar (uso de interface com Jogada?)
-	public void tratarLance(Lance lance) {
-		String tipo = lance.getClass().getSimpleName();
-		switch (tipo ) {
-		case "LanceMovimento":
-			this.tratarMovimento((LanceMovimento) lance);
-			break;
-		case "LanceAbrirPorta":
-			this.tratarAbrirPorta((LanceAbrirPorta) lance);
-			break;
-		case "LanceAtaque":
-			this.tratarAtaque((LanceAtaque) lance);
-			this.tratarFinalizarJogada(lance);
-			break;
-		case "LanceEnviarPlayer":
-			this.tratarEnviarPlayer((LanceEnviarPlayer) lance);
-			break;
-		case "LanceFinalizarJogada":
-			this.tratarFinalizarJogada(lance);
-			this.atorJogador.exibirCriaturas();
-			break;
-		case "LanceMagia":
-			this.tratarMagia((LanceMagia) lance);
-			//this.atorJogador.exibirCriaturas();
-			this.tratarFinalizarJogada(lance);
-			break;
-		case "LanceProcArmadilha":
-			this.tratarProcurarArmadilha((LanceProcArmadilha) lance);
-			break;
-		case "LanceProcTesouro":
-			this.tratarProcurarTesouro((LanceProcTesouro) lance);
-			break;
-		case "LanceSelecionarPersonagem":
-			this.tratarSelecionarPersonagem((LanceSelecionarPersonagem) lance);
-			this.atorJogador.atualizarInterfaceGrafica();
-			break;
+	public void tratarLance(Action action) {
+		String actionType = action.getClass().getSimpleName();
+		switch (ActionType.getByName(actionType)) {
+			case MOVE:
+				this.tratarMovimento((Move) action);
+				break;
+			case OPEN_DOOR:
+				this.tratarAbrirPorta((OpenDoor) action);
+				break;
+			case ATTACK:
+				this.tratarAtaque((Attack) action);
+				this.tratarFinalizarJogada(action);
+				break;
+			case SEND_PLAYER:
+				this.tratarEnviarPlayer((SendPlayer) action);
+				break;
+			case END_TURN:
+				this.tratarFinalizarJogada(action);
+				this.atorJogador.exibirCriaturas();
+				break;
+			case CAST_SPELL:
+				this.tratarMagia((CastSpell) action);
+				//this.atorJogador.exibirCriaturas();
+				this.tratarFinalizarJogada(action);
+				break;
+			case SEARCH_TRAPS:
+				this.tratarProcurarArmadilha((SearchTraps) action);
+				break;
+			case SEARCH_TREASURE:
+				this.tratarProcurarTesouro((SearchTreasure) action);
+				break;
+			case CHOOSE_CHARACTER:
+				this.tratarSelecionarPersonagem((ChooseCharacter) action);
+				this.atorJogador.atualizarInterfaceGrafica();
+				break;
 		}
 		//this.atorJogador.atualizarInterfaceGrafica();
 		this.atorJogador.atualizarArredoresJogador();
 	}
 	
 	// Inserir aqui a area visivel inicial por personagem
-	private void tratarSelecionarPersonagem(LanceSelecionarPersonagem lance) {
+	private void tratarSelecionarPersonagem(ChooseCharacter lance) {
 		PlayableCharacter character;
 		Adventurer playerA;
 		byte personagem = lance.getValue();
@@ -801,14 +809,14 @@ public class HeroQuest implements LogicInterface {
 		this.atorJogador.exibirCriaturas();
 	}
 
-	private void tratarProcurarTesouro(LanceProcTesouro lance) {
+	private void tratarProcurarTesouro(SearchTreasure lance) {
 		boolean foundGold = false;
 		boolean foundItem = false;
 		String itemName = "";
 		
 		PlayableCharacter character;
-		byte linha = lance.getSourceL();
-		byte coluna = lance.getSourceC();
+		byte linha = lance.getSourceRow();
+		byte coluna = lance.getSourceColumn();
 		
 		Position posicaoAtual = this.map.getPosition(linha, coluna);
 
@@ -858,9 +866,9 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void tratarProcurarArmadilha(LanceProcArmadilha lance) {
-		int linha = lance.getSourceL();
-		int coluna = lance.getSourceC();
+	private void tratarProcurarArmadilha(SearchTraps lance) {
+		int linha = lance.getSourceRow();
+		int coluna = lance.getSourceColumn();
 		Position posicaoAtual;
 		
 		boolean removeuArmadilhas = false;
@@ -910,7 +918,7 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void tratarMagia(LanceMagia lance) {
+	private void tratarMagia(CastSpell lance) {
 		byte alvo;
 		byte dano;
 		byte body;
@@ -938,13 +946,13 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void tratarEnviarPlayer(LanceEnviarPlayer lance) {
+	private void tratarEnviarPlayer(SendPlayer lance) {
 		Player player;
 		player = lance.getPlayer();
 		this.insertPlayerIntoQueue(player);
 	}
 
-	private void tratarAtaque(LanceAtaque lance) {
+	private void tratarAtaque(Attack lance) {
 		byte idAtacante = this.getCriaturaDaVez().getID();
 		byte idAlvo;
 		byte dano;
@@ -984,7 +992,7 @@ public class HeroQuest implements LogicInterface {
 		return null;
 	}
 
-	private void tratarMovimento(LanceMovimento lance) {
+	private void tratarMovimento(Move lance) {
 		Creature criatura;
 		byte body;
 		byte linha;
@@ -992,9 +1000,9 @@ public class HeroQuest implements LogicInterface {
 		
 		
 		
-		Position posicaoAtual = map.getPosition(lance.getSourceL(), lance.getSourceC());
+		Position posicaoAtual = map.getPosition(lance.getSourceRow(), lance.getSourceColumn());
 		
-		Position novaPosicao = map.getPosition(lance.getDestinationL(), lance.getDestinationC());
+		Position novaPosicao = map.getPosition(lance.getDestinationRow(), lance.getDestinationColumn());
 		
 		
 		criatura = this.getCriaturaDaVez();
@@ -1019,7 +1027,7 @@ public class HeroQuest implements LogicInterface {
 		
 		//this.setAreavisibleTeste(linha, coluna, novaPosicao.getClass().getSimpleName());
 		
-		byte dano = lance.getDano();
+		byte dano = lance.getDamage();
 		////////Trap trap = novaPosicao.getTrap();   gerada nova se a posicao nao e enviada
 		// solucao = enviar dano da trap do pc da origem do movimento
 		////if (trap != null) {
@@ -1054,30 +1062,30 @@ public class HeroQuest implements LogicInterface {
 						byte opcao = lance.getOpcao();
 						switch(lance.getDirection()){
 						case UP: {	if (opcao == 0){
-										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 									} else{
-										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 									}
 									break;
 									}
 						case DOWN: {if (opcao == 0){
-										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 									} else{
-										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 									}
 									break;
 									}
 						case LEFT: {if (opcao == 0){
-										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
 									} else{
-										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 									}
 									break;
 									}
 						default: {if (opcao == 0){
-										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 									} else{
-										novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
 									}
 									break;
 									}
@@ -1099,30 +1107,30 @@ public class HeroQuest implements LogicInterface {
 					byte opcao = lance.getOpcao();
 					switch(lance.getDirection()){
 					case UP: {	if (opcao == 0){
-									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 								} else{
-									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 								}
 								break;
 								}
 					case DOWN: {if (opcao == 0){
-									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationC());
+									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 								} else{
-									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationC());
+									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 								}
 								break;
 								}
 					case LEFT: {if (opcao == 0){
-									novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
 								} else{
-									novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 								}
 								break;
 								}
 					default: {if (opcao == 0){
-									novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()+1));
+									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 								} else{
-									novaPosicao = map.getPosition(lance.getDestinationL(), (byte) (novaPosicao.getColumn()-1));
+									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
 								}
 								break;
 								}
@@ -1168,8 +1176,8 @@ public class HeroQuest implements LogicInterface {
 		
 	}
 
-	private void tratarAbrirPorta(LanceAbrirPorta lance) {
-		int idPorta = lance.getObjectID();
+	private void tratarAbrirPorta(OpenDoor lance) {
+		int idPorta = lance.getDoorId();
 		Door porta = this.getPorta(idPorta);
 		if (!porta.getPortaEstaAberta()){
 			porta.abrirPorta();
@@ -1178,7 +1186,7 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 	
-	private void tratarFinalizarJogada(Lance lance) {
+	private void tratarFinalizarJogada(Action action) {
 		this.atorJogador.atualizarArredoresJogador(); // added for GUI refresh
 		
 		Creature daVez;
@@ -1298,9 +1306,9 @@ public class HeroQuest implements LogicInterface {
 			if (caster instanceof Barbarian || caster instanceof Wizard
 					|| caster instanceof Elf || caster instanceof Dwarf){
 				Position source = caster.getCurrentPosition();
-				LanceProcTesouro lance = new LanceProcTesouro();
-				lance.setSourceL(source.getRow());
-				lance.setSourceC(source.getColumn());
+				SearchTreasure lance = new SearchTreasure();
+				lance.setSourceRow(source.getRow());
+				lance.setSourceColumn(source.getColumn());
 				this.tratarLance(lance);
 				this.enviarLance(lance);
 			} else {
@@ -1342,7 +1350,7 @@ public class HeroQuest implements LogicInterface {
 		Zargon playerZ = new Zargon(this);
 		Adventurer playerA = new Adventurer();
 		PlayableCharacter character;
-		LanceSelecionarPersonagem lance = new LanceSelecionarPersonagem();
+		ChooseCharacter lance = new ChooseCharacter();
 		lance.setValue((byte)resultado);
 		//JOptionPane.showMessageDialog(null, resultado);
 		switch (resultado) {
@@ -1490,9 +1498,9 @@ public class HeroQuest implements LogicInterface {
 			if (caster instanceof Barbarian || caster instanceof Wizard
 					|| caster instanceof Elf || caster instanceof Dwarf){
 				Position posicao = caster.getCurrentPosition();
-				LanceProcArmadilha lance = new LanceProcArmadilha();
-				lance.setSourceC(posicao.getColumn());
-				lance.setSourceL(posicao.getRow());
+				SearchTraps lance = new SearchTraps();
+				lance.setSourceColumn(posicao.getColumn());
+				lance.setSourceRow(posicao.getRow());
 				tratarLance(lance);
 				enviarLance(lance);
 			} else {
@@ -1506,7 +1514,7 @@ public class HeroQuest implements LogicInterface {
 	public void finalizarJogada() {
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez) {
-			LanceFinalizarJogada lance = new LanceFinalizarJogada();
+			EndTurn lance = new EndTurn();
 			this.tratarLance(lance);
 			this.enviarLance(lance);
 		} else {
@@ -1547,7 +1555,7 @@ public class HeroQuest implements LogicInterface {
 		String idJogador = this.nomeLocalPlayer;
 		Player player = this.criarJogador(idJogador);
 		this.setLocalPlayer(player);
-		LanceEnviarPlayer lance = new LanceEnviarPlayer();
+		SendPlayer lance = new SendPlayer();
 		lance.setPlayer(player);
 		this.tratarLance(lance);
 		this.enviarLance(lance);

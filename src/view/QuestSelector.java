@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entities.HeroQuest;
-import entities.Strings;
+import entities.utils.Strings;
 import quests.*;
 
 public class QuestSelector extends JFrame {

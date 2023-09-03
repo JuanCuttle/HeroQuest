@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import entities.Door;
-import entities.FallingRock;
-import entities.Furniture;
+import entities.tiles.Door;
+import entities.tiles.FallingRock;
+import entities.tiles.Furniture;
 import entities.HeroQuest;
 import entities.Position;
-import entities.Strings;
+import entities.utils.Strings;
 
 public class GUIStub extends JFrame {
 	/**

@@ -34,6 +34,11 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import entities.*;
+import entities.enemies.Monster;
+import entities.tiles.Door;
+import entities.tiles.FallingRock;
+import entities.tiles.Furniture;
+import entities.utils.Strings;
 import quests.BasicMap;
 
 public class AtorJogador extends JFrame implements InterfaceGUI {

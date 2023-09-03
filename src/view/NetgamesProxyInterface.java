@@ -1,7 +1,7 @@
 package view;
 
 import br.ufsc.inf.leobr.cliente.Jogada;
-import entities.Lance;
+import entities.actions.Action;
 
 public interface NetgamesProxyInterface {
 
@@ -11,7 +11,7 @@ public interface NetgamesProxyInterface {
 	 
 	 void iniciarPartida(int numJog); // requerida por AtorJogador e HeroQuest (nao usado neste)
 	 
-	 void enviarJogada(Lance lance); // requerida por HeroQuest
+	 void enviarJogada(Action action); // requerida por HeroQuest
 	 
 	 void finalizarPartidaComErro(String message); // requerida por NetgamesServer
 	 

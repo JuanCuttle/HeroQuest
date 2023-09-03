@@ -2,20 +2,20 @@ package quests;
 
 import java.util.ArrayList;
 
-import entities.Barbarian;
+import entities.players.Barbarian;
 import entities.Creature;
-import entities.Dwarf;
-import entities.Elf;
-import entities.Fimir;
-import entities.Furniture;
-import entities.Goblin;
+import entities.players.Dwarf;
+import entities.players.Elf;
+import entities.enemies.Fimir;
+import entities.tiles.Furniture;
+import entities.enemies.Goblin;
 import entities.HeroQuest;
-import entities.Monster;
-import entities.Orc;
-import entities.Pit;
+import entities.enemies.Monster;
+import entities.enemies.Orc;
+import entities.tiles.Pit;
 import entities.Position;
-import entities.Strings;
-import entities.Wizard;
+import entities.utils.Strings;
+import entities.players.Wizard;
 
 public class LegacyOfTheOrcWarlord extends BasicMap {
 	

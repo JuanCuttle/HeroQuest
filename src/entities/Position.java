@@ -1,6 +1,8 @@
 package entities;
 
 import br.ufsc.inf.leobr.cliente.Jogada;
+import entities.tiles.Trap;
+import entities.tiles.Treasure;
 
 public class Position implements Jogada {
 
@@ -66,7 +68,6 @@ public class Position implements Jogada {
 	public Treasure getTreasure() {
 		return this.treasure;
 	}
-
 
 	public void setTreasure(Treasure treasure) {
 		this.treasure = treasure;

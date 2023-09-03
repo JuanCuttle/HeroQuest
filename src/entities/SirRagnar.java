@@ -1,5 +1,7 @@
 package entities;
 
+import entities.enemies.Monster;
+
 public class SirRagnar extends Monster {
 
 	/**

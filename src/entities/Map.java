@@ -16,6 +16,8 @@
 package entities;
 
 
+import entities.tiles.*;
+
 public class Map {
 	
 	protected Position[][] positions; 

@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import entities.Strings;
+import entities.utils.Strings;
 
 public class CharacterSelection extends JFrame {
 

@@ -3,8 +3,8 @@ package view;
 import javax.swing.JOptionPane;
 
 import entities.HeroQuest;
-import entities.Lance;
-import entities.Strings;
+import entities.actions.Action;
+import entities.utils.Strings;
 import br.ufsc.inf.leobr.cliente.Jogada;
 import br.ufsc.inf.leobr.cliente.OuvidorProxy;
 import br.ufsc.inf.leobr.cliente.Proxy;
@@ -65,9 +65,9 @@ public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 		}
 	}
 
-	public void enviarJogada(Lance lance) {
+	public void enviarJogada(Action action) {
 		try {
-			proxy.enviaJogada((Jogada) lance);
+			proxy.enviaJogada((Jogada) action);
 		} catch (NaoJogandoException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			e.printStackTrace();
@@ -88,8 +88,8 @@ public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 	}
 
 	public void receberJogada(Jogada jogada) {
-		Lance lance = (Lance) jogada;
-		this.heroQuest.tratarLance(lance);
+		Action action = (Action) jogada;
+		this.heroQuest.tratarLance(action);
 	}
 
 	@Override

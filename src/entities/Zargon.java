@@ -2,6 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 
+import entities.enemies.*;
 import quests.BasicMap;
 
 public class Zargon extends Player {

@@ -2,20 +2,20 @@ package quests;
 
 import java.util.ArrayList;
 
-import entities.ChaosSorcerer;
+import entities.enemies.ChaosSorcerer;
 import entities.Creature;
-import entities.Furniture;
+import entities.tiles.Furniture;
 import entities.HeroQuest;
 import entities.Items;
-import entities.Monster;
-import entities.Mummy;
-import entities.Orc;
-import entities.Pit;
-import entities.Skeleton;
+import entities.enemies.Monster;
+import entities.enemies.Mummy;
+import entities.enemies.Orc;
+import entities.tiles.Pit;
+import entities.enemies.Skeleton;
 import entities.Status;
-import entities.Strings;
-import entities.Treasure;
-import entities.Zombie;
+import entities.utils.Strings;
+import entities.tiles.Treasure;
+import entities.enemies.Zombie;
 
 public class TheFireMage extends BasicMap {
 	

@@ -2,6 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 
+import entities.actions.Action;
 import view.AtorClientServer;
 
 public interface LogicInterface {
@@ -20,9 +21,9 @@ public interface LogicInterface {
 	
 	ArrayList<Creature> getCreatureQueue(); // requerida por AtorJogador
 	
-	void enviarLance(Lance lance); // Comunica diretamente com AtorClienteServidor (requere)
+	void enviarLance(Action action); // Comunica diretamente com AtorClienteServidor (requere)
 	
-	void tratarLance(Lance lance); //requerida por AtorClientServer
+	void tratarLance(Action action); //requerida por AtorClientServer
 	
 	void procurarTesouro(); // requerida por AtorJogador
 	
