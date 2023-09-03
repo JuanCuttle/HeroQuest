@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import modelo.Door;
-import modelo.FallingRock;
-import modelo.Furniture;
-import modelo.HeroQuest;
-import modelo.Position;
-import modelo.Strings;
+import entities.Door;
+import entities.FallingRock;
+import entities.Furniture;
+import entities.HeroQuest;
+import entities.Position;
+import entities.Strings;
 
 public class GUIStub extends JFrame {
 	/**
@@ -116,55 +116,55 @@ public class GUIStub extends JFrame {
 		int linha = posicao.getRow();
 		int coluna = posicao.getColumn();
 		if (!posicao.isVisible()) {
-			path = "/imagens/" + "Wall" + ".png";
+			path = "/images/" + "Wall" + ".png";
 
 		} else {
 			if (posicao.getCreature() != null) {
-				path = "/imagens/"
+				path = "/images/"
 						+ posicao.getCreature().getClass().getSimpleName()
 						+ ".png";
 
 			} else if (posicao.getTrap() != null) {
 					if (posicao.getTrap().getVisible()) {
 						if (posicao.getTrap() instanceof FallingRock && posicao.getTrap().getTriggered()){
-							path = "/imagens/"
+							path = "/images/"
 									+ "Rubble"
 									+ ".png";
 						} else {
-							path = "/imagens/"
+							path = "/images/"
 									+ posicao.getTrap().getClass().getSimpleName()
 									+ ".png";
 						}
 					} else {
-						path = "/imagens/" + posicao.getClass().getSimpleName()
+						path = "/images/" + posicao.getClass().getSimpleName()
 								+ ".png";
 					}
 			} else {
 				if (posicao instanceof Door) {
 					if (!((Door) posicao).isSecreta()) {
 						if (((Door) posicao).getPortaEstaAberta()) {
-							path = "/imagens/PortaAberta.png";
+							path = "/images/tiles/doors/OpenDoor.png";
 						} else {
-							path = "/imagens/PortaFechada.png";
+							path = "/images/tiles/doors/ClosedDoor.png";
 						}
 					} else {
-						path = "/imagens/" + "Wall" + ".png";
+						path = "/images/" + "Wall" + ".png";
 					}
 				} else {
-					path = "/imagens/" + posicao.getClass().getSimpleName()
+					path = "/images/" + posicao.getClass().getSimpleName()
 							+ ".png";
 				}
 				int stairRow = map.getStairsPosition()[0];
 				int stairColumn = map.getStairsPosition()[1];
 				if (stairRow != 0){
 					if (linha == stairRow && coluna == stairColumn) {
-						path = "/imagens/2424.png";
+						path = "/images/stairs/Stairs00.png";
 					} else if (linha == stairRow && coluna == stairColumn+1) {
-						path = "/imagens/2425.png";
+						path = "/images/stairs/Stairs01.png";
 					} else if (linha == stairRow+1 && coluna == stairColumn) {
-						path = "/imagens/2524.png";
+						path = "/images/stairs/Stairs10.png";
 					} else if (linha == stairRow+1 && coluna == stairColumn+1) {
-						path = "/imagens/2525.png";
+						path = "/images/stairs/Stairs11.png";
 					}
 				}
 				
@@ -247,31 +247,31 @@ public class GUIStub extends JFrame {
 		
 		if (tblpos[0] == 0){
 			if (linha == tableRow && coluna == tableCol) {
-				path = "/imagens/tables/TableH00.png";
+				path = "/images/tables/TableH00.png";
 			} else if (linha == tableRow && coluna == tableCol+1) {
-				path = "/imagens/tables/TableH01.png";
+				path = "/images/tables/TableH01.png";
 			} else if (linha == tableRow && coluna == tableCol+2) {
-				path = "/imagens/tables/TableH02.png";
+				path = "/images/tables/TableH02.png";
 			} else if (linha == tableRow+1 && coluna == tableCol) {
-				path = "/imagens/tables/TableH10.png";
+				path = "/images/tables/TableH10.png";
 			} else if (linha == tableRow+1 && coluna == tableCol+1) {
-				path = "/imagens/tables/TableH11.png";
+				path = "/images/tables/TableH11.png";
 			} else if (linha == tableRow+1 && coluna == tableCol+2) {
-				path = "/imagens/tables/TableH12.png";
+				path = "/images/tables/TableH12.png";
 			}
 		} else {
 			if (linha == tableRow && coluna == tableCol) {
-				path = "/imagens/tables/TableV00.png";
+				path = "/images/tables/TableV00.png";
 			} else if (linha == tableRow && coluna == tableCol+1) {
-				path = "/imagens/tables/TableV01.png";
+				path = "/images/tables/TableV01.png";
 			} else if (linha == tableRow+1 && coluna == tableCol) {
-				path = "/imagens/tables/TableV10.png";
+				path = "/images/tables/TableV10.png";
 			} else if (linha == tableRow+1 && coluna == tableCol+1) {
-				path = "/imagens/tables/TableV11.png";
+				path = "/images/tables/TableV11.png";
 			} else if (linha == tableRow+2 && coluna == tableCol) {
-				path = "/imagens/tables/TableV20.png";
+				path = "/images/tables/TableV20.png";
 			} else if (linha == tableRow+2 && coluna == tableCol+1) {
-				path = "/imagens/tables/TableV21.png";
+				path = "/images/tables/TableV21.png";
 			}
 		}
 		return path;
@@ -284,31 +284,31 @@ public class GUIStub extends JFrame {
 		
 		if (rackpos[0] == 0){
 			if (linha == rackRow && coluna == rackCol) {
-				path = "/imagens/racks/RackH00.png";
+				path = "/images/racks/RackH00.png";
 			} else if (linha == rackRow && coluna == rackCol+1) {
-				path = "/imagens/racks/RackH01.png";
+				path = "/images/racks/RackH01.png";
 			} else if (linha == rackRow && coluna == rackCol+2) {
-				path = "/imagens/racks/RackH02.png";
+				path = "/images/racks/RackH02.png";
 			} else if (linha == rackRow+1 && coluna == rackCol) {
-				path = "/imagens/racks/RackH10.png";
+				path = "/images/racks/RackH10.png";
 			} else if (linha == rackRow+1 && coluna == rackCol+1) {
-				path = "/imagens/racks/RackH11.png";
+				path = "/images/racks/RackH11.png";
 			} else if (linha == rackRow+1 && coluna == rackCol+2) {
-				path = "/imagens/racks/RackH12.png";
+				path = "/images/racks/RackH12.png";
 			}
 		} else {
 			if (linha == rackRow && coluna == rackCol) {
-				path = "/imagens/racks/RackV00.png";
+				path = "/images/racks/RackV00.png";
 			} else if (linha == rackRow && coluna == rackCol+1) {
-				path = "/imagens/racks/RackV01.png";
+				path = "/images/racks/RackV01.png";
 			} else if (linha == rackRow+1 && coluna == rackCol) {
-				path = "/imagens/racks/RackV10.png";
+				path = "/images/racks/RackV10.png";
 			} else if (linha == rackRow+1 && coluna == rackCol+1) {
-				path = "/imagens/racks/RackV11.png";
+				path = "/images/racks/RackV11.png";
 			} else if (linha == rackRow+2 && coluna == rackCol) {
-				path = "/imagens/racks/RackV20.png";
+				path = "/images/racks/RackV20.png";
 			} else if (linha == rackRow+2 && coluna == rackCol+1) {
-				path = "/imagens/racks/RackV21.png";
+				path = "/images/racks/RackV21.png";
 			}
 		}
 		return path;
@@ -321,31 +321,31 @@ public class GUIStub extends JFrame {
 		
 		if (botpos[0] == 0){
 			if (linha == botRow && coluna == botCol) { // Change if and when there is this piece horizontally or facing other direction
-				path = "/imagens/bookOnTable/RackH00.png";
+				path = "/images/bookOnTable/RackH00.png";
 			} else if (linha == botRow && coluna == botCol+1) {
-				path = "/imagens/bookOnTable/RackH01.png";
+				path = "/images/bookOnTable/RackH01.png";
 			} else if (linha == botRow && coluna == botCol+2) {
-				path = "/imagens/bookOnTable/RackH02.png";
+				path = "/images/bookOnTable/RackH02.png";
 			} else if (linha == botRow+1 && coluna == botCol) {
-				path = "/imagens/bookOnTable/RackH10.png";
+				path = "/images/bookOnTable/RackH10.png";
 			} else if (linha == botRow+1 && coluna == botCol+1) {
-				path = "/imagens/bookOnTable/RackH11.png";
+				path = "/images/bookOnTable/RackH11.png";
 			} else if (linha == botRow+1 && coluna == botCol+2) {
-				path = "/imagens/bookOnTable/RackH12.png";
+				path = "/images/bookOnTable/RackH12.png";
 			}
 		} else {
 			if (linha == botRow && coluna == botCol) {
-				path = "/imagens/bookOnTable/BookOnTable00.png";
+				path = "/images/bookOnTable/BookOnTable00.png";
 			} else if (linha == botRow && coluna == botCol+1) {
-				path = "/imagens/bookOnTable/BookOnTable01.png";
+				path = "/images/bookOnTable/BookOnTable01.png";
 			} else if (linha == botRow+1 && coluna == botCol) {
-				path = "/imagens/bookOnTable/BookOnTable10.png";
+				path = "/images/bookOnTable/BookOnTable10.png";
 			} else if (linha == botRow+1 && coluna == botCol+1) {
-				path = "/imagens/bookOnTable/BookOnTable11.png";
+				path = "/images/bookOnTable/BookOnTable11.png";
 			} else if (linha == botRow+2 && coluna == botCol) {
-				path = "/imagens/bookOnTable/BookOnTable20.png";
+				path = "/images/bookOnTable/BookOnTable20.png";
 			} else if (linha == botRow+2 && coluna == botCol+1) {
-				path = "/imagens/bookOnTable/BookOnTable21.png";
+				path = "/images/bookOnTable/BookOnTable21.png";
 			}
 		}
 		return path;
@@ -358,31 +358,31 @@ public class GUIStub extends JFrame {
 		
 		if (tombpos[0] == 0){
 			if (linha == tombRow && coluna == tombCol) { // Change if and when there is this piece horizontally
-				path = "/imagens/tomb/RackH00.png";
+				path = "/images/tomb/RackH00.png";
 			} else if (linha == tombRow && coluna == tombCol+1) {
-				path = "/imagens/tomb/RackH01.png";
+				path = "/images/tomb/RackH01.png";
 			} else if (linha == tombRow && coluna == tombCol+2) {
-				path = "/imagens/tomb/RackH02.png";
+				path = "/images/tomb/RackH02.png";
 			} else if (linha == tombRow+1 && coluna == tombCol) {
-				path = "/imagens/tomb/RackH10.png";
+				path = "/images/tomb/RackH10.png";
 			} else if (linha == tombRow+1 && coluna == tombCol+1) {
-				path = "/imagens/tomb/RackH11.png";
+				path = "/images/tomb/RackH11.png";
 			} else if (linha == tombRow+1 && coluna == tombCol+2) {
-				path = "/imagens/tomb/RackH12.png";
+				path = "/images/tomb/RackH12.png";
 			}
 		} else {
 			if (linha == tombRow && coluna == tombCol) {
-				path = "/imagens/tomb/Tomb00.png";
+				path = "/images/tomb/Tomb00.png";
 			} else if (linha == tombRow && coluna == tombCol+1) {
-				path = "/imagens/tomb/Tomb01.png";
+				path = "/images/tomb/Tomb01.png";
 			} else if (linha == tombRow+1 && coluna == tombCol) {
-				path = "/imagens/tomb/Tomb10.png";
+				path = "/images/tomb/Tomb10.png";
 			} else if (linha == tombRow+1 && coluna == tombCol+1) {
-				path = "/imagens/tomb/Tomb11.png";
+				path = "/images/tomb/Tomb11.png";
 			} else if (linha == tombRow+2 && coluna == tombCol) {
-				path = "/imagens/tomb/Tomb20.png";
+				path = "/images/tomb/Tomb20.png";
 			} else if (linha == tombRow+2 && coluna == tombCol+1) {
-				path = "/imagens/tomb/Tomb21.png";
+				path = "/images/tomb/Tomb21.png";
 			}
 		}
 		return path;
@@ -395,11 +395,11 @@ public class GUIStub extends JFrame {
 		
 		if (thronepos[0] == 0){
 			if (linha == throneRow && coluna == throneCol) {
-				path = "/imagens/ThroneR.png";
+				path = "/images/throne/ThroneR.png";
 			}
 		} else {
 			if (linha == throneRow && coluna == throneCol) {
-				path = "/imagens/ThroneL.png";
+				path = "/images/throne/ThroneL.png";
 			}
 		}
 		return path;
@@ -412,19 +412,19 @@ public class GUIStub extends JFrame {
 		
 		if (wepRackpos[0] == 0){
 			if (linha == wepRackRow && coluna == wepRackCol) {
-				path = "/imagens/wepRack/WepRackR0.png";
+				path = "/images/wepRack/WepRackR0.png";
 			} else if(linha == wepRackRow+1 && coluna == wepRackCol){
-				path = "/imagens/wepRack/WepRackR1.png";
+				path = "/images/wepRack/WepRackR1.png";
 			} else if(linha == wepRackRow+2 && coluna == wepRackCol){
-				path = "/imagens/wepRack/WepRackR2.png";
+				path = "/images/wepRack/WepRackR2.png";
 			}
 		} else {
 			if (linha == wepRackRow && coluna == wepRackCol) {
-				path = "/imagens/wepRack/WepRackL0.png";
+				path = "/images/wepRack/WepRackL0.png";
 			} else if(linha == wepRackRow+1 && coluna == wepRackCol){
-				path = "/imagens/wepRack/WepRackL1.png";
+				path = "/images/wepRack/WepRackL1.png";
 			} else if(linha == wepRackRow+2 && coluna == wepRackCol){
-				path = "/imagens/wepRack/WepRackL2.png";
+				path = "/images/wepRack/WepRackL2.png";
 			}
 		}
 		return path;
@@ -437,31 +437,31 @@ public class GUIStub extends JFrame {
 		
 		if (deskpos[0] == 0){ // facing right
 			if (linha == deskRow && coluna == deskCol) {
-				path = "/imagens/desk/DeskR00.png";
+				path = "/images/desk/DeskR00.png";
 			} else if (linha == deskRow && coluna == deskCol+1) {
-				path = "/imagens/desk/DeskR01.png";
+				path = "/images/desk/DeskR01.png";
 			} else if (linha == deskRow+1 && coluna == deskCol) {
-				path = "/imagens/desk/DeskR10.png";
+				path = "/images/desk/DeskR10.png";
 			} else if (linha == deskRow+1 && coluna == deskCol+1) {
-				path = "/imagens/desk/DeskR11.png";
+				path = "/images/desk/DeskR11.png";
 			} else if (linha == deskRow+2 && coluna == deskCol) {
-				path = "/imagens/desk/DeskR20.png";
+				path = "/images/desk/DeskR20.png";
 			} else if (linha == deskRow+2 && coluna == deskCol+1) {
-				path = "/imagens/desk/DeskR21.png";
+				path = "/images/desk/DeskR21.png";
 			}
 		} else {
 			if (linha == deskRow && coluna == deskCol) {
-				path = "/imagens/desk/DeskL00.png";
+				path = "/images/desk/DeskL00.png";
 			} else if (linha == deskRow && coluna == deskCol+1) {
-				path = "/imagens/desk/DeskL01.png";
+				path = "/images/desk/DeskL01.png";
 			} else if (linha == deskRow+1 && coluna == deskCol) {
-				path = "/imagens/desk/DeskL10.png";
+				path = "/images/desk/DeskL10.png";
 			} else if (linha == deskRow+1 && coluna == deskCol+1) {
-				path = "/imagens/desk/DeskL11.png";
+				path = "/images/desk/DeskL11.png";
 			} else if (linha == deskRow+2 && coluna == deskCol) {
-				path = "/imagens/desk/DeskL20.png";
+				path = "/images/desk/DeskL20.png";
 			} else if (linha == deskRow+2 && coluna == deskCol+1) {
-				path = "/imagens/desk/DeskL21.png";
+				path = "/images/desk/DeskL21.png";
 			}
 		}
 		return path;
@@ -474,19 +474,19 @@ public class GUIStub extends JFrame {
 		
 		if (fireplacepos[0] == 0){ // facing down
 			if (linha == fireplaceRow && coluna == fireplaceCol) {
-				path = "/imagens/fireplace/FireplaceD0.png";
+				path = "/images/fireplace/FireplaceD0.png";
 			} else if(linha == fireplaceRow && coluna == fireplaceCol+1){
-				path = "/imagens/fireplace/FireplaceD1.png";
+				path = "/images/fireplace/FireplaceD1.png";
 			} else if(linha == fireplaceRow && coluna == fireplaceCol+2){
-				path = "/imagens/fireplace/FireplaceD2.png";
+				path = "/images/fireplace/FireplaceD2.png";
 			}
 		} else {
 			if (linha == fireplaceRow && coluna == fireplaceCol) {
-				path = "/imagens/fireplace/FireplaceU0.png";
+				path = "/images/fireplace/FireplaceU0.png";
 			} else if(linha == fireplaceRow && coluna == fireplaceCol+1){
-				path = "/imagens/fireplace/FireplaceU1.png";
+				path = "/images/fireplace/FireplaceU1.png";
 			} else if(linha == fireplaceRow && coluna == fireplaceCol+2){
-				path = "/imagens/fireplace/FireplaceU2.png";
+				path = "/images/fireplace/FireplaceU2.png";
 			}
 		}
 		return path;
@@ -499,19 +499,19 @@ public class GUIStub extends JFrame {
 		
 		if (bcpos[0] == 0){ // horizontal
 			if (linha == bcRow && coluna == bcCol) {
-				path = "/imagens/bookcase/BookcaseH0.png";
+				path = "/images/bookcase/BookcaseH0.png";
 			} else if(linha == bcRow && coluna == bcCol+1){
-				path = "/imagens/bookcase/BookcaseH1.png";
+				path = "/images/bookcase/BookcaseH1.png";
 			} else if(linha == bcRow && coluna == bcCol+2){
-				path = "/imagens/bookcase/BookcaseH2.png";
+				path = "/images/bookcase/BookcaseH2.png";
 			}
 		} else { // vertical
 			if (linha == bcRow && coluna == bcCol) {
-				path = "/imagens/bookcase/BookcaseV0.png";
+				path = "/images/bookcase/BookcaseV0.png";
 			} else if(linha == bcRow+1 && coluna == bcCol){
-				path = "/imagens/bookcase/BookcaseV1.png";
+				path = "/images/bookcase/BookcaseV1.png";
 			} else if(linha == bcRow+2 && coluna == bcCol){
-				path = "/imagens/bookcase/BookcaseV2.png";
+				path = "/images/bookcase/BookcaseV2.png";
 			}
 		}
 		return path;

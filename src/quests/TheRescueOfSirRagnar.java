@@ -2,19 +2,19 @@ package quests;
 
 import java.util.ArrayList;
 
-import modelo.Creature;
-import modelo.Door;
-import modelo.Fimir;
-import modelo.Furniture;
-import modelo.Goblin;
-import modelo.HeroQuest;
-import modelo.Items;
-import modelo.Monster;
-import modelo.Orc;
-import modelo.Position;
-import modelo.SirRagnar;
-import modelo.Strings;
-import modelo.Treasure;
+import entities.Creature;
+import entities.Door;
+import entities.Fimir;
+import entities.Furniture;
+import entities.Goblin;
+import entities.HeroQuest;
+import entities.Items;
+import entities.Monster;
+import entities.Orc;
+import entities.Position;
+import entities.SirRagnar;
+import entities.Strings;
+import entities.Treasure;
 
 
 public class TheRescueOfSirRagnar extends BasicMap {

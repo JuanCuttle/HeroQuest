@@ -2,19 +2,19 @@ package quests;
 
 import java.util.ArrayList;
 
-import modelo.ChaosWarrior;
-import modelo.Creature;
-import modelo.Fimir;
-import modelo.Furniture;
-import modelo.Goblin;
-import modelo.HeroQuest;
-import modelo.Items;
-import modelo.Monster;
-import modelo.Orc;
-import modelo.Position;
-import modelo.Status;
-import modelo.Strings;
-import modelo.Treasure;
+import entities.ChaosWarrior;
+import entities.Creature;
+import entities.Fimir;
+import entities.Furniture;
+import entities.Goblin;
+import entities.HeroQuest;
+import entities.Items;
+import entities.Monster;
+import entities.Orc;
+import entities.Position;
+import entities.Status;
+import entities.Strings;
+import entities.Treasure;
 
 public class LairOfTheOrcWarlord extends BasicMap {
 

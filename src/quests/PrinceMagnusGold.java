@@ -2,17 +2,17 @@ package quests;
 
 import java.util.ArrayList;
 
-import modelo.ChaosWarrior;
-import modelo.Fimir;
-import modelo.Furniture;
-import modelo.Goblin;
-import modelo.HeroQuest;
-import modelo.Monster;
-import modelo.Orc;
-import modelo.Pit;
-import modelo.Spear;
-import modelo.Strings;
-import modelo.Treasure;
+import entities.ChaosWarrior;
+import entities.Fimir;
+import entities.Furniture;
+import entities.Goblin;
+import entities.HeroQuest;
+import entities.Monster;
+import entities.Orc;
+import entities.Pit;
+import entities.Spear;
+import entities.Strings;
+import entities.Treasure;
 
 public class PrinceMagnusGold extends BasicMap {
 	public PrinceMagnusGold(HeroQuest game){

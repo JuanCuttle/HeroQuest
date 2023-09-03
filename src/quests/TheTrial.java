@@ -2,21 +2,21 @@ package quests;
 
 import java.util.ArrayList;
 
-import modelo.ChaosWarrior;
-import modelo.Creature;
-import modelo.Fimir;
-import modelo.Furniture;
-import modelo.Gargoyle;
-import modelo.Goblin;
-import modelo.HeroQuest;
-import modelo.Monster;
-import modelo.Mummy;
-import modelo.Orc;
-import modelo.Skeleton;
-import modelo.Status;
-import modelo.Strings;
-import modelo.Treasure;
-import modelo.Zombie;
+import entities.ChaosWarrior;
+import entities.Creature;
+import entities.Fimir;
+import entities.Furniture;
+import entities.Gargoyle;
+import entities.Goblin;
+import entities.HeroQuest;
+import entities.Monster;
+import entities.Mummy;
+import entities.Orc;
+import entities.Skeleton;
+import entities.Status;
+import entities.Strings;
+import entities.Treasure;
+import entities.Zombie;
 
 
 public class TheTrial extends BasicMap {

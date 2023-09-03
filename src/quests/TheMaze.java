@@ -2,15 +2,15 @@ package quests;
 
 import java.util.ArrayList;
 
-import modelo.Barbarian;
-import modelo.Creature;
-import modelo.Dwarf;
-import modelo.Elf;
-import modelo.HeroQuest;
-import modelo.Monster;
-import modelo.Orc;
-import modelo.Strings;
-import modelo.Wizard;
+import entities.Barbarian;
+import entities.Creature;
+import entities.Dwarf;
+import entities.Elf;
+import entities.HeroQuest;
+import entities.Monster;
+import entities.Orc;
+import entities.Strings;
+import entities.Wizard;
 
 public class TheMaze extends BasicMap {
 		

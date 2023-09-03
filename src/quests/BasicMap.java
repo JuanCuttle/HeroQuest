@@ -2,17 +2,17 @@ package quests;
 
 import java.util.ArrayList;
 
-import modelo.Corridor;
-import modelo.Door;
-import modelo.FallingRock;
-import modelo.HeroQuest;
-import modelo.Monster;
-import modelo.Pit;
-import modelo.Position;
-import modelo.Room;
-import modelo.Spear;
-import modelo.Treasure;
-import modelo.Wall;
+import entities.Corridor;
+import entities.Door;
+import entities.FallingRock;
+import entities.HeroQuest;
+import entities.Monster;
+import entities.Pit;
+import entities.Position;
+import entities.Room;
+import entities.Spear;
+import entities.Treasure;
+import entities.Wall;
 
 public class BasicMap {
 	
