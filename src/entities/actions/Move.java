@@ -1,7 +1,6 @@
 package entities.actions;
 
 import enums.DirectionEnum;
-import enums.TrapEvasionMovementEnum;
 
 public class Move extends Action {
 

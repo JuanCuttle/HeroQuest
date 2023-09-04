@@ -1,4 +1,4 @@
-package view;
+package interfaces;
 
 import br.ufsc.inf.leobr.cliente.Jogada;
 import entities.actions.Action;

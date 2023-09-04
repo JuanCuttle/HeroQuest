@@ -16,6 +16,7 @@ import enums.ActionTypeEnum;
 import enums.DirectionEnum;
 import enums.TrapEvasionMovementEnum;
 import enums.StatusEnum;
+import interfaces.LogicInterface;
 import quests.BasicMap;
 import quests.MelarsMaze;
 import view.AtorClientServer;
@@ -1538,8 +1539,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void finalizarJogo() {
-		//System.exit(0);
-		int option = JOptionPane.showConfirmDialog(null, Strings.ENDGAME.toString());
+		int option = JOptionPane.showConfirmDialog(null, Strings.END_GAME.toString());
 		if (option == 0){
 			System.exit(0);
 		}

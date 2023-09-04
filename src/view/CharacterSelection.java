@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entities.utils.Strings;
+import enums.ImageEnum;
 
 public class CharacterSelection extends JFrame {
 

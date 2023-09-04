@@ -40,10 +40,8 @@ import entities.tiles.Door;
 import entities.tiles.FallingRock;
 import entities.tiles.Furniture;
 import entities.utils.Strings;
-import enums.ConnectionResultEnum;
-import enums.DirectionEnum;
-import enums.TrapEvasionMovementEnum;
-import enums.StatusEnum;
+import enums.*;
+import interfaces.GUIInterface;
 import quests.BasicMap;
 
 public class GUI extends JFrame implements GUIInterface {
@@ -1266,7 +1264,7 @@ public class GUI extends JFrame implements GUIInterface {
 			         ois.close();
 			         fis.close();
 			         
-			         returnValues.add(sf.getCharClass()+"");
+			         returnValues.add(sf.getCharacterClass()+"");
 			         returnValues.add(sf.getGold()+"");
 			         returnValues.add(sf.getItems()+"");
 			            

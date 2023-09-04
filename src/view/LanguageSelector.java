@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entities.utils.Strings;
+import enums.LanguageEnum;
 
 public class LanguageSelector extends JFrame {
 

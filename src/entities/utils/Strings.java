@@ -1,7 +1,7 @@
 package entities.utils;
 
 import view.GUI;
-import view.LanguageEnum;
+import enums.LanguageEnum;
 
 public enum Strings {
 	 HEROQUEST {
@@ -190,7 +190,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  ENDGAME {
+	  END_GAME {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "O jogo terminou, deseja fech�-lo?";

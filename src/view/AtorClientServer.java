@@ -13,6 +13,7 @@ import br.ufsc.inf.leobr.cliente.exception.JahConectadoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoConectadoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoJogandoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
+import interfaces.NetgamesProxyInterface;
 
 public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 

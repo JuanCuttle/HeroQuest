@@ -11,6 +11,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
 import entities.utils.Strings;
+import enums.ImageEnum;
 
 public class Instructions extends JFrame {
 
