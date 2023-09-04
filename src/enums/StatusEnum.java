@@ -1,4 +1,4 @@
-package entities;
+package enums;
 /*
 	Sleeping: The creature cannot move, attack or defend itself. Every turn, the creature can roll a die for each of its Mind Points
 				If a 6 is rolled the spell is broken. Cannot be used against Mummies, Zombies or Skeletons
@@ -13,7 +13,7 @@ package entities;
 	Dead: The creature is dead.
 	
 */
-public enum Status {
+public enum StatusEnum {
 	SLEEPING,
 	CURSED,
 	AGILITY_UP,

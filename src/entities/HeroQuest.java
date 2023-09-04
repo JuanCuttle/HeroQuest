@@ -6,20 +6,19 @@ import java.util.Collections;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 import entities.actions.*;
 import entities.enemies.Monster;
-import entities.players.Barbarian;
-import entities.players.Dwarf;
-import entities.players.Elf;
-import entities.players.Wizard;
+import entities.players.*;
 import entities.tiles.*;
 import entities.utils.Strings;
+import enums.ActionTypeEnum;
+import enums.DirectionEnum;
+import enums.StatusEnum;
 import quests.BasicMap;
 import quests.MelarsMaze;
 import view.AtorClientServer;
-import view.AtorJogador;
+import view.GUI;
 import exceptions.PositionNotEmptyException;
 
 public class HeroQuest implements LogicInterface {
@@ -27,7 +26,7 @@ public class HeroQuest implements LogicInterface {
 	protected BasicMap map;
 	protected ArrayList<Player> players;
 
-	protected AtorJogador atorJogador;
+	protected GUI GUI;
 	private AtorClientServer atorClienteServidor;
 	protected Player localPlayer;
 	protected ArrayList<Creature> creatureQueue;
@@ -37,16 +36,15 @@ public class HeroQuest implements LogicInterface {
 	protected static boolean wizardAvailable;
 	protected static boolean elfAvailable;
 	protected static boolean dwarfAvailable;
-	protected boolean conectado;
-	protected boolean emAndamento;
+	protected boolean connected;
+	protected boolean inSession;
 	protected Adventurer localAdventurer;
 	protected Zargon localZargon;
-	public String nomeLocalPlayer = "";
+	public String localPlayerName = "";
 
 
-	//public HeroQuest(AtorJogador ator) {
 	public HeroQuest(){
-		this.players = new ArrayList<Player>();
+		this.players = new ArrayList<>();
 		//this.atorJogador = ator; // link later
 		this.atorClienteServidor = new AtorClientServer(this);
 		this.creatureQueue = new ArrayList<Creature>();
@@ -56,8 +54,8 @@ public class HeroQuest implements LogicInterface {
 		wizardAvailable = true;
 		elfAvailable = true;
 		dwarfAvailable = true;
-		this.conectado = false;
-		this.emAndamento = false;
+		this.connected = false;
+		this.inSession = false;
 		this.localAdventurer = null;
 		this.localZargon = null;
 		
@@ -65,9 +63,25 @@ public class HeroQuest implements LogicInterface {
 		//this.atorJogador.selectQuest(this);
 		//this.map = new TheTrial(this); // Uncomment to make game work, comment to make stub work
 	}
+
+	public boolean isConnected() {
+		return this.connected;
+	}
+
+	public void setConnected(boolean connected) {
+		this.connected = connected;
+	}
+
+	public boolean getInSession() {
+		return this.inSession;
+	}
+
+	public void setInSession(boolean valor) {
+		this.inSession = valor;
+	}
 	
 	public void abrirPorta(int idPorta) {
-		Creature criatura = this.getCriaturaDaVez();
+		Creature criatura = this.getCurrentCreature();
 		if (criatura instanceof Barbarian || criatura instanceof Wizard
 				|| criatura instanceof Elf || criatura instanceof Dwarf){
 			
@@ -88,21 +102,21 @@ public class HeroQuest implements LogicInterface {
 							this.enviarLance(lance);
 							
 					} else {
-						this.atorJogador.reportarErro(Strings.DOOROUTOFRANGE.toString());
+						this.GUI.reportError(Strings.DOOROUTOFRANGE.toString());
 					}
 				}
 			} else {
-				this.atorJogador
-						.reportarErro(Strings.NOTYOURTURN.toString());
+				this.GUI
+						.reportError(Strings.NOTYOURTURN.toString());
 			}
 		} else {
-			this.atorJogador
-			.reportarErro(Strings.CANTOPENDOOR.toString());
+			this.GUI
+			.reportError(Strings.CANTOPENDOOR.toString());
 		}
 	}
 	
 	public void abrirPortaTeclado() {
-		Creature criatura = this.getCriaturaDaVez();
+		Creature criatura = this.getCurrentCreature();
 		if (criatura instanceof Barbarian || criatura instanceof Wizard
 				|| criatura instanceof Elf || criatura instanceof Dwarf){
 
@@ -143,7 +157,7 @@ public class HeroQuest implements LogicInterface {
 				
 				if (!portaIds.isEmpty()) {
 					
-					int escolhida = this.atorJogador.escolherPorta(portaIds);
+					int escolhida = this.GUI.selectDoorToOpen(portaIds);
 					int idPorta = Integer.parseInt(portaId.get(escolhida));
 				
 					//Door porta = this.getPorta(idPorta);
@@ -158,22 +172,22 @@ public class HeroQuest implements LogicInterface {
 						this.enviarLance(lance);
 		 
 				} else {
-					this.atorJogador.reportarErro(Strings.DOOROUTOFRANGE.toString());
+					this.GUI.reportError(Strings.DOOROUTOFRANGE.toString());
 				}
 			} else {
-				this.atorJogador
-						.reportarErro(Strings.NOTYOURTURN.toString());
+				this.GUI
+						.reportError(Strings.NOTYOURTURN.toString());
 			}
 		} else {
-			this.atorJogador
-			.reportarErro(Strings.CANTOPENDOOR.toString());
+			this.GUI
+			.reportError(Strings.CANTOPENDOOR.toString());
 		}
 	}
 	
 
 	private boolean verificaSeJogadorDaVez() {
 		int idCriaturaLocal, idCriaturaDaVez;
-		idCriaturaDaVez = this.getCriaturaDaVez().getID();
+		idCriaturaDaVez = this.getCurrentCreature().getID();
 		if (this.localAdventurer != null) {
 			idCriaturaLocal = (this.localAdventurer).getPlayableCharacter()
 					.getID();
@@ -235,13 +249,13 @@ public class HeroQuest implements LogicInterface {
 				|| (colunaAventureiro == colunaPorta && linhaAventureiro == linhaPorta + 1);
 	}
 
-	public void movimentar(Directions direcao) {
+	public void movimentar(DirectionEnum direcao) {
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez) {
-			Creature criatura = this.getCriaturaDaVez();
+			Creature criatura = this.getCurrentCreature();
 			
-			if (criatura.getStatus() == Status.SLEEPING){
-				this.atorJogador.reportarErro(Strings.SLEEPFREEZE.toString());
+			if (criatura.getStatus() == StatusEnum.SLEEPING){
+				this.GUI.reportError(Strings.SLEEPFREEZE.toString());
 			} else {
 			
 				byte movimento = criatura.getMovement();
@@ -267,7 +281,7 @@ public class HeroQuest implements LogicInterface {
 							lance.setDamage(dano);
 							
 							if (trap instanceof FallingRock){
-								byte opcao = this.atorJogador.mostrarOpcoesFallingRock();
+								byte opcao = this.GUI.showFallingRockMovementOptions();
 								
 								
 								switch(direcao){
@@ -306,12 +320,12 @@ public class HeroQuest implements LogicInterface {
 								}
 								
 								lance.setDirection(direcao);
-								lance.setOpcao(opcao);
+								lance.setOption(opcao);
 							} else if (trap instanceof Pit){
 								
 								if (trap.getVisible()){
 								
-									byte opcao = this.atorJogador.mostrarOpcoesPit();
+									byte opcao = this.GUI.showPitJumpingOptions();
 									
 									switch(direcao){
 									case UP: {	if (opcao == 0){
@@ -349,10 +363,10 @@ public class HeroQuest implements LogicInterface {
 									}
 									
 									lance.setDirection(direcao);
-									lance.setOpcao(opcao);
+									lance.setOption(opcao);
 									} else {
 										lance.setDirection(direcao);
-										lance.setOpcao((byte)2);
+										lance.setOption((byte)2);
 									}
 							}
 						}
@@ -361,23 +375,23 @@ public class HeroQuest implements LogicInterface {
 						this.enviarLance(lance);
 
 					} catch (PositionNotEmptyException e) {
-						this.atorJogador.reportarErro(Strings.PHYSICSLAWS.toString());
+						this.GUI.reportError(Strings.PHYSICSLAWS.toString());
 					}
 				} else {
-					this.atorJogador
-							.reportarErro(Strings.NOMOVELEFT.toString());
+					this.GUI
+							.reportError(Strings.NOMOVELEFT.toString());
 					}
 				}
 			} else {
-				this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
+				this.GUI.reportError(Strings.NOTYOURTURN.toString());
 			}
 	}
 
-	public Creature getCriaturaDaVez() {
+	public Creature getCurrentCreature() {
 		return this.creatureQueue.get(0);
 	}
 
-	private Position getNovaPosicao(Directions direcao, byte linha, byte coluna)
+	private Position getNovaPosicao(DirectionEnum direcao, byte linha, byte coluna)
 			throws PositionNotEmptyException {
 		Position novaPosicao = null;
 		switch (direcao) {
@@ -409,10 +423,10 @@ public class HeroQuest implements LogicInterface {
 	public void atacar() {
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez) {
-			Creature atacante = this.getCriaturaDaVez();
+			Creature atacante = this.getCurrentCreature();
 			
-			if (atacante.getStatus() == Status.SLEEPING){
-				this.atorJogador.reportarErro(Strings.SLEEPNOATT.toString());
+			if (atacante.getStatus() == StatusEnum.SLEEPING){
+				this.GUI.reportError(Strings.SLEEPNOATT.toString());
 			} else{
 				Position posicaoAtacante = atacante.getCurrentPosition();
 				boolean hasSpear = false;
@@ -423,7 +437,7 @@ public class HeroQuest implements LogicInterface {
 				}
 				ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1,
 						posicaoAtacante);
-				Creature alvo = this.atorJogador.selecionarAlvo(possiveisAlvos);
+				Creature alvo = this.GUI.selectTarget(possiveisAlvos);
 				Position posicaoAlvo = alvo.getCurrentPosition();
 				boolean possivel = this.verificaSeDistanciaPossivel(
 						posicaoAtacante, posicaoAlvo, hasSpear);
@@ -435,12 +449,12 @@ public class HeroQuest implements LogicInterface {
 					this.tratarLance(lance);
 					this.enviarLance(lance);
 				} else {
-					this.atorJogador
-						.reportarErro(Strings.OUTOFRANGE.toString());
+					this.GUI
+						.reportError(Strings.OUTOFRANGE.toString());
 				}
 			}
 		} else {
-			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -478,10 +492,10 @@ public class HeroQuest implements LogicInterface {
 				defDiceAmount--;
 			}
 		}
-		if (alvo.getStatus() == Status.ROCK_SKIN){
+		if (alvo.getStatus() == StatusEnum.ROCK_SKIN){
 			defDiceAmount++;
 		}
-		if (atacante.getStatus() == Status.COURAGE){
+		if (atacante.getStatus() == StatusEnum.COURAGE){
 			atkDiceAmount += 2;
 		}
 		probabilidade = 2;
@@ -496,7 +510,7 @@ public class HeroQuest implements LogicInterface {
 		} else {
 			probabilidade = 3;
 		}
-		if (alvo.getStatus() == Status.SLEEPING){
+		if (alvo.getStatus() == StatusEnum.SLEEPING){
 			defence = 0;
 		} else {
 			for (byte i = 1; i <= defDiceAmount; i++) {
@@ -521,24 +535,24 @@ public class HeroQuest implements LogicInterface {
 	public void usarMagia() {
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez) {
-			Creature atacante = this.getCriaturaDaVez();
+			Creature atacante = this.getCurrentCreature();
 			if (atacante instanceof Wizard) {
 				ArrayList<Spell> magiasDisponiveis = ((Wizard) atacante)
 						.getSpells();
 				byte mind = atacante.getMind();
 				if (mind > 0) {
-					Spell magia = this.atorJogador
-							.selecionarMagia(magiasDisponiveis);
+					Spell magia = this.GUI
+							.selectSpell(magiasDisponiveis);
 					Position posicaoAtual = atacante.getCurrentPosition();
 					ArrayList<Creature> possiveisAlvos = this
 							.getPossiveisAlvos((byte) 2, posicaoAtual);
-					Creature alvo = this.atorJogador
-							.selecionarAlvo(possiveisAlvos);
+					Creature alvo = this.GUI
+							.selectTarget(possiveisAlvos);
 					boolean sucesso = this.calcularSucessoDaMagia(atacante,
 							alvo, magia);
 					if (sucesso) {
 						CastSpell lance = new CastSpell();
-						if (magia.getStatus() == Status.SLEEPING){ // determinar o numero de rodadas a dormir
+						if (magia.getStatus() == StatusEnum.SLEEPING){ // determinar o numero de rodadas a dormir
 							byte roundsToSleep = 0;
 							byte dado = 0;
 							byte mindAlvo = alvo.getMind();
@@ -559,20 +573,20 @@ public class HeroQuest implements LogicInterface {
 						this.enviarLance(lance);
 					}
 				} else {
-					this.atorJogador.reportarErro(Strings.NOMIND.toString());
+					this.GUI.reportError(Strings.NOMIND.toString());
 				}
 			} else if (atacante instanceof Elf) {
 				ArrayList<Spell> magiasDisponiveis = ((Elf) atacante)
 						.getSpells();
 				byte mind = atacante.getMind();
 				if (mind > 0) {
-					Spell magia = this.atorJogador
-							.selecionarMagia(magiasDisponiveis);
+					Spell magia = this.GUI
+							.selectSpell(magiasDisponiveis);
 					Position posicaoAtual = atacante.getCurrentPosition();
 					ArrayList<Creature> possiveisAlvos = this
 							.getPossiveisAlvos((byte) 2, posicaoAtual);
-					Creature alvo = this.atorJogador
-							.selecionarAlvo(possiveisAlvos);
+					Creature alvo = this.GUI
+							.selectTarget(possiveisAlvos);
 					boolean sucesso = this.calcularSucessoDaMagia(atacante,
 							alvo, magia);
 					if (sucesso) {
@@ -583,13 +597,13 @@ public class HeroQuest implements LogicInterface {
 						this.enviarLance(lance);
 					}
 				} else {
-					this.atorJogador.reportarErro(Strings.NOMIND.toString());
+					this.GUI.reportError(Strings.NOMIND.toString());
 				}
 			} else {
-				this.atorJogador.reportarErro(Strings.DOESNTUSESPELLS.toString());
+				this.GUI.reportError(Strings.DOESNTUSESPELLS.toString());
 			}
 		} else {
-			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -605,7 +619,7 @@ public class HeroQuest implements LogicInterface {
 		dano = spell.getDamage();
 		success = true;
 
-		if (spell.getNome() == "Ball of Flame"){
+		if (spell.getName() == "Ball of Flame"){
 			// 2 de dano, menos 1 por cada 5 ou 6 rolados em 2 dados
 			byte dado1 = (byte)(Math.random()*6);
 			byte dado2 = (byte)(Math.random()*6);
@@ -620,11 +634,11 @@ public class HeroQuest implements LogicInterface {
 			
 			if (dano == 0) {
 				success = false;
-				this.atorJogador.mostrarMensagem(Strings.MAGICFAIL.toString());
+				this.GUI.showMessagePopup(Strings.MAGICFAIL.toString());
 			}
 		}
 		
-		if (spell.getNome() == "Fire of Wrath") {
+		if (spell.getName() == "Fire of Wrath") {
 			// 1 de dano, 0 se conseguir rolar 5 ou 6 em um dado
 			byte dado = (byte)(Math.random()*6);
 			
@@ -635,11 +649,11 @@ public class HeroQuest implements LogicInterface {
 			
 			if (dano == 0) {
 				success = false;
-				this.atorJogador.mostrarMensagem(Strings.MAGICFAIL.toString());
+				this.GUI.showMessagePopup(Strings.MAGICFAIL.toString());
 			}
 		}
 		
-		if (spell.getNome() == "Sleep"){
+		if (spell.getName() == "Sleep"){
 			
 			String nomeAlvo = target.getClass().getSimpleName();
 			if (nomeAlvo == "Zombie" || nomeAlvo == "Mummy" || nomeAlvo == "Skeleton"){
@@ -652,7 +666,7 @@ public class HeroQuest implements LogicInterface {
 					dado = (byte)(Math.random()*6);
 					if (dado == 5){
 						success = false;
-						this.atorJogador.mostrarMensagem(Strings.MAGICFAIL.toString());
+						this.GUI.showMessagePopup(Strings.MAGICFAIL.toString());
 						break;
 					}
 				}
@@ -675,7 +689,7 @@ public class HeroQuest implements LogicInterface {
 
 	public void tratarLance(Action action) {
 		String actionType = action.getClass().getSimpleName();
-		switch (ActionType.getByName(actionType)) {
+		switch (ActionTypeEnum.getByName(actionType)) {
 			case MOVE:
 				this.tratarMovimento((Move) action);
 				break;
@@ -691,7 +705,7 @@ public class HeroQuest implements LogicInterface {
 				break;
 			case END_TURN:
 				this.tratarFinalizarJogada(action);
-				this.atorJogador.exibirCriaturas();
+				this.GUI.showVisibleCreaturesInQueue();
 				break;
 			case CAST_SPELL:
 				this.tratarMagia((CastSpell) action);
@@ -706,11 +720,11 @@ public class HeroQuest implements LogicInterface {
 				break;
 			case CHOOSE_CHARACTER:
 				this.tratarSelecionarPersonagem((ChooseCharacter) action);
-				this.atorJogador.atualizarInterfaceGrafica();
+				this.GUI.refreshGUI();
 				break;
 		}
 		//this.atorJogador.atualizarInterfaceGrafica();
-		this.atorJogador.atualizarArredoresJogador();
+		this.GUI.updatePlayerSurroundings();
 	}
 	
 	// Inserir aqui a area visivel inicial por personagem
@@ -802,11 +816,11 @@ public class HeroQuest implements LogicInterface {
 				
 				break;
 			default:
-				this.atorJogador.reportarErro(Strings.CHARSELECTERROR.toString());
+				this.GUI.reportError(Strings.CHARSELECTERROR.toString());
 				break;
 		}
 		this.sortCreatureQueueByID();
-		this.atorJogador.exibirCriaturas();
+		this.GUI.showVisibleCreaturesInQueue();
 	}
 
 	private void tratarProcurarTesouro(SearchTreasure lance) {
@@ -834,7 +848,7 @@ public class HeroQuest implements LogicInterface {
 						if (tesouro.isTrap()){
 							character.decreaseBody((byte) 1);
 							tesouro.setAsTrap(false);
-							this.atorJogador.mostrarAcaoTrap((byte) 1, character);
+							this.GUI.showTrapActivationMessage((byte) 1, character);
 						} else {
 							if (gold >= 0){
 								tesouro.setGoldAmount(-1);
@@ -855,12 +869,12 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 		if (foundGold){
-			this.atorJogador.mostrarMensagem(Strings.THEPLAYER.toString()
+			this.GUI.showMessagePopup(Strings.THEPLAYER.toString()
 					+ character.getClass().getSimpleName()
 					+ Strings.FOUNDGOLD.toString());
 		}
 		if (foundItem){
-			this.atorJogador.mostrarMensagem(Strings.THEPLAYER.toString()
+			this.GUI.showMessagePopup(Strings.THEPLAYER.toString()
 					+ character.getClass().getSimpleName()
 					+ Strings.FOUNDITEM.toString()+itemName);
 		}
@@ -896,7 +910,7 @@ public class HeroQuest implements LogicInterface {
 					if (posicaoAtual.getTreasure() != null){
 						if (posicaoAtual.getTreasure().isTrap()){
 							posicaoAtual.getTreasure().setAsTrap(false);
-							this.atorJogador.mostrarMensagem(Strings.DISARMTREASURETRAP.toString());
+							this.GUI.showMessagePopup(Strings.DISARMTREASURETRAP.toString());
 						}
 					}
 					if (posicaoAtual instanceof Door){
@@ -914,7 +928,7 @@ public class HeroQuest implements LogicInterface {
 		}
 		
 		if (removeuArmadilhas){
-			this.atorJogador.mostrarRemocaoTrap();
+			this.GUI.showTrapRemovalMessage();
 		}
 	}
 
@@ -928,20 +942,20 @@ public class HeroQuest implements LogicInterface {
 		//int id = alvo.getID();
 		Creature criatura = this.getCriaturaPorID(alvo);
 		dano = magia.getDamage();
-		Status status = magia.getStatus();
-		if (status != null) {
-			criatura.setStatus(status);
+		StatusEnum statusEnum = magia.getStatus();
+		if (statusEnum != null) {
+			criatura.setStatus(statusEnum);
 		}
 		if (roundsToSleep != null){
 			criatura.setRoundsToSleep(roundsToSleep);
 		}
-		this.getCriaturaDaVez().usarMagia(magia);
-		this.atorJogador.anunciarUsoDeMagia(this.getCriaturaDaVez(), magia,
-				criatura, dano, status); /////////////// alvo -> criatura
+		this.getCurrentCreature().usarMagia(magia);
+		this.GUI.showEffectOfCastSpell(this.getCurrentCreature(), magia,
+				criatura, dano, statusEnum); /////////////// alvo -> criatura
 		criatura.increaseBody(dano);
 		body = criatura.getBody();
 		if (body <= 0) {
-			this.atorJogador.anunciarMorteDeCriatura(criatura);
+			this.GUI.announceCreatureDeath(criatura);
 			this.killCreature(alvo);
 		}
 	}
@@ -953,7 +967,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	private void tratarAtaque(Attack lance) {
-		byte idAtacante = this.getCriaturaDaVez().getID();
+		byte idAtacante = this.getCurrentCreature().getID();
 		byte idAlvo;
 		byte dano;
 		byte body;
@@ -964,20 +978,20 @@ public class HeroQuest implements LogicInterface {
 		body = criatura.getBody();
 		
 		if (dano > 0){
-			if (criatura.getStatus() == Status.ROCK_SKIN){
-				criatura.setStatus(Status.NEUTRAL);
+			if (criatura.getStatus() == StatusEnum.ROCK_SKIN){
+				criatura.setStatus(StatusEnum.NEUTRAL);
 			}
 		}
 		// Courage status removal
 		Creature attacker = this.getCreaturePorID(idAtacante);
-		if (attacker.getStatus() == Status.COURAGE){
-			attacker.setStatus(Status.NEUTRAL);
+		if (attacker.getStatus() == StatusEnum.COURAGE){
+			attacker.setStatus(StatusEnum.NEUTRAL);
 		}
 		
 		boolean seAtacou = idAtacante == idAlvo;
-		this.atorJogador.mostrarDano(this.getCreaturePorID(idAlvo), dano, seAtacou);
+		this.GUI.showAttackDamageMessage(this.getCreaturePorID(idAlvo), dano, seAtacou);
 		if (body <= 0) {
-			this.atorJogador.anunciarMorteDeCriatura(criatura);
+			this.GUI.announceCreatureDeath(criatura);
 			this.killCreature(idAlvo);
 		}
 	}
@@ -1005,7 +1019,7 @@ public class HeroQuest implements LogicInterface {
 		Position novaPosicao = map.getPosition(lance.getDestinationRow(), lance.getDestinationColumn());
 		
 		
-		criatura = this.getCriaturaDaVez();
+		criatura = this.getCurrentCreature();
 		
 		
 		linha = posicaoAtual.getRow();
@@ -1039,7 +1053,7 @@ public class HeroQuest implements LogicInterface {
 				
 				if (!novaPosicao.getTrap().getTriggered()){
 					criatura.decreaseBody(dano);
-					this.atorJogador.mostrarAcaoTrap(dano, criatura);
+					this.GUI.showTrapActivationMessage(dano, criatura);
 					novaPosicao.getTrap().makeTrapVisible(); ////////
 					
 					novaPosicao.getTrap().makeTrapTriggered();
@@ -1056,10 +1070,10 @@ public class HeroQuest implements LogicInterface {
 					//novaPosicao.getTrap().setTriggered(false);
 					
 					// se foi para frente ou para tras (se caiu no pit, fica nele)
-					if (lance.getOpcao() != 2){
+					if (lance.getOption() != 2){
 						novaPosicao.removeCreature();
 						
-						byte opcao = lance.getOpcao();
+						byte opcao = lance.getOption();
 						switch(lance.getDirection()){
 						case UP: {	if (opcao == 0){
 										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
@@ -1104,7 +1118,7 @@ public class HeroQuest implements LogicInterface {
 				if (novaPosicao.getTrap() instanceof FallingRock){
 					novaPosicao.removeCreature();
 					
-					byte opcao = lance.getOpcao();
+					byte opcao = lance.getOption();
 					switch(lance.getDirection()){
 					case UP: {	if (opcao == 0){
 									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
@@ -1148,8 +1162,8 @@ public class HeroQuest implements LogicInterface {
 				
 				body = criatura.getBody();
 				if (body <= 0) {
-					criatura.setStatus(Status.DEAD);
-					this.atorJogador.anunciarMorteDesafortunada(criatura);
+					criatura.setStatus(StatusEnum.DEAD);
+					this.GUI.announceUnfortunateDeath(criatura);
 					this.killCreature(criatura.getID());
 					
 					this.tratarFinalizarJogada(lance);
@@ -1187,7 +1201,7 @@ public class HeroQuest implements LogicInterface {
 	}
 	
 	private void tratarFinalizarJogada(Action action) {
-		this.atorJogador.atualizarArredoresJogador(); // added for GUI refresh
+		this.GUI.updatePlayerSurroundings(); // added for GUI refresh
 		
 		Creature daVez;
 		Creature finalizada = this.removeCreatureFromQueue();
@@ -1195,44 +1209,44 @@ public class HeroQuest implements LogicInterface {
 		this.insertCreatureIntoQueue(finalizada);
 		
 		if (!(finalizada instanceof Wizard) && !(finalizada instanceof Elf)){
-			Status finalizadaStatus = finalizada.getStatus();
-			if (finalizadaStatus == Status.AGILITY_UP
-				|| finalizadaStatus == Status.AGILITY_DOWN){
+			StatusEnum finalizadaStatusEnum = finalizada.getStatus();
+			if (finalizadaStatusEnum == StatusEnum.AGILITY_UP
+				|| finalizadaStatusEnum == StatusEnum.AGILITY_DOWN){
 					
-				finalizada.setStatus(Status.NEUTRAL);
+				finalizada.setStatus(StatusEnum.NEUTRAL);
 			}
 		}
 		
 		
-		daVez = this.getCriaturaDaVez();
+		daVez = this.getCurrentCreature();
 		// int body = criatura.getBody();
-		Status status = daVez.getStatus();
+		StatusEnum statusEnum = daVez.getStatus();
 		
 		byte verificados = 0;
-		while ((status == Status.DEAD || daVez.isVisible() == false || status == Status.CURSED
-			|| status == Status.SLEEPING)
+		while ((statusEnum == StatusEnum.DEAD || daVez.isVisible() == false || statusEnum == StatusEnum.CURSED
+			|| statusEnum == StatusEnum.SLEEPING)
 			&& verificados <= this.getCreatureQueue().size()) {
 			
-			if (status == Status.CURSED || 
-				status == Status.AGILITY_UP ||
-				status == Status.AGILITY_DOWN){
+			if (statusEnum == StatusEnum.CURSED ||
+				statusEnum == StatusEnum.AGILITY_UP ||
+				statusEnum == StatusEnum.AGILITY_DOWN){
 				
-				daVez.setStatus(Status.NEUTRAL);
+				daVez.setStatus(StatusEnum.NEUTRAL);
 			}
 			
-			if (status == Status.SLEEPING){
+			if (statusEnum == StatusEnum.SLEEPING){
 				byte roundsToSleep = (byte)(daVez.getRoundsToSleep()-1);
 				daVez.setRoundsToSleep(roundsToSleep);
 				if (roundsToSleep == 0){
-					daVez.setStatus(Status.NEUTRAL);
-					this.atorJogador.mostrarMensagem(Strings.THECREATURE.toString()+daVez.getClass().getSimpleName()+Strings.WOKEUP.toString());
+					daVez.setStatus(StatusEnum.NEUTRAL);
+					this.GUI.showMessagePopup(Strings.THECREATURE.toString()+daVez.getClass().getSimpleName()+Strings.WOKEUP.toString());
 				}
 			}
 			finalizada = this.removeCreatureFromQueue();
 			this.creatureQueue.trimToSize();
 			this.insertCreatureIntoQueue(finalizada);
-			daVez = this.getCriaturaDaVez();
-			status = daVez.getStatus();
+			daVez = this.getCurrentCreature();
+			statusEnum = daVez.getStatus();
 			
 			verificados++;
 			
@@ -1243,8 +1257,8 @@ public class HeroQuest implements LogicInterface {
 		// Courage status removal
 		ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1, daVez.getCurrentPosition());
 		if (possiveisAlvos.size() == 1){ // Cannot any enemies
-			if (daVez.getStatus() == Status.COURAGE){
-				daVez.setStatus(Status.NEUTRAL);
+			if (daVez.getStatus() == StatusEnum.COURAGE){
+				daVez.setStatus(StatusEnum.NEUTRAL);
 			}
 		}
 		
@@ -1300,7 +1314,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void procurarTesouro() {
-		Creature caster = this.getCriaturaDaVez();
+		Creature caster = this.getCurrentCreature();
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez) {
 			if (caster instanceof Barbarian || caster instanceof Wizard
@@ -1312,23 +1326,23 @@ public class HeroQuest implements LogicInterface {
 				this.tratarLance(lance);
 				this.enviarLance(lance);
 			} else {
-				this.atorJogador
-					.reportarErro(Strings.MONSTERCANTUNDERSTAND.toString());
+				this.GUI
+					.reportError(Strings.MONSTERCANTUNDERSTAND.toString());
 			}
 		} else {
-			this.atorJogador
-				.reportarErro(Strings.NOTYOURTURN.toString());
+			this.GUI
+				.reportError(Strings.NOTYOURTURN.toString());
 		}
 	}
 
 	public void selecionarPersonagem() throws ClassNotFoundException {
-		boolean exists = this.atorJogador.checkSaveFileExists(nomeLocalPlayer);
+		boolean exists = this.GUI.checkSaveFileExists(localPlayerName);
 		if (exists){
 			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRMLOADGAME);
 			if (choice == 0){
 				ArrayList<String> values = null;
 				try {
-					values = this.atorJogador.readSaveFile(nomeLocalPlayer);
+					values = this.GUI.readSaveFile(localPlayerName);
 					//System.out.println(values);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -1337,10 +1351,10 @@ public class HeroQuest implements LogicInterface {
 				this.selecionarPersonagemEscolhida(Integer.parseInt(values.get(0)));
 				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(values.get(1)));
 			} else {
-				this.atorJogador.mostrarOsCincoPersonagens();
+				this.GUI.showCharacterSelectionScreen();
 			}
 		} else {
-			this.atorJogador.mostrarOsCincoPersonagens();
+			this.GUI.showCharacterSelectionScreen();
 		}
 		//int resultado = this.atorJogador.mostrarOsCincoPersonagens();
 	}
@@ -1370,7 +1384,7 @@ public class HeroQuest implements LogicInterface {
 				disponivel = this.getDwarfAvailable();
 				break;
 			default:
-				this.atorJogador.reportarErro(Strings.CHARSELECTERROR.toString());
+				this.GUI.reportError(Strings.CHARSELECTERROR.toString());
 				disponivel = false;
 				break;
 		}
@@ -1415,14 +1429,14 @@ public class HeroQuest implements LogicInterface {
 	
 					break;
 				default:
-					this.atorJogador.reportarErro(Strings.CHARSELECTERROR.toString());
+					this.GUI.reportError(Strings.CHARSELECTERROR.toString());
 					break;
 			}
 			this.tratarLance(lance);
 			this.enviarLance(lance);
 			
 		} else {
-			this.atorJogador.reportarErro(Strings.CHARUNAVAILABLE.toString());
+			this.GUI.reportError(Strings.CHARUNAVAILABLE.toString());
 			this.selecionarPersonagem();
 		}
 	}
@@ -1460,7 +1474,7 @@ public class HeroQuest implements LogicInterface {
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
 			Creature criatura = this.creatureQueue.get(i);
 			if (criatura.getID() == creatureID) {
-				criatura.setStatus(Status.DEAD);
+				criatura.setStatus(StatusEnum.DEAD);
 				Position pos = criatura.getCurrentPosition();
 				pos.removeCreature();
 				this.map.atualizarPosicao(pos, pos.getRow(), pos.getColumn());
@@ -1492,7 +1506,7 @@ public class HeroQuest implements LogicInterface {
 	 */
 
 	public void procurarArmadilhaOuPortaSecreta() {
-		Creature caster = this.getCriaturaDaVez();
+		Creature caster = this.getCurrentCreature();
 		boolean daVez = this.verificaSeJogadorDaVez();
 		if (daVez ) {
 			if (caster instanceof Barbarian || caster instanceof Wizard
@@ -1504,10 +1518,10 @@ public class HeroQuest implements LogicInterface {
 				tratarLance(lance);
 				enviarLance(lance);
 			} else {
-				this.atorJogador.reportarErro(Strings.MONSTERCANTUNDERSTAND.toString());
+				this.GUI.reportError(Strings.MONSTERCANTUNDERSTAND.toString());
 			}
 		} else {
-			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOTYOURTURN.toString());
 		}
 	}
 
@@ -1518,24 +1532,8 @@ public class HeroQuest implements LogicInterface {
 			this.tratarLance(lance);
 			this.enviarLance(lance);
 		} else {
-			this.atorJogador.reportarErro(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOTYOURTURN.toString());
 		}
-	}
-
-	public boolean informarConectado() {
-		return this.conectado;
-	}
-
-	public void estabelecerConectado(boolean valor) {
-		this.conectado = valor;
-	}
-
-	public boolean informarEmAndamento() {
-		return this.emAndamento;
-	}
-
-	public void setEmAndamento(boolean valor) {
-		this.emAndamento = valor;
 	}
 
 	public void finalizarJogo() {
@@ -1547,19 +1545,19 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void iniciarNovaPartida(int posicao) {
-		this.setEmAndamento(true);
+		this.setInSession(true);
 		
 		//this.map = new Map(this);
 		
 		//String idJogador = this.atorJogador.informarNomeJogador();
-		String idJogador = this.nomeLocalPlayer;
+		String idJogador = this.localPlayerName;
 		Player player = this.criarJogador(idJogador);
 		this.setLocalPlayer(player);
 		SendPlayer lance = new SendPlayer();
 		lance.setPlayer(player);
 		this.tratarLance(lance);
 		this.enviarLance(lance);
-		this.atorJogador.atualizarInterfaceGrafica();
+		this.GUI.refreshGUI();
 	}
 
 	public void iniciarPartida(int numJog) {
@@ -1576,7 +1574,7 @@ public class HeroQuest implements LogicInterface {
 					try {
 						int heroType;
 						PlayableCharacter a = this.localAdventurer.getPlayableCharacter();
-						if (a.getStatus() != Status.DEAD){
+						if (a.getStatus() != StatusEnum.DEAD){
 							switch (a.getClass().getSimpleName()){
 								case "Barbarian": heroType = 1;
 												break;
@@ -1588,21 +1586,19 @@ public class HeroQuest implements LogicInterface {
 												break;
 										
 							}
-							this.atorJogador.writeSaveFile(nomeLocalPlayer, heroType, a.getGold(), a.getItems(this.map));
+							this.GUI.writeSaveFile(localPlayerName, heroType, a.getGold(), a.getItems(this.map));
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				// Announce hero victory
-				this.atorJogador.anunciarVitoriaDosJogadores();
-				// End game
+				this.GUI.announceHeroesWon();
 				this.finalizarJogo();
 			}
 		} else {
 			// Announce villain victory
-			this.atorJogador.anunciarVitoriaDoZargon();
+			this.GUI.announceZargonWon();
 			// End game
 			this.finalizarJogo();
 		}
@@ -1614,7 +1610,7 @@ public class HeroQuest implements LogicInterface {
 			Creature criatura = this.creatureQueue.get(i);
 			if (criatura instanceof Barbarian || criatura instanceof Wizard
 					|| criatura instanceof Elf || criatura instanceof Dwarf) {
-				if (criatura.getStatus() != Status.DEAD)
+				if (criatura.getStatus() != StatusEnum.DEAD)
 					return true;
 			}
 		}
@@ -1642,9 +1638,9 @@ public class HeroQuest implements LogicInterface {
 					.getPlayableCharacter();
 			int gold = character.getGold();
 			ArrayList<Items> items = character.getItems(this.map);
-			this.atorJogador.mostrarInventario(gold, items);
+			this.GUI.showInventory(gold, items);
 		} else {
-			this.atorJogador.reportarErro(Strings.ZARGONNOGOLD.toString());
+			this.GUI.reportError(Strings.ZARGONNOGOLD.toString());
 		}
 	}
 
@@ -1654,16 +1650,16 @@ public class HeroQuest implements LogicInterface {
 			byte body = criatura.getBody();
 			byte mind = criatura.getMind();
 			byte movement = criatura.getMovement();
-			Status status = criatura.getStatus();
+			StatusEnum statusEnum = criatura.getStatus();
 			Position posicao = criatura.getCurrentPosition();
 			byte linha = posicao.getRow();
 			byte coluna = posicao.getColumn();
 			byte roundsToSleep = criatura.getRoundsToSleep();
 		
-			this.atorJogador.mostrarInformacoes(body, mind, movement, status,
+			this.GUI.showCreatureInformation(body, mind, movement, statusEnum,
 					linha, coluna, roundsToSleep);
 		} else {
-			this.atorJogador.mostrarMensagem(Strings.UNKNOWN.toString());
+			this.GUI.showMessagePopup(Strings.UNKNOWN.toString());
 		}
 	}
 
@@ -1709,9 +1705,12 @@ public class HeroQuest implements LogicInterface {
 		return null;
 	}
 
-	public void setNomeLocalPlayerAndServer(String idUsuario, String idServer) {
-		this.nomeLocalPlayer = idUsuario;
-		this.atorJogador.setTitle(this.atorJogador.getTitle()+Strings.SERVER.toString()+idServer+Strings.COMMAPLAYER.toString()+this.nomeLocalPlayer);
+	public void setLocalPlayerName(String playerName) {
+		this.localPlayerName = playerName;
+	}
+
+	public void setServerAddress(String serverAddress) {
+		this.GUI.setTitle(this.GUI.getTitle()+ Strings.SERVER + serverAddress + Strings.COMMAPLAYER + this.localPlayerName);
 	}
 
 	public AtorClientServer getAtorClienteServidor() {
@@ -1726,11 +1725,11 @@ public class HeroQuest implements LogicInterface {
 		this.map = map;
 	}
 
-	public void setAtorJogador(AtorJogador atorJogador) {
-		this.atorJogador = atorJogador;
+	public void setAtorJogador(GUI GUI) {
+		this.GUI = GUI;
 	}
 
-	public AtorJogador getAtorJogador() {
-		return atorJogador;
+	public GUI getAtorJogador() {
+		return GUI;
 	}
 }

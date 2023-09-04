@@ -21,7 +21,7 @@ public class QuestSelector extends JFrame {
 	 */
 	private static final long serialVersionUID = -6345581665543710575L;
 	private JPanel contentPane;
-	private static Quest[] options;
+	private static QuestEnum[] options;
 	private HeroQuest game;
 
 	/**
@@ -36,7 +36,7 @@ public class QuestSelector extends JFrame {
 		this.setVisible(true);
 		
 		try {
-			options = Quest.values();
+			options = QuestEnum.values();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -49,8 +49,8 @@ public class QuestSelector extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JComboBox<Quest> comboBox = new JComboBox<>();
-		for (Quest t : options){
+		JComboBox<QuestEnum> comboBox = new JComboBox<>();
+		for (QuestEnum t : options){
 			comboBox.addItem(t);
 		}
 		
@@ -60,10 +60,10 @@ public class QuestSelector extends JFrame {
 		btnShow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				Quest quest = (Quest) comboBox.getSelectedItem();
+				QuestEnum questEnum = (QuestEnum) comboBox.getSelectedItem();
 				game = new HeroQuest();
 				try {
-					switch(quest){
+					switch(questEnum){
 						case TheTrial: selectMap(new TheTrial(game));
 									break;
 						case TheMaze: selectMap(new TheMaze(game));
@@ -97,7 +97,7 @@ public class QuestSelector extends JFrame {
 	
 	public void selectMap(BasicMap bm){
 		game.setMap(bm);
-		AtorJogador frame = new AtorJogador(game);
+		GUI frame = new GUI(game);
 		frame.setVisible(true);
 		
 		if (bm instanceof TheTrial){

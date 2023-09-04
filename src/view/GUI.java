@@ -35,13 +35,17 @@ import javax.swing.border.EmptyBorder;
 
 import entities.*;
 import entities.enemies.Monster;
+import entities.players.PlayableCharacter;
 import entities.tiles.Door;
 import entities.tiles.FallingRock;
 import entities.tiles.Furniture;
 import entities.utils.Strings;
+import enums.ConnectionResultEnum;
+import enums.DirectionEnum;
+import enums.StatusEnum;
 import quests.BasicMap;
 
-public class AtorJogador extends JFrame implements InterfaceGUI {
+public class GUI extends JFrame implements GUIInterface {
 
 	protected static final long serialVersionUID = 1L;
 	protected JPanel contentPane;
@@ -60,10 +64,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 	protected JMenuBar menuBar;
 	protected TextArea textArea;
 
-	public ListenerDoTeclado listener = new ListenerDoTeclado(this);
+	public KeyboardListener listener = new KeyboardListener(this);
 	public MusicThread musicThread;
 	
-	public static Languages language = Languages.English;
+	public static LanguageEnum language = LanguageEnum.English;
 
 	public static Boolean autoConnectToServer = true;
 
@@ -86,7 +90,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		});
 	}
 
-	public AtorJogador(HeroQuest game) {
+	public GUI(HeroQuest game) {
 		try {
 			createMusic();
 		} catch (Exception e) {
@@ -94,7 +98,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		}
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
-				AtorJogador.class.getResource("/images/players/Wizard.png")));
+				GUI.class.getResource("/images/players/Wizard.png")));
 		setTitle(Strings.HEROQUEST.toString());
 		
 		// GUI attributes
@@ -121,9 +125,9 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		JButton btnInstructions = new JButton(Strings.INSTRUCTIONS.toString());
 		btnInstructions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Instrucoes instr = null;
+				Instructions instr = null;
 				try {
-					instr = new Instrucoes();
+					instr = new Instructions();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -136,7 +140,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		btnCharSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					selecionarPersonagem();
+					chooseCharacter();
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -162,7 +166,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		mnSettings.add(btnLanguage);
 		btnMusic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				music();
+				toggleMusic();
 			}
 		});
 		contentPane = new JPanel();
@@ -203,7 +207,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 				botao.addKeyListener(listener);
 				botao.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						abrirPorta(Integer.parseInt(botao.getName()));
+						openDoor(Integer.parseInt(botao.getName()));
 					}
 				});
 				contentPane.add(botao);
@@ -212,25 +216,18 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		}
 
 		// Create creature queue buttons
-		JButton useless = new JButton("");
-		useless.setVisible(false);
-		this.creatureButtons.add(useless);
+		JButton creatureQueueButton = new JButton("");
+		creatureQueueButton.setVisible(false);
+		this.creatureButtons.add(creatureQueueButton);
 		for (int i = 1; i <= map.getCreatureQueueSize(); i++) {
-			JButton botao = new JButton();
-			botao.setName("" + i);
-			botao.setBounds(0, 27 * (i - 1) + 89, 150, 27);
-			botao.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					mostrarInformacoes(Integer.parseInt(botao.getName()));
-				}
-			});
-			botao.addKeyListener(listener);
-			this.creatureButtons.add(i, botao);
-			this.contentPane.add(botao);
+			JButton button = new JButton();
+			button.setName("" + i);
+			button.setBounds(0, 27 * (i - 1) + 89, 150, 27);
+			button.addActionListener(e -> showCreatureInformation(Integer.parseInt(button.getName())));
+			button.addKeyListener(listener);
+			this.creatureButtons.add(i, button);
+			this.contentPane.add(button);
 		}
-
-		// Create user action buttons
-		//generateActionButtons();
 		
 		this.textArea = new TextArea();
 		textArea.setFont(new Font("Viner Hand ITC", Font.BOLD, 15));
@@ -238,7 +235,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		contentPane.add(textArea);
 		
 		if (autoConnectToServer){
-			this.conectar();
+			this.connectToServer();
 		}
 	}
 	
@@ -254,7 +251,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.connectButton.setBorder(invisivel);
 		this.connectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				conectar();
+				connectToServer();
 			}
 		});
 		this.connectButton.addKeyListener(listener);
@@ -268,7 +265,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.disconnectButton.setBorder(invisivel);
 		this.disconnectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				desconectar();
+				disconnectFromServer();
 			}
 		});
 		this.disconnectButton.addKeyListener(listener);
@@ -282,7 +279,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.startGameButton.setBorder(invisivel);
 		this.startGameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				iniciarPartida();
+				startGame();
 			}
 		});
 		this.startGameButton.addKeyListener(listener);
@@ -296,7 +293,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.endTurnButton.setBorder(invisivel);
 		this.endTurnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				finalizarJogada();
+				endTurn();
 			}
 		});
 		this.endTurnButton.addKeyListener(listener);
@@ -310,7 +307,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.showInventoryButton.setBorder(invisivel);
 		this.showInventoryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mostrarInventario();
+				showInventory();
 			}
 		});
 		this.showInventoryButton.addKeyListener(listener);
@@ -324,7 +321,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.attackButton.setBorder(invisivel);
 		this.attackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				atacar();
+				attack();
 			}
 		});
 		this.attackButton.addKeyListener(listener);
@@ -338,7 +335,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.useSpellButton.setBorder(invisivel);
 		this.useSpellButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				usarMagia();
+				useSpell();
 			}
 		});
 		this.useSpellButton.addKeyListener(listener);
@@ -352,7 +349,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.searchForTrapsButton.setBorder(invisivel);
 		this.searchForTrapsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				procurarArmadilhaOuPortaSecreta();
+				searchTrapsAndHiddenDoors();
 			}
 		});
 		this.searchForTrapsButton.addKeyListener(listener);
@@ -366,7 +363,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.searchForTreasureButton.setBorder(invisivel);
 		this.searchForTreasureButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				procurarTesouro();
+				searchTreasure();
 			}
 		});
 		this.searchForTreasureButton.addKeyListener(listener);
@@ -375,7 +372,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void selecionarPersonagem() throws ClassNotFoundException {
+	public void chooseCharacter() throws ClassNotFoundException {
 		this.heroQuest.selecionarPersonagem();
 	}
 
@@ -383,338 +380,282 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		this.heroQuest.abrirPortaTeclado();
 	}
 
-	public void abrirPorta(int idPorta) {
-		this.heroQuest.abrirPorta(idPorta);
+	public void openDoor(int doorId) {
+		this.heroQuest.abrirPorta(doorId);
 	}
 
-	public void mostrarMensagem(String msg) {
-		//this.textArea.setText(msg);
+	public void showMessagePopup(String msg) {
 		JOptionPane.showMessageDialog(null, msg);
 	}
 
-	public void reportarErro(String msg) {
+	public void reportError(String msg) {
 		this.textArea.setText(msg);
-		//JOptionPane.showMessageDialog(null, msg);
 	}
 
-	public void movimentar(Directions direcao) {
-		this.heroQuest.movimentar(direcao);
+	public void moveCreature(DirectionEnum direction) {
+		this.heroQuest.movimentar(direction);
 	}
 
-	public void atacar() {
+	public void attack() {
 		this.heroQuest.atacar();
 	}
 
-	public void usarMagia() {
+	public void useSpell() {
 		this.heroQuest.usarMagia();
 	}
 
-	public Spell selecionarMagia(ArrayList<Spell> magiasDisponiveis) {
+	public Spell selectSpell(ArrayList<Spell> availableSpells) {
 		String inputDialog = Strings.SELECTSPELL.toString();
-		for (int i = 0; i < magiasDisponiveis.size(); i++) {
+		for (int i = 0; i < availableSpells.size(); i++) {
 			inputDialog += "\n" + i + " - "
-					+ magiasDisponiveis.get(i).getNome();
+					+ availableSpells.get(i).getName();
 		}
-		String opcao = JOptionPane.showInputDialog(inputDialog);
-		int index = Integer.parseInt(opcao);
-		return magiasDisponiveis.get(index);
+		String option = JOptionPane.showInputDialog(inputDialog);
+		int index = Integer.parseInt(option);
+		return availableSpells.get(index);
 	}
 
-	public Creature selecionarAlvo(ArrayList<Creature> possiveisAlvos) {
+	public Creature selectTarget(ArrayList<Creature> availableTargets) {
 		String inputDialog = Strings.SELECTTARGET.toString();
-		for (int i = 0; i < possiveisAlvos.size(); i++) {
+		for (int i = 0; i < availableTargets.size(); i++) {
 			inputDialog += "\n" + i + " - "
-					+ possiveisAlvos.get(i).getClass().getSimpleName();
+					+ availableTargets.get(i).getClass().getSimpleName();
 		}
-		String opcao = JOptionPane.showInputDialog(inputDialog);
-		int index = Integer.parseInt(opcao);
-		return possiveisAlvos.get(index);
+		String option = JOptionPane.showInputDialog(inputDialog);
+		int index = Integer.parseInt(option);
+		return availableTargets.get(index);
 	}
 
-	public void atualizarInterfaceGrafica() {
+	public void refreshGUI() {
 		for (byte i = 0; i < this.heroQuest.getMap().getNumberOfRows(); i++) {
 			for (byte j = 0; j < this.heroQuest.getMap().getNumberOfColumns(); j++) {
-				Position posicao = this.heroQuest.getPosition(i, j);
-/*				if (posicao.getCreature() != null){
-					posicao.getCreature().setVisible(true);
-				}*/
-				this.atualizarBotao(this.boardButtons[i][j], posicao);
+				Position position = this.heroQuest.getPosition(i, j);
+				this.refreshTile(this.boardButtons[i][j], position);
 			}
 		}
-		this.exibirCriaturas();
+		this.showVisibleCreaturesInQueue();
 	}
 
-	public void procurarTesouro() {
+	public void searchTreasure() {
 		this.heroQuest.procurarTesouro();
 	}
 
-	// Chamar TelaSelecionarPersonagem!
-	public void mostrarOsCincoPersonagens() {
-/*		String inputDialog = "Digite o número correspondente ao personagem escolhido: \nObs.: Zargon controla os monstros, não um aventureiro";
-		inputDialog += "\n0 - Zargon";
-		inputDialog += "\n1 - Barbarian";
-		inputDialog += "\n2 - Wizard";
-		inputDialog += "\n3 - Elf";
-		inputDialog += "\n4 - Dwarf";*/
-		
+	public void showCharacterSelectionScreen() {
 		CharacterSelection cs = new CharacterSelection(this);
 		cs.setVisible(true);
-		
-		/*String opcao = JOptionPane.showInputDialog(null, inputDialog);
-		
-		int index = Integer.parseInt(opcao);
-		return index;*/
 	}
 
-	public void procurarArmadilhaOuPortaSecreta() {
+	public void searchTrapsAndHiddenDoors() {
 		this.heroQuest.procurarArmadilhaOuPortaSecreta();
 	}
 
-	public void finalizarJogada() {
+	public void endTurn() {
 		this.heroQuest.finalizarJogada();
 	}
 
-	// Cï¿½digo nï¿½o usado
-	public String obterIdJogador() {
-		String idJogador = JOptionPane
-				.showInputDialog(Strings.INPUTNAME.toString());
-		return idJogador;
+	public String obtainPlayerName() {
+		String playerName = JOptionPane
+				.showInputDialog(Strings.INPUT_NAME.toString());
+		return playerName;
 	}
 
-	public String obterIdServidor() {
-		String idServidor = (Strings.OBTAINSERVERID.toString());
+	public String obtainServerAddress() {
+		String serverAddress = (Strings.OBTAIN_SERVER_ADDRESS.toString());
 		if (!autoConnectToServer) {
-			idServidor = JOptionPane.showInputDialog(this,
-					(Strings.INPUTSERVERADDRESS.toString()), idServidor);
+			serverAddress = JOptionPane.showInputDialog(this,
+					(Strings.INPUTSERVERADDRESS.toString()), serverAddress);
 		}
-		return idServidor;
+		return serverAddress;
 	}
 
-	/*
-	 * resultado 0 - conexao com exito 1 - tentativa de conexao com conexao
-	 * previamente estabelecida 2 - tentativa de conexao falhou
-	 */
-	public void conectar() {
-		boolean conectado = this.heroQuest.informarConectado();
-		if (!conectado) {
-			String servidor = this.obterDadosConexao();
-			String idUsuario = obterIdJogador();
-			boolean exito = this.heroQuest.getAtorClienteServidor().conectar(
-					servidor, idUsuario);
-			if (exito) {
-				this.heroQuest.estabelecerConectado(true);
-
-				this.heroQuest.setNomeLocalPlayerAndServer(idUsuario, servidor);
-				
-				//this.selectQuest(heroQuest);
-
-				notificarResultado(0);
-				
-				// Quest message
-				this.textArea.setText(this.heroQuest.getMap().description);
-				
+	public void connectToServer() {
+		boolean isConnected = this.heroQuest.isConnected();
+		if (!isConnected) {
+			String serverAddress = this.obtainServerAddress();
+			String playerName = obtainPlayerName();
+			boolean success = this.heroQuest.getAtorClienteServidor().conectar(
+					serverAddress, playerName);
+			if (success) {
+				this.heroQuest.setConnected(true);
+				this.heroQuest.setLocalPlayerName(playerName);
+				this.heroQuest.setServerAddress(serverAddress);
+				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFULCONNECT.getId());
+				showQuestDescription();
 			} else {
-				notificarResultado(2);
+				showConnectionResultMessage(ConnectionResultEnum.FAILEDCONNECT.getId());
 			}
 		} else {
-			notificarResultado(1);
+			showConnectionResultMessage(ConnectionResultEnum.ALREADYCONNECTED.getId());
 		}
-
 	}
 
-	/**
-	 * 
-	 * @param resultado
-	 */
-	public void notificarResultado(int resultado) {
-		String mensagem = "";
-		switch (resultado) {
-		case 0:
-			mensagem = Strings.SUCCESSFULCONNECT.toString();
-			break;
-		case 1:
-			mensagem = Strings.ALREADYCONNECTED.toString();
-			break;
-		case 2:
-			mensagem = Strings.FAILEDCONNECT.toString();
-			break;
-		case 3:
-			mensagem = Strings.SUCCESSFULDISCONNECT.toString();
-			break;
-		case 4:
-			mensagem = Strings.DISCBEFORECONNECT.toString();
-			break;
-		case 5:
-			mensagem = Strings.FAILEDDISCONNECT.toString();
-			break;
-		case 6:
-			mensagem = Strings.SUCCESSFULSTART.toString();
-			break;
-		case 7:
-			mensagem = Strings.STARTBEFORECONNECT.toString();
-			break;
-		case 13:
-			mensagem = Strings.UNINTERRUPTEDGAME.toString();
-			break;
-		default:
-			mensagem = "";
-			break;
+	private void showQuestDescription() {
+		this.textArea.setText(this.heroQuest.getMap().description);
+	}
+
+	public void showConnectionResultMessage(int result) {
+		String connectionResultMessage;
+		switch (result) {
+			case 0:
+				connectionResultMessage = Strings.SUCCESSFULCONNECT.toString();
+				break;
+			case 1:
+				connectionResultMessage = Strings.ALREADYCONNECTED.toString();
+				break;
+			case 2:
+				connectionResultMessage = Strings.FAILEDCONNECT.toString();
+				break;
+			case 3:
+				connectionResultMessage = Strings.SUCCESSFULDISCONNECT.toString();
+				break;
+			case 4:
+				connectionResultMessage = Strings.DISCBEFORECONNECT.toString();
+				break;
+			case 5:
+				connectionResultMessage = Strings.FAILEDDISCONNECT.toString();
+				break;
+			case 6:
+				connectionResultMessage = Strings.SUCCESSFULSTART.toString();
+				break;
+			case 7:
+				connectionResultMessage = Strings.STARTBEFORECONNECT.toString();
+				break;
+			case 13:
+				connectionResultMessage = Strings.UNINTERRUPTEDGAME.toString();
+				break;
+			default:
+				connectionResultMessage = "";
+				break;
 		}
-		this.textArea.setText(mensagem);
-		//JOptionPane.showMessageDialog(null, mensagem);
+		this.textArea.setText(connectionResultMessage);
 	}
 
-	public String obterDadosConexao() {
-		String servidor = this.obterIdServidor();
-		return servidor;
-	}
-
-	/*
-	 * resultado 3 - desconexao com exito 4 - tentativa de desconexao sem
-	 * conexao previamente estabelecida 5 - tentativa de desconexao falhou
-	 */
-	public void desconectar() {
-		boolean conectado = this.heroQuest.informarConectado();
-		if (conectado) {
-			boolean exito = this.heroQuest.getAtorClienteServidor().desconectar();
-			if (exito) {
-				this.heroQuest.estabelecerConectado(false);
-				notificarResultado(3);
+	public void disconnectFromServer() {
+		boolean isConnected = this.heroQuest.isConnected();
+		if (isConnected) {
+			boolean success = this.heroQuest.getAtorClienteServidor().desconectar();
+			if (success) {
+				this.heroQuest.setConnected(false);
+				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFULDISCONNECT.getId());
 			} else {
-				notificarResultado(5);
+				showConnectionResultMessage(ConnectionResultEnum.FAILEDDISCONNECT.getId());
 			}
 		} else {
-			notificarResultado(4);
+			showConnectionResultMessage(ConnectionResultEnum.DISCBEFORECONNECT.getId());
 		}
 	}
 
-	/*
-	 * resultado 6 - solicitaï¿½ï¿½o de inicio procedida com exito 7 - tentativa
-	 * de inicio sem conexao previamente estabelecida 13 - partida corrente nao
-	 * interrompida
-	 */
-	public void iniciarPartida() {
-		boolean conectado = false;
-		boolean interromper = false;
-		boolean emAndamento = this.heroQuest.informarEmAndamento();
-		if (emAndamento) {
-			interromper = this.avaliarInterrupcao();
+	public void startGame() {
+		boolean isConnected = false;
+		boolean isInterrupted = false;
+		boolean inSession = this.heroQuest.getInSession();
+		if (inSession) {
+			isInterrupted = true;
 		} else {
-			conectado = this.heroQuest.informarConectado();
+			isConnected = this.heroQuest.isConnected();
 		}
-		if (interromper || ((!emAndamento) && conectado)) {
-			int numJog = this.informarQuantidadeDePlayers();
-			this.heroQuest.getAtorClienteServidor().iniciarPartida(numJog);
-			notificarResultado(6);
+		if (isInterrupted || ((!inSession) && isConnected)) {
+			int numberOfPlayersInGame = this.setTotalNumberOfPlayersInTheGame();
+			this.heroQuest.getAtorClienteServidor().iniciarPartida(numberOfPlayersInGame);
+			showConnectionResultMessage(ConnectionResultEnum.SUCCESSFULSTART.getId());
 		}
-		if (!conectado) {
-			notificarResultado(7);
+		if (!isConnected) {
+			showConnectionResultMessage(ConnectionResultEnum.STARTBEFORECONNECT.getId());
 		}
-		notificarResultado(13);
+		showConnectionResultMessage(ConnectionResultEnum.UNINTERRUPTEDGAME.getId());
 	}
 
-	public boolean avaliarInterrupcao() {
-		return true;
+	public void announceHeroesWon() {
+		this.textArea.setText(Strings.HERO_WON.toString());
 	}
 
-	public void anunciarVitoriaDosJogadores() {
-		this.textArea.setText(Strings.HEROWIN.toString());
-		//JOptionPane.showMessageDialog(null,
-			//	Strings.HEROWIN.toString());
-	}
-
-	public void anunciarVitoriaDoZargon() {
-		this.textArea.setText(Strings.ZARGONWIN.toString());
-		/*JOptionPane.showMessageDialog(null,
-				Strings.ZARGONWIN.toString());*/
+	public void announceZargonWon() {
+		this.textArea.setText(Strings.ZARGON_WON.toString());
 	}
 
 	public String informarNomeJogador() {
 		String nomeJogador = JOptionPane
-				.showInputDialog(Strings.INPUTNAME.toString());
+				.showInputDialog(Strings.INPUT_NAME.toString());
 		return nomeJogador;
 	}
 
-	public void mostrarInventario() {
+	public void showInventory() {
 		this.heroQuest.mostrarInventario();
 	}
 
-	public void mostrarInventario(int gold, ArrayList<Items> items) {
+	public void showInventory(int gold, ArrayList<Items> items) {
 		String itemString = Strings.ITEMSOWNED.toString();
 		for (Items item : items){
 			itemString += item + "\n";
 		}
 		this.textArea.setText(Strings.YOUHAVE.toString() + gold
-				+ Strings.INVYCOINS.toString()+itemString);
-		/*JOptionPane.showMessageDialog(null, Strings.YOUHAVE.toString() + gold
-				+ Strings.INVYCOINS.toString());*/
+				+ Strings.INVYCOINS +itemString);
 	}
 
-	public void mostrarInformacoes(int characterID) {
+	public void showCreatureInformation(int characterID) {
 		this.heroQuest.mostrarInformacoes(characterID);
 	}
 
-	public void mostrarInformacoes(byte body, byte mind, byte movement,
-			Status status, int linha, int coluna, Byte roundsToSleep) {
+	public void showCreatureInformation(byte body, byte mind, byte movement,
+										StatusEnum statusEnum, int row, int column, Byte roundsToSleep) {
 		String output = Strings.CURRENTBP.toString() + body
-				+ Strings.CURRENTMP.toString() + mind + Strings.REMAININGMOVES.toString()
-				+ movement + Strings.CURRENTSTATUS.toString() + status + Strings.LINE.toString()+ linha
-				+ Strings.COLUMN.toString() + coluna;
+				+ Strings.CURRENTMP + mind + Strings.REMAININGMOVES
+				+ movement + Strings.CURRENTSTATUS + statusEnum + Strings.LINE + row
+				+ Strings.COLUMN + column;
 		if (roundsToSleep != null){
 			if (roundsToSleep != 0){
 				output += Strings.TTW.toString() + roundsToSleep;
 			}
 		}
 		this.textArea.setText(output);
-		//JOptionPane.showMessageDialog(null, output);
 	}
 
-	public int informarQuantidadeDePlayers() {
-		int numJogadores;
+	public int setTotalNumberOfPlayersInTheGame() {
+		int numberOfPlayersInGame;
 		do {
-			String numjog = JOptionPane
+			String numberOfPlayers = JOptionPane
 					.showInputDialog(Strings.NUMBEROFPLAYERS.toString());
-			numJogadores = Integer.parseInt(numjog);
-		} while (numJogadores < 2);
-		return numJogadores;
+			numberOfPlayersInGame = Integer.parseInt(numberOfPlayers);
+		} while (numberOfPlayersInGame < 2);
+		return numberOfPlayersInGame;
 	}
 
-	public void atualizarBotao(JButton botao, Position posicao) {
+	public void refreshTile(JButton button, Position position) {
 		ImageIcon img;
 		String path = "";
-		int linha = posicao.getRow();
-		int coluna = posicao.getColumn();
-		if (!posicao.isVisible()) {
+		int linha = position.getRow();
+		int coluna = position.getColumn();
+		if (!position.isVisible()) {
 			path = "images/tiles/Wall.png";
 
 		} else {
-			Creature creatureInPosition = posicao.getCreature();
+			Creature creatureInPosition = position.getCreature();
 			if (creatureInPosition != null) {
 				if (creatureInPosition instanceof PlayableCharacter) {
 					path = "/images/players/";
 				} else if (creatureInPosition instanceof Monster) {
 					path = "/images/enemies/";
 				}
-				path += posicao.getCreature().getClass().getSimpleName()
+				path += position.getCreature().getClass().getSimpleName()
 						+ ".png";
-			} else if (posicao.getTrap() != null) {
-					if (posicao.getTrap().getVisible()) {
-						if (posicao.getTrap() instanceof FallingRock && posicao.getTrap().getTriggered()){
+			} else if (position.getTrap() != null) {
+					if (position.getTrap().getVisible()) {
+						if (position.getTrap() instanceof FallingRock && position.getTrap().getTriggered()){
 							path = "/images/tiles/traps/Rubble.png";
 						} else {
 							path = "/images/tiles/traps/"
-									+ posicao.getTrap().getClass().getSimpleName()
+									+ position.getTrap().getClass().getSimpleName()
 									+ ".png";
 						}
 					} else {
 						path = "/images/tiles/"
-								+ posicao.getClass().getSimpleName()
+								+ position.getClass().getSimpleName()
 								+ ".png";
 					}
 			} else {
-				if (posicao instanceof Door) {
-					if (!((Door) posicao).isSecreta()) {
-						if (((Door) posicao).getPortaEstaAberta()) {
+				if (position instanceof Door) {
+					if (!((Door) position).isSecreta()) {
+						if (((Door) position).getPortaEstaAberta()) {
 							path = "/images/tiles/doors/OpenDoor.png";
 						} else {
 							path = "/images/tiles/doors/ClosedDoor.png";
@@ -723,7 +664,7 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 						path = "/images/tiles/Wall.png";
 					}
 				} else {
-					path = "/images/tiles/" + posicao.getClass().getSimpleName()
+					path = "/images/tiles/" + position.getClass().getSimpleName()
 							+ ".png";
 				}
 				//Map map = this.heroQuest.getMap();
@@ -807,10 +748,10 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 			}
 		}
 		img = new ImageIcon(getClass().getResource(path));
-		botao.setIcon(img);
-		botao.invalidate();
-		botao.revalidate();
-		botao.repaint();
+		button.setIcon(img);
+		button.invalidate();
+		button.revalidate();
+		button.repaint();
 	}
 
 	private String tablePath(BasicMap map, int linha, int coluna, byte[] tblpos, String path) {
@@ -1090,160 +1031,113 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		return path;
 	}
 
-	private void atualizarBotao(JButton botao, Creature criatura,
-			int posicaoBotao) {
-		if (criatura.isVisible() == true) {
-			String nome = criatura.getClass().getSimpleName();
-			botao.setText(nome);
+	private void refreshCreatureInQueue(JButton button, Creature creature,
+										int buttonPositionInQueue) {
+		if (creature.isVisible()) {
+			String creatureName = creature.getClass().getSimpleName();
+			button.setText(creatureName);
 		}
-		botao.setBounds(0, 27 * posicaoBotao + 89, 150, 27);
-		botao.invalidate();
-		botao.revalidate();
-		botao.repaint();
+		button.setBounds(0, 27 * buttonPositionInQueue + 89, 150, 27);
+		button.invalidate();
+		button.revalidate();
+		button.repaint();
 	}
 
-	public void exibirCriaturas() {
+	public void showVisibleCreaturesInQueue() {
 		// Each button was assigned to a creature via creature.ID at button initialize
 		// For each creature in the queue, we find its button, and move it to its new position
 		// in the GUI button list
-		ArrayList<Creature> criaturas = this.heroQuest.getCreatureQueue();
-		for (int i = 0; i < criaturas.size(); i++) {
-			Creature criatura = criaturas.get(i);
-
-			this.atualizarBotao(this.creatureButtons.get(criatura.getID()), criatura, i);
+		ArrayList<Creature> creaturesInQuest = this.heroQuest.getCreatureQueue();
+		for (int i = 0; i < creaturesInQuest.size(); i++) {
+			Creature creature = creaturesInQuest.get(i);
+			this.refreshCreatureInQueue(this.creatureButtons.get(creature.getID()), creature, i);
 		}
 	}
 
-	public void mostrarAcaoTrap(byte dano, Creature criatura) {
-		this.textArea.setText(Strings.OHNO.toString()
-						+ criatura.getClass().getSimpleName()
-						+ Strings.ACTIVATEDTRAP.toString() + dano
-						+ Strings.OFBP.toString());
-/*		JOptionPane
-				.showMessageDialog(null, Strings.OHNO.toString()
-						+ criatura.getClass().getSimpleName()
-						+ Strings.ACTIVATEDTRAP.toString() + dano
-						+ Strings.OFBP.toString());*/
+	public void showTrapActivationMessage(byte damage, Creature creature) {
+		this.textArea.setText(Strings.OHNO
+						+ creature.getClass().getSimpleName()
+						+ Strings.ACTIVATEDTRAP + damage
+						+ Strings.OFBP);
 	}
 
-	public void mostrarDano(Creature alvo, byte dano, boolean seAtacou) {
-		if (!seAtacou) {
-			this.textArea.setText(Strings.THECREATURE.toString()
-					+ alvo.getClass().getSimpleName() + Strings.RECEIVED.toString() + dano
-					+ Strings.OFDAMAGE.toString());
-/*			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
-					+ alvo.getClass().getSimpleName() + Strings.RECEIVED.toString() + dano
-					+ Strings.OFDAMAGE.toString());*/
+	public void showAttackDamageMessage(Creature target, byte damage, boolean selfInflicted) {
+		if (selfInflicted) {
+			this.textArea.setText(Strings.THECREATURE
+					+ target.getClass().getSimpleName()
+					+ Strings.ATTEMPTSSEPPUKU + damage + Strings.OFDAMAGE);
 		} else {
-			this.textArea.setText(Strings.THECREATURE.toString()
-					+ alvo.getClass().getSimpleName()
-					+ Strings.ATTEMPTSSEPPUKU.toString() + dano + Strings.OFDAMAGE.toString());
-/*			JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
-					+ alvo.getClass().getSimpleName()
-					+ Strings.ATTEMPTSSEPPUKU.toString() + dano + Strings.OFDAMAGE.toString());*/
+			this.textArea.setText(Strings.THECREATURE
+					+ target.getClass().getSimpleName() + Strings.RECEIVED + damage
+					+ Strings.OFDAMAGE);
 		}
 	}
 
-	public void anunciarMorteDeCriatura(Creature alvo) {
-		this.textArea.setText(Strings.THECREATURE.toString()
-				+ alvo.getClass().getSimpleName()
-				+ Strings.DIEDHONORABLY.toString());
-/*		JOptionPane.showMessageDialog(null, Strings.THECREATURE.toString()
-				+ alvo.getClass().getSimpleName()
-				+ Strings.DIEDHONORABLY.toString());*/
+	public void announceCreatureDeath(Creature creature) {
+		this.textArea.setText(Strings.THECREATURE
+				+ creature.getClass().getSimpleName()
+				+ Strings.DIEDHONORABLY);
 	}
 
-	public void anunciarUsoDeMagia(Creature caster, Spell magia, Creature alvo,
-			byte dano, Status status) {
-		if (status != null) {
-			this.textArea.setText(Strings.THE.toString()
+	public void showEffectOfCastSpell(Creature caster, Spell spell, Creature target,
+									  byte damage, StatusEnum statusEnum) {
+		if (statusEnum != null) {
+			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
-					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
-					+ Strings.MODIFIEDIN.toString() + dano
-					+ Strings.BPMODSTATUS.toString() + status
-					+ Strings.EXCLMARK.toString());
-/*			JOptionPane.showMessageDialog(null, Strings.THE.toString()
-					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
-					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
-					+ Strings.MODIFIEDIN.toString() + dano
-					+ Strings.BPMODSTATUS.toString() + status
-					+ Strings.EXCLMARK.toString());*/
+					+ Strings.MURMUREDSPELL + spell.getName()
+					+ Strings.ANDTHECREATURE + target.getClass().getSimpleName()
+					+ Strings.MODIFIEDIN + damage
+					+ Strings.BPMODSTATUS + statusEnum
+					+ Strings.EXCLMARK);
 		} else {
-			this.textArea.setText(Strings.THE.toString()
+			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
-					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
-					+ Strings.MODIFIEDIN.toString() + dano + Strings.BPMODSNOTATUS.toString());
-/*			JOptionPane.showMessageDialog(null, Strings.THE.toString()
-					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL.toString() + magia.getNome()
-					+ Strings.ANDTHECREATURE.toString() + alvo.getClass().getSimpleName()
-					+ Strings.MODIFIEDIN.toString() + dano + Strings.BPMODSNOTATUS.toString());*/
+					+ Strings.MURMUREDSPELL + spell.getName()
+					+ Strings.ANDTHECREATURE + target.getClass().getSimpleName()
+					+ Strings.MODIFIEDIN + damage + Strings.BPMODSNOTATUS);
 		}
 
 	}
 
-	public void anunciarMorteDesafortunada(Creature criatura) {
-		this.textArea.setText(Strings.OHNO.toString()+" "+Strings.THECREATURE.toString()
-				+ criatura.getClass().getSimpleName()
-				+ Strings.DIEDONTRAP.toString());
-/*		JOptionPane.showMessageDialog(null, Strings.OHNO.toString()+" "+Strings.THECREATURE.toString()
-				+ criatura.getClass().getSimpleName()
-				+ Strings.DIEDONTRAP.toString());*/
+	public void announceUnfortunateDeath(Creature creature) {
+		this.textArea.setText(Strings.OHNO + " " + Strings.THECREATURE
+				+ creature.getClass().getSimpleName()
+				+ Strings.DIEDONTRAP);
 	}
 
-	public void anunciarDaVez(Creature criatura) {
-		Position posicaoCriatura = criatura.getCurrentPosition();
-		int linha = posicaoCriatura.getRow();
-		int coluna = posicaoCriatura.getColumn();
-		this.textArea.setText(Strings.CREATURESTURN.toString()
-				+ criatura.getClass().getSimpleName()
-				+ Strings.ONLINE.toString() + linha + Strings.COMMACOLUMN.toString() + coluna
-				+ Strings.OFGAMEBOARD.toString());
-/*		JOptionPane.showMessageDialog(null, Strings.CREATURESTURN.toString()
-				+ criatura.getClass().getSimpleName()
-				+ Strings.ONLINE.toString() + linha + Strings.COMMACOLUMN.toString() + coluna
-				+ Strings.OFGAMEBOARD.toString());*/
-	}
+	public void updatePlayerSurroundings() {
+		Creature currentCreature = this.heroQuest.getCurrentCreature();
+		Position currentPosition = currentCreature.getCurrentPosition();
+		byte currentRow = currentPosition.getRow();
+		byte currentColumn = currentPosition.getColumn();
 
-	public void atualizarArredoresJogador() {
-		Creature atual = this.heroQuest.getCriaturaDaVez();
-		Position p = atual.getCurrentPosition();
-		byte linha = p.getRow();
-		byte coluna = p.getColumn();
-
-		for (byte i = (byte) (linha - 2); i <= linha + 2; i++) {
-			for (byte j = (byte) (coluna - 2); j <= coluna + 2; j++) {
+		for (byte i = (byte) (currentRow - 2); i <= currentRow + 2; i++) {
+			for (byte j = (byte) (currentColumn - 2); j <= currentColumn + 2; j++) {
 				if (i >= 0 && i < this.heroQuest.getMap().getNumberOfRows() && j >= 0 && j < this.heroQuest.getMap().getNumberOfColumns()) {
-					Position posicao = this.heroQuest.getPosition(i, j);
-					this.atualizarBotao(this.boardButtons[i][j], posicao);
+					Position position = this.heroQuest.getPosition(i, j);
+					this.refreshTile(this.boardButtons[i][j], position);
 				}
 			}
 		}
 		
-		this.exibirCriaturas(); //precisa?
+		this.showVisibleCreaturesInQueue(); //precisa?
 	}
 
-	public int escolherPorta(ArrayList<String> portaIds) {
-		String inputDialog = Strings.SELECTDOOR.toString();
-		for (int i = 0; i < portaIds.size(); i++) {
-			inputDialog += i + " - " + portaIds.get(i) + "\n";
+	public int selectDoorToOpen(ArrayList<String> doorIds) {
+		String availableDoors = Strings.SELECTDOOR.toString();
+		for (int i = 0; i < doorIds.size(); i++) {
+			availableDoors += i + " - " + doorIds.get(i) + "\n";
 		}
-		String opcao = JOptionPane.showInputDialog(inputDialog);
-		return Integer.parseInt(opcao);
+		String chosenDoorId = JOptionPane.showInputDialog(availableDoors);
+		return Integer.parseInt(chosenDoorId);
 
 	}
 
 	public void createMusic() throws Exception {
-
-		/*File f = new File("src/musicas/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav");*/
 		String f = "/music/Castlevania Symphony of the Night Track 03 Dance Of Illusions.wav";
 		AudioInputStream audioIn = null;
 		
 		try {
-			//audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
 			audioIn = AudioSystem.getAudioInputStream(getClass().getResource(f));
 		} catch (MalformedURLException e2) {
 			e2.printStackTrace();
@@ -1263,42 +1157,39 @@ public class AtorJogador extends JFrame implements InterfaceGUI {
 		}
 
 		this.musicThread = new MusicThread(clip) {
-
 		};
 		SwingUtilities.invokeLater(musicThread);
-
 	}
 
-	public void music() {
-		this.musicThread.music();
+	public void toggleMusic() {
+		this.musicThread.toggleMusic();
 	}
 
-	public void mostrarRemocaoTrap() {
-		this.textArea.setText(Strings.DWARFDISARMEDTRAPS.toString());
-		//JOptionPane.showMessageDialog(null, Strings.DWARFDISARMEDTRAPS.toString());
+	public void showTrapRemovalMessage() {
+		this.textArea.setText(Strings.DWARF_DISARMED_TRAPS.toString());
 	}
 
-	public byte mostrarOpcoesFallingRock() {
+	public byte showFallingRockMovementOptions() {
 		String input = Strings.ROCKFALL.toString();
-		input += "0 - " + Strings.FORWARD.toString();
-		input += "1 - " + Strings.BACKWARD.toString();
+		input += "0 - " + Strings.FORWARD;
+		input += "1 - " + Strings.BACKWARD;
 		String option = JOptionPane.showInputDialog(input);
 		return (byte)Integer.parseInt(option);
 	}
 	
-	public byte mostrarOpcoesPit() {
-		String input = Strings.PITJUMP.toString();
-		input += "0 - " + Strings.YES.toString();
-		input += "1 - " + Strings.NO.toString();
+	public byte showPitJumpingOptions() {
+		String input = Strings.PIT_JUMP.toString();
+		input += "0 - " + Strings.YES;
+		input += "1 - " + Strings.NO;
 		String option = JOptionPane.showInputDialog(input);
 		return (byte)Integer.parseInt(option);
 	}
 	
-	public void setLanguage(Languages lang) {
+	public void setLanguage(LanguageEnum lang) {
 		language = lang;
 	}
 	
-	public AtorJogador getThis(){
+	public GUI getThis(){
 		return this;
 	}
 	

@@ -7,8 +7,8 @@ public class Player implements Jogada {
 	private static final long serialVersionUID = 1098287781774912497L;
 	protected String nome;
 
-	public Player(String idJogador) {
-		this.nome = idJogador;
+	public Player(String name) {
+		this.nome = name;
 	}
 	
 	public Player() {}

@@ -4,12 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Label;
 import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,27 +22,11 @@ public class CharacterSelection extends JFrame {
 	private static final long serialVersionUID = 7096359184586117742L;
 	private final JPanel contentPanel = new JPanel();
 	
-	private String personagemEscolhida;
-	@SuppressWarnings("unused")
-	private AtorJogador atorJogador;
+	private String chosenPlayer;
+	private GUI GUI;
 
-	/**
-	 * Launch the application.
-	 */
-/*	public static void main(String[] args) {
-		try {
-			CharacterSelection frame = new CharacterSelection(new AtorJogador());
-			frame.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}*/
-
-	/**
-	 * Create the frame.
-	 */
-	public CharacterSelection(AtorJogador atorJogador) {
-		this.atorJogador = atorJogador;
+	public CharacterSelection(GUI GUI) {
+		this.GUI = GUI;
 		
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -58,26 +38,23 @@ public class CharacterSelection extends JFrame {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		{
 			TextField textField = new TextField();
-			textField.addTextListener(new TextListener() {
-				public void textValueChanged(TextEvent arg0) {
-					
-					personagemEscolhida = textField.getText();
-					if (personagemEscolhida.equals("0")
-							|| personagemEscolhida.equals("1")
-							|| personagemEscolhida.equals("2")
-							|| personagemEscolhida.equals("3")
-							|| personagemEscolhida.equals("4")){
-						int escolhida = Integer.parseInt(personagemEscolhida);
-						try {
-							atorJogador.heroQuest.selecionarPersonagemEscolhida(escolhida);
-						} catch (ClassNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						dispose();
-					}
-				}
-			});
+			textField.addTextListener(arg0 -> {
+
+                chosenPlayer = textField.getText();
+                if (chosenPlayer.equals("0")
+                        || chosenPlayer.equals("1")
+                        || chosenPlayer.equals("2")
+                        || chosenPlayer.equals("3")
+                        || chosenPlayer.equals("4")){
+                    int chosenIndex = Integer.parseInt(chosenPlayer);
+                    try {
+                        GUI.heroQuest.selecionarPersonagemEscolhida(chosenIndex);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    dispose();
+                }
+            });
 			{
 				Label label = new Label(Strings.TYPECHARNUMBER.toString());
 				contentPanel.add(label);
@@ -85,7 +62,7 @@ public class CharacterSelection extends JFrame {
 			contentPanel.add(textField);
 		}
 		{
-			JButton btnZargon = new JButton("0 - " + Strings.ZARGON.toString());
+			JButton btnZargon = new JButton("0 - " + Strings.ZARGON);
 			btnZargon.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
@@ -106,7 +83,7 @@ public class CharacterSelection extends JFrame {
 		}
 		{
 			{
-				JButton btnWizard = new JButton("2 - " + Strings.WIZARD.toString());
+				JButton btnWizard = new JButton("2 - " + Strings.WIZARD);
 				btnWizard.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
@@ -123,7 +100,7 @@ public class CharacterSelection extends JFrame {
 						cardScreen.setVisible(true);
 					}
 				});
-				JButton btnNewButton = new JButton("1 - " + Strings.BARBARIAN.toString());
+				JButton btnNewButton = new JButton("1 - " + Strings.BARBARIAN);
 				btnNewButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
@@ -140,16 +117,14 @@ public class CharacterSelection extends JFrame {
 						cardScreen.setVisible(true);
 					}
 				});
-				btnNewButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-					}
-				});
+				btnNewButton.addActionListener(arg0 -> {
+                });
 				contentPanel.add(btnNewButton);
 				contentPanel.add(btnWizard);
 			}
 		}
 		{
-			JButton btnElf = new JButton("3 - " + Strings.ELF.toString());
+			JButton btnElf = new JButton("3 - " + Strings.ELF);
 			btnElf.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
@@ -169,7 +144,7 @@ public class CharacterSelection extends JFrame {
 			contentPanel.add(btnElf);
 		}
 		{
-			JButton btnDwarf = new JButton("4 - " + Strings.DWARF.toString());
+			JButton btnDwarf = new JButton("4 - " + Strings.DWARF);
 			btnDwarf.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {

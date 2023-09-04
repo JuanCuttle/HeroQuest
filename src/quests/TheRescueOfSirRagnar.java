@@ -185,7 +185,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 					c.setVisible(true);
 				}
 				
-				game.getAtorJogador().atualizarInterfaceGrafica();
+				game.getAtorJogador().refreshGUI();
 			}
 		}
 	}

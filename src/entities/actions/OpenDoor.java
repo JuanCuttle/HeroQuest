@@ -14,7 +14,7 @@ public class OpenDoor extends Action {
 		return this.doorId;
 	}
 
-	public void setDoorId(int idPorta) {
-		this.doorId = idPorta;
+	public void setDoorId(int doorId) {
+		this.doorId = doorId;
 	}
 }

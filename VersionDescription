@@ -9,7 +9,7 @@ Can be troublesome with Creature objects (change not made through ID)
 
 6) Sleep implemented (COMPLEX)
 
-!!!!!!!!!!!!!!!!!!!!Adequately test all status!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!Adequately test all statusEnum!!!!!!!!!!!!!!!!!!!!
 
 7) Added instructions
 
@@ -41,7 +41,7 @@ Can be troublesome with Creature objects (change not made through ID)
 
 19) Adjusted treasure searching message (only appears once), exported jar music now works, Courage implemented and visible pit is now disarmed
 
-20) Squashed Courage status removal bug, attempt of fixing verificaSeJogadorDaVez() NullPointerException (finished 13)), 
+20) Squashed Courage statusEnum removal bug, attempt of fixing verificaSeJogadorDaVez() NullPointerException (finished 13)),
 	added error message for trying to attack when not the players' turn, fixed error message for Zargon checking gold, 
 	fixed bound checking in search for treasure and traps
 
@@ -59,7 +59,7 @@ Can be troublesome with Creature objects (change not made through ID)
 
 27) Added Save files, containing Hero type (Barbarian, Wizard, Elf, Dwarf) and gold coins in inventory
 
-28) Upgrades: New map, almost identical to original board game. New quest: The Trial (first quest in official questbook).
+28) Upgrades: New map, almost identical to original board game. New questEnum: The Trial (first questEnum in official questbook).
 			  For map testing purposes, Map template created in class BasicMap (Rooms, Corridors and Walls only. no Traps, Treasure, Doors or Creatures).
 			  For map testing purposes, stub for GUI created in class GUIStub.
 			  New Monsters added: Orc and Gargoyle.
@@ -94,9 +94,9 @@ Can be troublesome with Creature objects (change not made through ID)
 			  
 32) Upgrades: You can now CHOOSE YOUR ADVENTURE!
 			  New Quest added: The Rescue of Sir Ragnar
-			  Tweaks to BasicMap to make quest creation code simpler.
+			  Tweaks to BasicMap to make questEnum creation code simpler.
 			  
-33) Upgrades: Finished The Rescue of Sir Ragnar quest. Sir Ragnar is controlled by Zargon, but is to act as an adventurer would.
+33) Upgrades: Finished The Rescue of Sir Ragnar questEnum. Sir Ragnar is controlled by Zargon, but is to act as an adventurer would.
 			  Creature movement adapted to resemble original (Monsters have fixed movement per turn, depending on species).
 			  Items added as Enum, saveable in player file.
 			  Quest opening descriptions added.

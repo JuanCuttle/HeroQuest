@@ -3,6 +3,7 @@ package entities;
 import java.util.Random;
 
 import br.ufsc.inf.leobr.cliente.Jogada;
+import enums.StatusEnum;
 
 public class Creature implements Jogada, Comparable<Creature> {
 
@@ -11,7 +12,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 	protected byte body;
 	protected byte mind;
 	protected byte movement;
-	protected Status status;
+	protected StatusEnum statusEnum;
 	protected byte attackDiceAmount;
 	protected byte defenceDiceAmount;
 	protected Position currentPosition;
@@ -34,7 +35,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 		this.turn = false;
 		this.body = (byte) body;
 		this.mind = (byte) mind;
-		this.status = Status.NEUTRAL;
+		this.statusEnum = StatusEnum.NEUTRAL;
 		this.attackDiceAmount = (byte) atk;
 		this.defenceDiceAmount = (byte) def;
 		
@@ -59,12 +60,12 @@ public class Creature implements Jogada, Comparable<Creature> {
 		this.body += value;
 	}
 
-	public Status getStatus() {
-		return this.status;
+	public StatusEnum getStatus() {
+		return this.statusEnum;
 	}
 
-	public void setStatus(Status status) {
-		this.status = status;
+	public void setStatus(StatusEnum statusEnum) {
+		this.statusEnum = statusEnum;
 	}
 
 	public byte getMind() {
@@ -100,12 +101,12 @@ public class Creature implements Jogada, Comparable<Creature> {
 		if (!(this.getClass().getSuperclass().getSimpleName().equals("Monster"))){
 			Random rand = new Random();
 			movement = rand.nextInt(12 - 2 + 1) + 2; // 12 max vaue, + 2 because of minimum roll
-			if (this.status == Status.AGILITY_DOWN){
+			if (this.statusEnum == StatusEnum.AGILITY_DOWN){
 				movement /= 2;
-				this.status = Status.NEUTRAL;
-			} else if (this.status == Status.AGILITY_UP){
+				this.statusEnum = StatusEnum.NEUTRAL;
+			} else if (this.statusEnum == StatusEnum.AGILITY_UP){
 				movement *= 2;
-				this.status = Status.NEUTRAL;
+				this.statusEnum = StatusEnum.NEUTRAL;
 			}
 		} else {
 			if (this instanceof SirRagnar) {

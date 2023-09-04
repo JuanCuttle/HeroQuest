@@ -1,17 +1,18 @@
 package entities;
 
 import br.ufsc.inf.leobr.cliente.Jogada;
+import enums.StatusEnum;
 
 public class Spell implements Jogada {
 	
 	private static final long serialVersionUID = -5887762451618737398L;
 	protected String name;
-	protected Status deliveredStatus;
+	protected StatusEnum deliveredStatus;
 	protected byte deliveredDamage;
 	
-	public Spell(String nome, Status status, byte damage) {
-		this.name = nome;
-		this.deliveredStatus = status;
+	public Spell(String name, StatusEnum statusEnum, byte damage) {
+		this.name = name;
+		this.deliveredStatus = statusEnum;
 		this.deliveredDamage = damage;
 	}
 
@@ -19,11 +20,11 @@ public class Spell implements Jogada {
 		return this.deliveredDamage;
 	}
 
-	public Status getStatus() {
+	public StatusEnum getStatus() {
 		return this.deliveredStatus;
 	}
 
-	public String getNome() {
+	public String getName() {
 		return this.name;
 	}
 	

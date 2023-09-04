@@ -2,6 +2,7 @@ package quests;
 
 import java.util.ArrayList;
 
+import enums.StatusEnum;
 import entities.enemies.ChaosWarrior;
 import entities.Creature;
 import entities.tiles.Furniture;
@@ -12,7 +13,6 @@ import entities.enemies.Monster;
 import entities.enemies.Mummy;
 import entities.tiles.Pit;
 import entities.enemies.Skeleton;
-import entities.Status;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
 import entities.enemies.Zombie;
@@ -172,7 +172,7 @@ public class TheStoneHunter extends BasicMap {
 	
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
 		Creature karlen = game.getCreaturePorID(6);
-		if (karlen.getStatus() == Status.DEAD){
+		if (karlen.getStatus() == StatusEnum.DEAD){
 			return true;
 		}
 		return false;
@@ -182,7 +182,7 @@ public class TheStoneHunter extends BasicMap {
 		if (!foundKarlen){
 			if (game.getCreaturePorID(6).isVisible()){
 				foundKarlen = true;
-				game.getAtorJogador().mostrarMensagem(Strings.FOUNDKARLEN.toString());
+				game.getAtorJogador().showMessagePopup(Strings.FOUNDKARLEN.toString());
 			}
 		}
 	}

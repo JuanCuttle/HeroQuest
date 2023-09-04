@@ -12,7 +12,7 @@ import entities.Items;
 import entities.enemies.Monster;
 import entities.enemies.Orc;
 import entities.Position;
-import entities.Status;
+import enums.StatusEnum;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
 
@@ -165,7 +165,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 	
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
 		Creature ulag = game.getCreaturePorID(6);
-		if (ulag.getStatus() == Status.DEAD){
+		if (ulag.getStatus() == StatusEnum.DEAD){
 			return true;
 		}
 		return false;

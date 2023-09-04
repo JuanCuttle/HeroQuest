@@ -1,6 +1,6 @@
 package entities.actions;
 
-import entities.Directions;
+import enums.DirectionEnum;
 
 public class Move extends Action {
 
@@ -16,22 +16,22 @@ public class Move extends Action {
 
 	protected byte damage;
 	
-	protected Directions direction;
-	protected byte opcao;
+	protected DirectionEnum direction;
+	protected byte option;
 
-	public byte getOpcao() {
-		return opcao;
+	public byte getOption() {
+		return option;
 	}
 
-	public void setOpcao(byte opcao) {
-		this.opcao = opcao;
+	public void setOption(byte option) {
+		this.option = option;
 	}
 
-	public Directions getDirection() {
+	public DirectionEnum getDirection() {
 		return direction;
 	}
 
-	public void setDirection(Directions direction) {
+	public void setDirection(DirectionEnum direction) {
 		this.direction = direction;
 	}
 

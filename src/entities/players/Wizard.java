@@ -1,8 +1,7 @@
 package entities.players;
 
-import entities.PlayableCharacter;
 import entities.Spell;
-import entities.Status;
+import enums.StatusEnum;
 
 import java.util.*;
 
@@ -21,12 +20,12 @@ public class Wizard extends PlayableCharacter {
 	}
 	
 	public void createSpells() {
-		Spell swift_Wind = new Spell("Swift Wind", Status.AGILITY_UP, (byte) 0);
-		Spell tempest = new Spell("Tempest", Status.CURSED, (byte) 0);
+		Spell swift_Wind = new Spell("Swift Wind", StatusEnum.AGILITY_UP, (byte) 0);
+		Spell tempest = new Spell("Tempest", StatusEnum.CURSED, (byte) 0);
 		Spell ball_of_Flame = new Spell("Ball of Flame", null, (byte) -2);
-		Spell courage = new Spell("Courage", Status.COURAGE, (byte) 0);
+		Spell courage = new Spell("Courage", StatusEnum.COURAGE, (byte) 0);
 		Spell fire_of_Wrath = new Spell("Fire of Wrath", null, (byte) -1);
-		Spell sleep = new Spell("Sleep", Status.SLEEPING, (byte) 0);
+		Spell sleep = new Spell("Sleep", StatusEnum.SLEEPING, (byte) 0);
 		Spell water_of_Healing = new Spell("Water of Healing", null, (byte) 4);
 		this.spells.add(swift_Wind);
 		this.spells.add(tempest);

@@ -1,5 +1,5 @@
 package view;
 
-public enum Languages {
+public enum LanguageEnum {
 	English, Portugues;
 }

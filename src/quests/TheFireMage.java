@@ -2,6 +2,7 @@ package quests;
 
 import java.util.ArrayList;
 
+import enums.StatusEnum;
 import entities.enemies.ChaosSorcerer;
 import entities.Creature;
 import entities.tiles.Furniture;
@@ -12,7 +13,6 @@ import entities.enemies.Mummy;
 import entities.enemies.Orc;
 import entities.tiles.Pit;
 import entities.enemies.Skeleton;
-import entities.Status;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
 import entities.enemies.Zombie;
@@ -169,7 +169,7 @@ public class TheFireMage extends BasicMap {
 	
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
 		Creature balur = game.getCreaturePorID(15);
-		if (balur.getStatus() == Status.DEAD){
+		if (balur.getStatus() == StatusEnum.DEAD){
 			return true;
 		}
 		return false;

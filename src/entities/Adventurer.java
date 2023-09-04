@@ -1,5 +1,7 @@
 package entities;
 
+import entities.players.PlayableCharacter;
+
 public class Adventurer extends Player {
 
 	private static final long serialVersionUID = 476483639541190443L;

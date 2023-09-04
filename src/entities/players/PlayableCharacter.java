@@ -1,7 +1,9 @@
-package entities;
+package entities.players;
 
 import java.util.ArrayList;
 
+import entities.Creature;
+import entities.Items;
 import quests.BasicMap;
 import quests.LegacyOfTheOrcWarlord;
 
@@ -13,7 +15,7 @@ public class PlayableCharacter extends Creature {
 	
 	public PlayableCharacter(int body, int mind, int atk, int def) {
 		super(body, mind, atk, def);
-		items = new ArrayList<Items>();
+		items = new ArrayList<>();
 	}
 
 	public void increaseGold(int value) {
@@ -30,7 +32,7 @@ public class PlayableCharacter extends Creature {
 	
 	public ArrayList<Items> getItems(BasicMap map){
 		if (map instanceof LegacyOfTheOrcWarlord && !((LegacyOfTheOrcWarlord) map).foundEquipment()){
-			return new ArrayList<Items>();
+			return new ArrayList<>();
 		}
 		return this.items;
 	}

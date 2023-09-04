@@ -2,6 +2,7 @@ package quests;
 
 import java.util.ArrayList;
 
+import enums.StatusEnum;
 import entities.enemies.ChaosWarrior;
 import entities.Creature;
 import entities.enemies.Fimir;
@@ -13,7 +14,6 @@ import entities.enemies.Monster;
 import entities.enemies.Mummy;
 import entities.enemies.Orc;
 import entities.enemies.Skeleton;
-import entities.Status;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
 import entities.enemies.Zombie;
@@ -215,7 +215,7 @@ public class TheTrial extends BasicMap {
 	
 	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
 		Creature verag = game.getCreaturePorID(24);
-		if (verag.getStatus() == Status.DEAD){
+		if (verag.getStatus() == StatusEnum.DEAD){
 			return true;
 		}
 		return false;

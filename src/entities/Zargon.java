@@ -11,7 +11,7 @@ public class Zargon extends Player {
 	protected ArrayList<Monster> monsters;
 	
 	public Zargon(HeroQuest heroQuest) {
-		this.monsters = new ArrayList<Monster>();
+		this.monsters = new ArrayList<>();
 		this.monsters = this.createMonsters(heroQuest);
 	}
 	

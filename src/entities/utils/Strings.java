@@ -1,7 +1,7 @@
 package entities.utils;
 
-import view.AtorJogador;
-import view.Languages;
+import view.GUI;
+import view.LanguageEnum;
 
 public enum Strings {
 	 HEROQUEST {
@@ -12,7 +12,7 @@ public enum Strings {
 	  
 	  DOOROUTOFRANGE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "N�o est� perto da porta.";
 	    	  	default: return "You are too far from the door.";
 	    	  }
@@ -21,7 +21,7 @@ public enum Strings {
 
 	  NOTYOURTURN {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "N�o � o jogador da vez.";
 	    	  	default: return "It's not your turn.";
 	    	  }
@@ -30,7 +30,7 @@ public enum Strings {
 	  
 	  YOURTURN {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "� sua vez.";
 	    	  	default: return "It's your turn.";
 	    	  }
@@ -39,7 +39,7 @@ public enum Strings {
 	  
 	  CANTOPENDOOR {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Monstros n�o s�o capazes de abrir portas!";
 	    	  	default: return "Monsters cannot open doors!";
 	    	  }
@@ -48,7 +48,7 @@ public enum Strings {
 	  
 	  SLEEPFREEZE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� est� dormindo, n�o pode se mover!";
 	    	  	default: return "You are fast asleep, and cannot move!";
 	    	  }
@@ -57,7 +57,7 @@ public enum Strings {
 	  
 	  PHYSICSLAWS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Respeite as leis da f�sica!";
 	    	  	default: return "Show some respect for the laws of Physics!";
 	    	  }
@@ -66,7 +66,7 @@ public enum Strings {
 	  
 	  NOMOVELEFT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� n�o tem movimento suficiente nesta rodada.";
 	    	  	default: return "You have no movement left!";
 	    	  }
@@ -75,7 +75,7 @@ public enum Strings {
 	  
 	  SLEEPNOATT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� est� dormindo, n�o pode atacar!";
 	    	  	default: return "You are fast asleep, and cannot attack!";
 	    	  }
@@ -84,7 +84,7 @@ public enum Strings {
 	  
 	  OUTOFRANGE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "N�o � poss�vel atacar um alvo t�o distante.";
 	    	  	default: return "You cannot reach your target.";
 	    	  }
@@ -93,7 +93,7 @@ public enum Strings {
 	  
 	  NOMIND {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Mind insuficiente.";
 	    	  	default: return "Insufficient Mind points.";
 	    	  }
@@ -102,7 +102,7 @@ public enum Strings {
 	  
 	  DOESNTUSESPELLS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Seu personagem n�o usa magia.";
 	    	  	default: return "Your character cannot use spells.";
 	    	  }
@@ -111,7 +111,7 @@ public enum Strings {
 	  
 	  MAGICFAIL {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "O encantamento parece perigoso, mas o conjurador se desconcentra e o feiti�o se desfaz...";
 		    	default: return "The spell seems dangerous at first, but the caster loses his focus for a split-second and the spell vanishes from whence it came...";
 	    	  }
@@ -120,7 +120,7 @@ public enum Strings {
 	  
 	  CHARSELECTERROR {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Erro na sele��o de personagem. Tente novamente.";
 	    	  	default: return "Error during character selection. Please try again.";
 	    	  }
@@ -129,7 +129,7 @@ public enum Strings {
 	  
 	  THEPLAYER {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "O jogador ";
 	    	  	default: return "The player ";
 	    	  }
@@ -138,7 +138,7 @@ public enum Strings {
 	  
 	  FOUNDGOLD {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " encontrou algumas moedas de ouro.";
 	    	  	default: return " found some gold coins.";
 	    	  }
@@ -147,7 +147,7 @@ public enum Strings {
 	  
 	  FOUNDITEM {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " encontrou o item: ";
 	    	  	default: return " has found the item: ";
 	    	  }
@@ -156,7 +156,7 @@ public enum Strings {
 	  
 	  THECREATURE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "A criatura ";
 	    	  	default: return "The creature ";
 	    	  }
@@ -165,7 +165,7 @@ public enum Strings {
 	  
 	  WOKEUP {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " acordou!";
 	    	  	default: return " woke up!";
 	    	  }
@@ -174,7 +174,7 @@ public enum Strings {
 	  
 	  MONSTERCANTUNDERSTAND {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "O monstro n�o � capaz de entender esse comando.";
 	    	  	default: return "The monster cannot understand this command.";
 	    	  }
@@ -183,7 +183,7 @@ public enum Strings {
 	  
 	  CHARUNAVAILABLE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Personagem n�o dispon�vel";
 	    	  	default: return "The selected character is unavailable";
 	    	  }
@@ -192,7 +192,7 @@ public enum Strings {
 	  
 	  ENDGAME {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "O jogo terminou, deseja fech�-lo?";
 	    	  	default: return "The game has ended, do you wish to exit?";
 	    	  }
@@ -201,7 +201,7 @@ public enum Strings {
 	  
 	  ZARGONNOGOLD {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Zargon n�o carrega gold.";
 	    	  	default: return "Zargon does not carry gold.";
 	    	  }
@@ -216,7 +216,7 @@ public enum Strings {
 	  
 	  SERVER {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return ", Conectado ao servidor: ";
 	    	  	default: return ", Connected to server: ";
 	    	  }
@@ -225,7 +225,7 @@ public enum Strings {
 	  
 	  COMMAPLAYER {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return ", Jogador: ";
 	    	  	default: return ", Player: ";
 	    	  }
@@ -234,7 +234,7 @@ public enum Strings {
 	  
 	  INSTRUCTIONS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Instru\u00E7\u00F5es";
 	    	  	default: return "Instructions";
 	    	  }
@@ -249,7 +249,7 @@ public enum Strings {
 	  
 	  SELECTCHAR {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Selecionar personagem";
 	    	  	default: return "Character selection";
 	    	  }
@@ -258,7 +258,7 @@ public enum Strings {
 	  
 	  SETTINGS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Configura��es";
 	    	  	default: return "Settings";
 	    	  }
@@ -267,7 +267,7 @@ public enum Strings {
 	  
 	  TRIGGERMUSIC {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Iniciar/pausar a m�sica";
 	    	  	default: return "Turn music on/off";
 	    	  }
@@ -276,7 +276,7 @@ public enum Strings {
 	  
 	  LANGUAGEBUTTON {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "L�ngua";
 	    	  	default: return "Language";
 	    	  }
@@ -285,7 +285,7 @@ public enum Strings {
 	  
 	  SELECTSPELL {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Digite o n�mero correspondente � magia que deseja usar: ";
 	    	  	default: return "Type in the number corresponding to the spell you wish to use: ";
 	    	  }
@@ -294,23 +294,23 @@ public enum Strings {
 	  
 	  SELECTTARGET {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Digite o n�mero correspondente ao alvo escolhido: ";
 	    	  	default: return "Type in the number corresponding to the desired target: ";
 	    	  }
 	      }
 	  },
 	  
-	  INPUTNAME {
+	  INPUT_NAME {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Digite o nome do seu personagem: ";
 	    	  	default: return "Type in the your character's name: ";
 	    	  }
 	      }
 	  },
 	  
-	  OBTAINSERVERID {
+	  OBTAIN_SERVER_ADDRESS {
 	      public String toString() {
 	    	  // String idServidor = ("venus.inf.ufsc.br");
 	  		  // String idServidor = ("127.0.0.1");
@@ -323,7 +323,7 @@ public enum Strings {
 	  
 	  INPUTSERVERADDRESS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Insira o endere�o do servidor";
 	    	  	default: return "Type in the server's address";
 	    	  }
@@ -332,7 +332,7 @@ public enum Strings {
 	  
 	  SUCCESSFULCONNECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Conexao com exito";
 	    	  	default: return "Successful connection";
 	    	  }
@@ -341,7 +341,7 @@ public enum Strings {
 	  
 	  ALREADYCONNECTED {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Tentativa de conexao com conexao previamente estabelecida";
 	    	  	default: return "Conection attempt with previously established connection";
 	    	  }
@@ -350,7 +350,7 @@ public enum Strings {
 	  
 	  FAILEDCONNECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Tentativa de conexao falhou";
 	    	  	default: return "Failed to establish connection";
 	    	  }
@@ -359,7 +359,7 @@ public enum Strings {
 	  
 	  SUCCESSFULDISCONNECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Desconexao com exito";
 	    	  	default: return "Successfully disconnected";
 	    	  }
@@ -368,7 +368,7 @@ public enum Strings {
 	  
 	  DISCBEFORECONNECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Tentativa de desconexao sem conexao previamente estabelecida";
 		    	default: return "Attempt to disconnect without previous connection";
 	    	  }
@@ -377,7 +377,7 @@ public enum Strings {
 	  
 	  FAILEDDISCONNECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Tentativa de desconexao falhou";
 	    	  	default: return "Failed disconnection attempt";
 	    	  }
@@ -386,7 +386,7 @@ public enum Strings {
 	  
 	  SUCCESSFULSTART {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Solicita��o de inicio procedida com exito";
 	    	  	default: return "Successful starting request";
 	    	  }
@@ -395,7 +395,7 @@ public enum Strings {
 	  
 	  STARTBEFORECONNECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Tentativa de inicio sem conexao previamente estabelecida";
 	    	  	default: return "Attempt at starting without previous connection";
 	    	  }
@@ -404,25 +404,25 @@ public enum Strings {
 	  
 	  UNINTERRUPTEDGAME {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Partida corrente nao interrompida";
 	    	  	default: return "Current game not interrupted";
 	    	  }
 	      }
 	  },
 	  
-	  HEROWIN {
+	  HERO_WON {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Parab�ns aos aventureiros!\n Voc�s foram vitoriosos!!!";
 		    	default: return "Congratulations to the heroes!\n You were victorious!!!";
 	    	  }
 	      }
 	  },
 	  
-	  ZARGONWIN {
+	  ZARGON_WON {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Oh n�o, o terr�vel Zargon venceu desta vez!";
 	    	  	default: return "Oh no, the evil Zargon has won!";
 	    	  }
@@ -431,7 +431,7 @@ public enum Strings {
 	  
 	  YOUHAVE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� possui ";
 	    	  	default: return "You have ";
 	    	  }
@@ -440,7 +440,7 @@ public enum Strings {
 	  
 	  INVYCOINS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " moedas de ouro no seu invent�rio.";
 	    	  	default: return " gold coins in your inventory.";
 	    	  }
@@ -449,7 +449,7 @@ public enum Strings {
 	  
 	  CURRENTBP {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 		    	  case Portugues: return "Body atual: ";
 		    	  default: return "Current Body: ";
 	    	  }
@@ -458,7 +458,7 @@ public enum Strings {
 	  
 	  CURRENTMP {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "\nMind restante: ";
 	    	  	default: return "\nCurrent Mind: ";
 	    	  }
@@ -467,7 +467,7 @@ public enum Strings {
 	  
 	  REMAININGMOVES {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "\nMovimento restante: ";
 	    	  	default: return "\nRemaining Movement: ";
 	    	  }
@@ -476,7 +476,7 @@ public enum Strings {
 	  
 	  CURRENTSTATUS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "\nStatus atual: ";
 	    	  	default: return "\nCurrent Status: ";
 	    	  }
@@ -485,7 +485,7 @@ public enum Strings {
 	  
 	  LINE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "\nLinha: " ;
 	    	  	default: return "\nLine: ";
 	    	  }
@@ -494,7 +494,7 @@ public enum Strings {
 	  
 	  COLUMN {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " Coluna: ";
 	    	  	default: return " Column: ";
 	    	  }
@@ -503,7 +503,7 @@ public enum Strings {
 	  
 	  TTW {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "\nTurnos at� acordar: ";
 	    	  	default: return "\nTurns left to wake: ";
 	    	  }
@@ -512,7 +512,7 @@ public enum Strings {
 	  
 	  NUMBEROFPLAYERS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Favor digitar a quantidade de jogadores que ir�o participar desta partida: ";
 	    	  	default: return "Please type in the (total) number of players who will participate in this game: ";
 	    	  }
@@ -521,7 +521,7 @@ public enum Strings {
 	  
 	  OHNO {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Oh n�o! ";
 	    	  	default: return "Oh no! ";
 	    	  }
@@ -530,7 +530,7 @@ public enum Strings {
 	  
 	  ACTIVATEDTRAP {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " ativou uma armadilha e perdeu ";
 	    	  	default: return " has activated a trap and lost ";
 	    	  }
@@ -539,7 +539,7 @@ public enum Strings {
 	  
 	  OFBP {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " de Body points!";
 	    	  	default: return " Body points!";
 	    	  }
@@ -548,7 +548,7 @@ public enum Strings {
 	  
 	  RECEIVED {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " recebeu ";
 	    	  	default: return " received ";
 	    	  }
@@ -557,7 +557,7 @@ public enum Strings {
 	  
 	  OFDAMAGE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " de dano.";
 	    	  	default: return " of damage.";
 	    	  }
@@ -566,7 +566,7 @@ public enum Strings {
 	  
 	  ATTEMPTSSEPPUKU {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " tenta seppuku e recebe ";
 	    	  	default: return " attempts seppuku and inflicts ";
 	    	  }
@@ -575,7 +575,7 @@ public enum Strings {
 	  
 	  DIEDHONORABLY {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " morreu honrosamente em batalha.";
 	    	  	default: return " has died honorably in battle.";
 	    	  }
@@ -584,7 +584,7 @@ public enum Strings {
 	  
 	  THE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "O ";
 	    	  	default: return "The ";
 	    	  }
@@ -593,7 +593,7 @@ public enum Strings {
 	  
 	  MURMUREDSPELL {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " murmurou algumas palavras m�gicas (";
 	    	  	default: return " murmured a few magical words (";
 	    	  }
@@ -602,7 +602,7 @@ public enum Strings {
 	  
 	  ANDTHECREATURE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "), e a criatura ";
 	    	  	default: return "), and the creature ";
 	    	  }
@@ -611,7 +611,7 @@ public enum Strings {
 	  
 	  MODIFIEDIN {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " modificou em ";
 	    	  	default: return " modified in ";
 	    	  }
@@ -620,7 +620,7 @@ public enum Strings {
 	  
 	  BPMODSTATUS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " seus Body points, e conferiu a ele o estado ";
 	    	  	default : return " its Body points, and conferred to it the status ";
 	    	  }
@@ -629,7 +629,7 @@ public enum Strings {
 	  
 	  BPMODSNOTATUS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " seus Body points!";
 	    	  	default: return " its Body points!";
 	    	  }
@@ -644,7 +644,7 @@ public enum Strings {
 	  
 	  DIEDONTRAP {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " morreu ao ativar uma armadilha!";
 	    	  	default: return " died as it triggered a trap!";
 	    	  }
@@ -653,7 +653,7 @@ public enum Strings {
 	  
 	  CREATURESTURN {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "A vez � da criatura ";
 	    	  	default: return "The turn is of creature ";
 	    	  }
@@ -662,7 +662,7 @@ public enum Strings {
 	  
 	  ONLINE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " a qual est� na linha ";
 	    	  	default: return " which is on line ";
 	    	  }
@@ -671,7 +671,7 @@ public enum Strings {
 	  
 	  COMMACOLUMN {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return ", coluna ";
 	    	  	default: return ", column ";
 	    	  }
@@ -680,7 +680,7 @@ public enum Strings {
 	  
 	  OFGAMEBOARD {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return " do tabuleiro.";
 	    	  	default: return " of the game board.";
 	    	  }
@@ -689,16 +689,16 @@ public enum Strings {
 	  
 	  SELECTDOOR {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Escolha a porta a ser aberta: \n";
 	    	  	default: return "Choose the door to be opened: \n";
 	    	  }
 	      }
 	  },
 	  
-	  DWARFDISARMEDTRAPS {
+	  DWARF_DISARMED_TRAPS {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "O An�o desarmou as armadilhas pr�ximas a ele!";
 	    	  	default: return "The Dwarf has disarmed the traps close to him!";
 	    	  }
@@ -707,7 +707,7 @@ public enum Strings {
 	  
 	  DISARMTREASURETRAP {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O aventureiro desarmou uma armadilha em um tesouro!";
 	    	  } else {
 	    		  return "The adventurer has disarmed a trap in a treasure chest!";
@@ -717,7 +717,7 @@ public enum Strings {
 	  
 	  REVEALEDTHRONEPASSAGE {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O trono se moveu para revelar uma passagem secreta!";
 	    	  } else {
 	    		  return "The throne moved to reveal a hidden passage!";
@@ -727,7 +727,7 @@ public enum Strings {
 	  
 	  ROCKFALL {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Oh n�o, voc� est� sendo soterrado! Escolha se deseja ir para frente ou para tr�s:\n";
 	    	  	default: return "Oh no, you are being buried by rocks! Decide if you want to move forwards or backwards:\n";
 	    	  }
@@ -736,7 +736,7 @@ public enum Strings {
 	  
 	  FORWARD {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "para frente\n";
 	    	  	default: return "forwards\n";
 	    	  }
@@ -745,16 +745,16 @@ public enum Strings {
 	  
 	  BACKWARD {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "para tr�s";
 	    	  	default: return "backwards";
 	    	  }
 	      }
 	  },
 	  
-	  PITJUMP {
+	  PIT_JUMP {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� deseja pular o buraco?\n";
 	    	  	default: return "Do you wish to jump over the pit?\n";
 	    	  }
@@ -763,7 +763,7 @@ public enum Strings {
 	  
 	  YES {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "sim\n";
 	    	  	default: return "yes\n";
 	    	  }
@@ -772,7 +772,7 @@ public enum Strings {
 	  
 	  NO {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "n�o";
 	    	  	default: return "no";
 	    	  }
@@ -781,7 +781,7 @@ public enum Strings {
 	  
 	  ERRORABORT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Ocorreu um erro e o jogo teve de ser abortado";
 	    	  	default: return "An error has ocurred and the game had to be aborted";
 	    	  }
@@ -790,7 +790,7 @@ public enum Strings {
 	  
 	  SELECTYOURCHAR {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Selecione seu personagem";
 	    	  	default: return "Select your character";
 	    	  }
@@ -799,7 +799,7 @@ public enum Strings {
 	  
 	  TYPECHARNUMBER {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Digite o n\u00FAmero ao lado do escolhido:";
 	    	  	default: return "Type in the number beside the chosen character";
 	    	  }
@@ -808,7 +808,7 @@ public enum Strings {
 	  
 	  ZARGONDESCRIPTION {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Zargon. Voc� controla os monstros na masmorra. Seu objetivo � matar os herois."; 
 	    	  	default: return "Zargon. You control the monsters in the dungeon. Your task is to kill the heroes.";
 	    	  }
@@ -823,31 +823,43 @@ public enum Strings {
 	  
 	  BARBARIAN {
 	      public String toString() {
-	          return "Barbarian";
+			  switch(GUI.language){
+				  case Portugues: return "Bárbaro";
+				  default : return "Barbarian";
+			  }
 	      }
 	  },
 	  
 	  WIZARD {
 	      public String toString() {
-	          return "Wizard";
+			  switch(GUI.language){
+				  case Portugues: return "Mago";
+				  default : return "Wizard";
+			  }
 	      }
 	  },
 	  
 	  ELF {
 	      public String toString() {
-	          return "Elf";
+			  switch(GUI.language){
+				  case Portugues: return "Elfo";
+				  default : return "Elf";
+			  }
 	      }
 	  },
 	  
 	  DWARF {
 	      public String toString() {
-	          return "Dwarf";
+			  switch(GUI.language){
+				  case Portugues: return "Anão";
+				  default : return "Dwarf";
+			  }
 	      }
 	  },
 	  
 	  NORTH {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Norte";
 	    	  	default : return "North";
 	    	  }
@@ -856,7 +868,7 @@ public enum Strings {
 	  
 	  SOUTH {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Sul";
 	    	  	default: return "South";
 	    	  }
@@ -865,7 +877,7 @@ public enum Strings {
 	  
 	  EAST {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Leste";
 	    	  	default: return "East";
 	    	  }
@@ -874,7 +886,7 @@ public enum Strings {
 	  
 	  WEST {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Oeste";
 	    	  	default: return "West";
 	    	  }
@@ -883,7 +895,7 @@ public enum Strings {
 	  
 	  LANGSELECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Selecione uma l�ngua";
 	    	  	default: return "Select a language";
 	    	  }
@@ -892,7 +904,7 @@ public enum Strings {
 	  
 	  SELECT {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Selecione";
 	    	  	default: return "Select";
 	    	  }
@@ -901,7 +913,7 @@ public enum Strings {
 	  
 	  INSTRUCTMANUAL {
 	      public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Manual de Instru��es";
 	    	  } else {
 	    		  return "Instruction Manual";
@@ -911,7 +923,7 @@ public enum Strings {
 	  
 	  GUIDE {
 	      public String toString() {
-	    	  switch(AtorJogador.language){
+	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� est� em uma masmorra. Est� frio, �mido e totalmente escuro. "
 	    	  			+ "Os �nicos sons s�o de seus pr�prios batimentos card�acos, "
 	    	  			+ "respira��o e ecos de �gua gotejando pelos corredores. "
@@ -980,7 +992,7 @@ public enum Strings {
 	  
 	  CONFIRMLOADGAME {
 	      public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Um arquivo com o seu nome j� existe, deseja carreg�-lo?";
 	    	  } else {
 	    		  return "A file with your name already exists, do you wish to load it?";
@@ -990,7 +1002,7 @@ public enum Strings {
 	  
 	  FILENOTFOUND {
 	      public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Arquivo com n�o encontrado, criando um novo...";
 	    	  } else {
 	    		  return "File not found, creating new file...";
@@ -1000,7 +1012,7 @@ public enum Strings {
 	  
 	  THETRIAL {
 	      public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Voc�s aprenderam bem, meus amigos. Agora chegou a hora do seu primeiro desafio."
 	    		  		+ " Voc�s precisam primeiro entrar nas catacumbas que cont�m a tumba de Fellmarg."
 	    		  		+ "\nVoc�s devem localizar e destruir Verag, uma g�rgula repugnante que se esconde nas catacumbas."
@@ -1020,7 +1032,7 @@ public enum Strings {
 	  
 	  THERESCUEOFSIRRAGNAR {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Sir Ragnar, um dos mais poderosos guerreiros do Imperados, foi raptado. "
 	    		  		+ "\nEle est� prisioneiro de Ulag, o General dos Orcs. Voc� deve localizar "
 	    		  		+ "Sir Ragnar e traz�-lo de volta � seguran�a, o Pr�ncipe Magnus ir� "
@@ -1040,7 +1052,7 @@ public enum Strings {
 	  
 	  THEMAZE {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Este ser� seu �ltimo teste antes de seguir adiante. \nAtente para usar as "
 	    		  		+ "habilidades que foram ensinadas a voc�. Voc� deve tentar encontrar a sa�da. "
 	    		  		+ "\n V�rios Monstros foram posicionados no Labirinto. Eles tentar�o impedi-lo, ent�o tenha cuidado. "
@@ -1057,7 +1069,7 @@ public enum Strings {
 	  
 	  LAIROFTHEORCWARLORD {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O Pr�ncipe Magnus ordenou que o General dos Orcs, Ulag, que foi respons�vel "
 	    		  		+ "\npelo sequestro do Sir Ragnar, deve ser localizado e eliminado. Aquele que "
 	    		  		+ "\nmatar Ulag ser� recompensado em 100 moedas de ouro. Qualquer tesouro encontrado "
@@ -1073,7 +1085,7 @@ public enum Strings {
 	  
 	  ITEMSOWNED {
 		  public String toString(){
-			  if(AtorJogador.language == Languages.Portugues){
+			  if(GUI.language == LanguageEnum.Portugues){
 				  return "\nVoc� tamb�m possui os seguintes itens: \n";
 			  } else {
 				  return "\nYou also own the following items: \n";
@@ -1083,7 +1095,7 @@ public enum Strings {
 	  
 	  PRINCEMAGNUSGOLD {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Tr�s ba�s de tesouro foram roubados enquanto eram levados ao Imperador."
 	    		  		+ "\nUma recompensa de 200 moedas de ouro foi oferecida a qualquer um que "
 	    		  		+ "\npossa retornar o ba� com TODO o ouro. Os ladr�es s�o conhecidos como um "
@@ -1100,7 +1112,7 @@ public enum Strings {
 	  
 	  MELARSMAZE {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "H� muito tempo, um poderoso feiticeiro chamado Melar criou um Talism� o qual "
 	    		  		+ "\npodia aumentar o conhecimento de magia do usu�rio. Ele guardava o Talism� "
 	    		  		+ "\ncom ele em todos os momentos, temendo que ele poderia ser roubado e usado "
@@ -1122,7 +1134,7 @@ public enum Strings {
 	  
 	  LEGACYOFTHEORCWARLORD {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O horrendo filho de Ulag, Grak, jurou vingan�a contra aqueles que mataram seu pai."
 	    		  		+ "\nApesar de ter levado v�rios meses, ele finalmente conseguiu localizar voc� "
 	    		  		+ "e o capturou em uma emboscada. Agora voc� est� sendo mantido prisioneiro nas suas "
@@ -1142,7 +1154,7 @@ public enum Strings {
 	  
 	  THESTONEHUNTER {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O Mago pessoal do Imperador, Karlen, desapareceu. O Imperador teme que ou ele "
 	    		  		+ "\nfoi assassinado ou sucumbiu �s tenta��es da magia do Chaos. Voc� deve descobrir "
 	    		  		+ "\no que houve com Karlen e, caso ele esteja vivo, traz�-lo de volta � seguran�a."
@@ -1158,7 +1170,7 @@ public enum Strings {
 	  
 	  FOUNDKARLEN {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O Zumbi nesta sala � Karlne. Enquanto trabalhava em uma magia de Chaos ele foi consumido "
 	    		  		+ "\npela magia que ele criou e foi transformado em um Zumbi lobotomizado.";
 	    	  } else {
@@ -1170,7 +1182,7 @@ public enum Strings {
 	  
 	  THEFIREMAGE {
 		  public String toString() {
-	    	  if(AtorJogador.language == Languages.Portugues){
+	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Os Orcs das Montanhas Negras t�m usado magias de Fogo em seus ataques. Balur, "
 	    		  		+ "\no Mago do Fogo, � quem pensamos ser respons�vel por ajud�-los. Nenhuma magia "
 	    		  		+ "\nde Fogo pode feri-lo, e os Magos do Imperador foram incapazes de combater "

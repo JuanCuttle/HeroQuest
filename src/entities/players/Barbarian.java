@@ -1,7 +1,5 @@
 package entities.players;
 
-import entities.PlayableCharacter;
-
 public class Barbarian extends PlayableCharacter {
 
 	private static final long serialVersionUID = -8284046323234351676L;

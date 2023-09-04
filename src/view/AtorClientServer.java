@@ -67,7 +67,7 @@ public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 
 	public void enviarJogada(Action action) {
 		try {
-			proxy.enviaJogada((Jogada) action);
+			proxy.enviaJogada(action);
 		} catch (NaoJogandoException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			e.printStackTrace();

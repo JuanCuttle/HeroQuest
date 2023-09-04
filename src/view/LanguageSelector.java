@@ -24,7 +24,7 @@ public class LanguageSelector extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LanguageSelector(AtorJogador gui) {
+	public LanguageSelector(GUI gui) {
 		setTitle(Strings.LANGSELECT.toString());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 100);
@@ -33,10 +33,10 @@ public class LanguageSelector extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JComboBox<Languages> comboBox = new JComboBox<>();
+		JComboBox<LanguageEnum> comboBox = new JComboBox<>();
 		
-		comboBox.addItem(Languages.Portugues);
-		comboBox.addItem(Languages.English);
+		comboBox.addItem(LanguageEnum.Portugues);
+		comboBox.addItem(LanguageEnum.English);
 		
 		contentPane.add(comboBox, BorderLayout.CENTER);
 		
@@ -44,7 +44,7 @@ public class LanguageSelector extends JFrame {
 		btnShow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				gui.setLanguage((Languages) comboBox.getSelectedItem());
+				gui.setLanguage((LanguageEnum) comboBox.getSelectedItem());
 				gui.atualizarBotoesLingua();
 				dispose(); // Remove JFrame
 			}

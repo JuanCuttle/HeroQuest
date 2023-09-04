@@ -3,6 +3,7 @@ package entities;
 import java.util.ArrayList;
 
 import entities.actions.Action;
+import enums.DirectionEnum;
 import view.AtorClientServer;
 
 public interface LogicInterface {
@@ -11,9 +12,9 @@ public interface LogicInterface {
 	
 	void abrirPortaTeclado(); // requerida por AtorJogador
 	
-	void movimentar(Directions direcao); // requerida por AtorJogador
+	void movimentar(DirectionEnum direcao); // requerida por AtorJogador
 	
-	Creature getCriaturaDaVez(); // requerida por AtorJogador
+	Creature getCurrentCreature(); // requerida por AtorJogador
 	
 	void atacar(); // requerida por AtorJogador
 	
@@ -35,11 +36,11 @@ public interface LogicInterface {
 	
 	void finalizarJogada(); // requerida por AtorJogador
 	
-	boolean informarConectado(); // requerida por AtorJogador
+	boolean isConnected();
 	
-	void estabelecerConectado(boolean valor); // requerida por AtorJogador
+	void setConnected(boolean connected);
 	
-	boolean informarEmAndamento(); // requerida por AtorJogador
+	boolean getInSession(); // requerida por AtorJogador
 	
 	void finalizarJogo(); //requerida por AtorClientServer
 	
@@ -51,7 +52,9 @@ public interface LogicInterface {
 	
 	Position getPosition(byte i, byte j); // requerida por AtorJogador
 	
-	void setNomeLocalPlayerAndServer(String idUsuario, String idServer); // requerida por AtorJogador
+	void setLocalPlayerName(String playerName);
+
+	void setServerAddress(String serverAddress);
 	
 	AtorClientServer getAtorClienteServidor(); // requerida por AtorJogador
 }

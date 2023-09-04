@@ -1,6 +1,6 @@
-package entities;
+package enums;
 
-public enum ActionType {
+public enum ActionTypeEnum {
 
 	MOVE(1, "Move"),
 	ATTACK(2, "Attack"),
@@ -15,7 +15,7 @@ public enum ActionType {
 	private int id;
 	private String name;
 
-	ActionType(int id, String name) {
+	ActionTypeEnum(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -36,10 +36,10 @@ public enum ActionType {
 		this.name = name;
 	}
 
-	public static ActionType getByName(String actionName) {
-		for (ActionType actionType : ActionType.values()) {
-			if (actionType.name.equalsIgnoreCase(actionName))
-				return actionType;
+	public static ActionTypeEnum getByName(String actionName) {
+		for (ActionTypeEnum actionTypeEnum : ActionTypeEnum.values()) {
+			if (actionTypeEnum.name.equalsIgnoreCase(actionName))
+				return actionTypeEnum;
 		}
 		return CHOOSE_CHARACTER;
 	}

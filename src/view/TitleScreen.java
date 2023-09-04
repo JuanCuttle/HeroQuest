@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class TelaInicial extends JFrame {
+public class TitleScreen extends JFrame {
 
 	/**
 	 * 
@@ -26,7 +26,7 @@ public class TelaInicial extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaInicial frame = new TelaInicial();
+					TitleScreen frame = new TitleScreen();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,7 +38,7 @@ public class TelaInicial extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TelaInicial() {
+	public TitleScreen() {
 		setTitle("HeroQuest");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -70,9 +70,9 @@ public class TelaInicial extends JFrame {
 		btnNewButton_1.setBounds(400, 357, 200, 50);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Instrucoes instr = null;
+				Instructions instr = null;
 				try {
-					instr = new Instrucoes();
+					instr = new Instructions();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
