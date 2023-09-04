@@ -2,10 +2,6 @@ package entities.actions;
 
 public class SearchTreasure extends Action {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8334075615667812844L;
 	
 	protected byte sourceRow;

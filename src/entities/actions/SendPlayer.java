@@ -4,9 +4,6 @@ import entities.Player;
 
 public class SendPlayer extends Action {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1496481667237326600L;
 	
 	protected Player player;

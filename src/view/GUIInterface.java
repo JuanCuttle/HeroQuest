@@ -6,6 +6,7 @@ import javax.swing.JButton;
 
 import entities.*;
 import enums.DirectionEnum;
+import enums.TrapEvasionMovementEnum;
 import enums.StatusEnum;
 
 public interface GUIInterface {
@@ -90,7 +91,7 @@ public interface GUIInterface {
 	
 	void showTrapRemovalMessage();
 	
-	byte showFallingRockMovementOptions();
+	TrapEvasionMovementEnum showFallingRockMovementOptions();
 	
-	byte showPitJumpingOptions();
+	TrapEvasionMovementEnum showPitJumpingOptions();
 }

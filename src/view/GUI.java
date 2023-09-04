@@ -42,6 +42,7 @@ import entities.tiles.Furniture;
 import entities.utils.Strings;
 import enums.ConnectionResultEnum;
 import enums.DirectionEnum;
+import enums.TrapEvasionMovementEnum;
 import enums.StatusEnum;
 import quests.BasicMap;
 
@@ -1169,20 +1170,22 @@ public class GUI extends JFrame implements GUIInterface {
 		this.textArea.setText(Strings.DWARF_DISARMED_TRAPS.toString());
 	}
 
-	public byte showFallingRockMovementOptions() {
+	public TrapEvasionMovementEnum showFallingRockMovementOptions() {
 		String input = Strings.ROCKFALL.toString();
 		input += "0 - " + Strings.FORWARD;
 		input += "1 - " + Strings.BACKWARD;
 		String option = JOptionPane.showInputDialog(input);
-		return (byte)Integer.parseInt(option);
+		int selectedMovement = Integer.parseInt(option);
+		return TrapEvasionMovementEnum.getEnumById(selectedMovement);
 	}
 	
-	public byte showPitJumpingOptions() {
+	public TrapEvasionMovementEnum showPitJumpingOptions() {
 		String input = Strings.PIT_JUMP.toString();
 		input += "0 - " + Strings.YES;
 		input += "1 - " + Strings.NO;
 		String option = JOptionPane.showInputDialog(input);
-		return (byte)Integer.parseInt(option);
+		int selectedMovement = Integer.parseInt(option);
+		return TrapEvasionMovementEnum.getEnumById(selectedMovement);
 	}
 	
 	public void setLanguage(LanguageEnum lang) {

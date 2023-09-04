@@ -14,6 +14,7 @@ import entities.tiles.*;
 import entities.utils.Strings;
 import enums.ActionTypeEnum;
 import enums.DirectionEnum;
+import enums.TrapEvasionMovementEnum;
 import enums.StatusEnum;
 import quests.BasicMap;
 import quests.MelarsMaze;
@@ -281,92 +282,92 @@ public class HeroQuest implements LogicInterface {
 							lance.setDamage(dano);
 							
 							if (trap instanceof FallingRock){
-								byte opcao = this.GUI.showFallingRockMovementOptions();
+								TrapEvasionMovementEnum evasionOption = this.GUI.showFallingRockMovementOptions();
 								
 								
 								switch(direcao){
-								case UP: {	if (opcao == 0){
-												novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
-												if (novaPosicao instanceof Wall){
-													opcao = 1;
+									case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
+													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
+													if (novaPosicao instanceof Wall){
+														evasionOption = TrapEvasionMovementEnum.BACKWARD;
+													}
 												}
-											}
-											break;
-											}
-								case DOWN: {if (opcao == 0){
-												novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
-												if (novaPosicao instanceof Wall){
-													opcao = 1;
+												break;
 												}
-											}
-											break;
-											}
-								case LEFT: {if (opcao == 0){
-												novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
-												if (novaPosicao instanceof Wall){
-													opcao = 1;
+									case DOWN: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
+													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
+													if (novaPosicao instanceof Wall){
+														evasionOption = TrapEvasionMovementEnum.BACKWARD;
+													}
 												}
-											}
-											break;
-											}
-								default: {if (opcao == 0){
-												novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
-												if (novaPosicao instanceof Wall){
-													opcao = 1;
+												break;
 												}
-											}
+									case LEFT: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
+													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
+													if (novaPosicao instanceof Wall){
+														evasionOption = TrapEvasionMovementEnum.BACKWARD;
+													}
+												}
+												break;
+												}
+									default: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
+													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
+													if (novaPosicao instanceof Wall){
+														evasionOption = TrapEvasionMovementEnum.BACKWARD;
+													}
+												}
 											break;
 											}
 								}
 								
 								lance.setDirection(direcao);
-								lance.setOption(opcao);
+								lance.setFallingRockMovementEnum(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
 							} else if (trap instanceof Pit){
 								
 								if (trap.getVisible()){
 								
-									byte opcao = this.GUI.showPitJumpingOptions();
+									TrapEvasionMovementEnum evasionOption = this.GUI.showPitJumpingOptions();
 									
 									switch(direcao){
-									case UP: {	if (opcao == 0){
-													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
-													if (novaPosicao instanceof Wall){
-														opcao = 1;
+										case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+														novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
+														if (novaPosicao instanceof Wall) {
+															evasionOption = TrapEvasionMovementEnum.BACKWARD;
+														}
 													}
-												}
-												break;
-												}
-									case DOWN: {if (opcao == 0){
-													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
-													if (novaPosicao instanceof Wall){
-														opcao = 1;
+													break;
 													}
-												}
-												break;
-												}
-									case LEFT: {if (opcao == 0){
-													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
-													if (novaPosicao instanceof Wall){
-														opcao = 1;
+										case DOWN: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+														novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
+														if (novaPosicao instanceof Wall) {
+															evasionOption = TrapEvasionMovementEnum.BACKWARD;
+														}
 													}
-												}
-												break;
-												}
-									default: {if (opcao == 0){
-													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
-													if (novaPosicao instanceof Wall){
-														opcao = 1;
+													break;
 													}
-												}
-												break;
-												}
+										case LEFT: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+														novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
+														if (novaPosicao instanceof Wall) {
+															evasionOption = TrapEvasionMovementEnum.BACKWARD;
+														}
+													}
+													break;
+													}
+										default: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+														novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
+														if (novaPosicao instanceof Wall) {
+															evasionOption = TrapEvasionMovementEnum.BACKWARD;
+														}
+													}
+													break;
+													}
 									}
 									
 									lance.setDirection(direcao);
-									lance.setOption(opcao);
+									lance.setFallingRockMovementEnum(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
 									} else {
 										lance.setDirection(direcao);
-										lance.setOption((byte)2);
+										lance.setFallingRockMovementEnum(TrapEvasionMovementEnum.getIdByEnum(TrapEvasionMovementEnum.FALLEN_INTO_PIT));
 									}
 							}
 						}
@@ -1070,33 +1071,33 @@ public class HeroQuest implements LogicInterface {
 					//novaPosicao.getTrap().setTriggered(false);
 					
 					// se foi para frente ou para tras (se caiu no pit, fica nele)
-					if (lance.getOption() != 2){
+					if (!TrapEvasionMovementEnum.FALLEN_INTO_PIT.equals(lance.getFallingRockMovementEnum())){
 						novaPosicao.removeCreature();
 						
-						byte opcao = lance.getOption();
+						TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(lance.getFallingRockMovementEnum());
 						switch(lance.getDirection()){
-						case UP: {	if (opcao == 0){
+						case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
 										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
-									} else{
+									} else {
 										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 									}
 									break;
 									}
-						case DOWN: {if (opcao == 0){
+						case DOWN: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
 										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
-									} else{
+									} else {
 										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 									}
 									break;
 									}
-						case LEFT: {if (opcao == 0){
+						case LEFT: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
 										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
-									} else{
+									} else {
 										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 									}
 									break;
 									}
-						default: {if (opcao == 0){
+						default: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
 										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 									} else{
 										novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
@@ -1117,33 +1118,33 @@ public class HeroQuest implements LogicInterface {
 				
 				if (novaPosicao.getTrap() instanceof FallingRock){
 					novaPosicao.removeCreature();
-					
-					byte opcao = lance.getOption();
+
+					TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(lance.getFallingRockMovementEnum());
 					switch(lance.getDirection()){
-					case UP: {	if (opcao == 0){
+					case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
 									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
-								} else{
+								} else {
 									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
 								}
 								break;
 								}
-					case DOWN: {if (opcao == 0){
+					case DOWN: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
 									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
-								} else{
+								} else {
 									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
 								}
 								break;
 								}
-					case LEFT: {if (opcao == 0){
+					case LEFT: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
 									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
-								} else{
+								} else {
 									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
 								}
 								break;
 								}
-					default: {if (opcao == 0){
+					default: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
 									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
-								} else{
+								} else {
 									novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
 								}
 								break;

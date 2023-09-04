@@ -2,10 +2,6 @@ package entities.actions;
 
 public class SearchTraps extends Action {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8442030273252018701L;
 	
 	protected byte sourceRow;
