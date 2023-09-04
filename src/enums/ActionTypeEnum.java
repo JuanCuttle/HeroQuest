@@ -2,7 +2,7 @@ package enums;
 
 public enum ActionTypeEnum {
 
-	MOVE(1, "Move"),
+	MOVEMENT(1, "Movement"),
 	ATTACK(2, "Attack"),
 	CAST_SPELL(3, "CastSpell"),
 	SEARCH_TREASURE(4, "SearchTreasure"),

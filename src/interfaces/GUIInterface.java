@@ -83,7 +83,7 @@ public interface GUIInterface {
 	
 	void updatePlayerSurroundings();
 	
-	int selectDoorToOpen(ArrayList<String> doorIds);
+	int selectDoorToOpenOrClose(ArrayList<String> doorIds);
 	
 	void createMusic() throws Exception;
 	

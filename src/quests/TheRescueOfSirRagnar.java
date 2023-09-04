@@ -172,7 +172,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 				foundRagnar = true;
 				ArrayList<Door> doors = game.doors;
 				for (Door d : doors){
-					d.abrirPorta();
+					d.openDoor();
 				}
 				
 				for (Position[] p : this.positions){

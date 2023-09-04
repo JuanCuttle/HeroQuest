@@ -2,7 +2,7 @@ package entities.actions;
 
 import enums.DirectionEnum;
 
-public class Move extends Action {
+public class Movement extends Action {
 
 	private static final long serialVersionUID = 6681660893398112322L;
 
@@ -14,14 +14,14 @@ public class Move extends Action {
 	protected byte damage;
 	
 	protected DirectionEnum direction;
-	protected byte trapEvasionMovementEnum;
+	protected byte trapEvasionMovementId;
 
-	public byte getFallingRockMovementEnum() {
-		return trapEvasionMovementEnum;
+	public byte getTrapEvasionMovementId() {
+		return trapEvasionMovementId;
 	}
 
-	public void setFallingRockMovementEnum(byte fallingRockMovementEnum) {
-		this.trapEvasionMovementEnum = fallingRockMovementEnum;
+	public void setTrapEvasionMovementId(byte trapEvasionMovementId) {
+		this.trapEvasionMovementId = trapEvasionMovementId;
 	}
 
 	public DirectionEnum getDirection() {

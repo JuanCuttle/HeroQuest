@@ -204,11 +204,7 @@ public class GUI extends JFrame implements GUIInterface {
 				botao.setBorder(invisivel);
 				botao.setVisible(true);
 				botao.addKeyListener(listener);
-				botao.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						openDoor(Integer.parseInt(botao.getName()));
-					}
-				});
+				botao.addActionListener(e -> openDoor(Integer.parseInt(botao.getName())));
 				contentPane.add(botao);
 				this.boardButtons[i][j] = botao;
 			}
@@ -376,11 +372,11 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void abrirPortaTeclado() {
-		this.heroQuest.abrirPortaTeclado();
+		this.heroQuest.openDoorWithKeyboard();
 	}
 
 	public void openDoor(int doorId) {
-		this.heroQuest.abrirPorta(doorId);
+		this.heroQuest.openDoor(doorId);
 	}
 
 	public void showMessagePopup(String msg) {
@@ -392,7 +388,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void moveCreature(DirectionEnum direction) {
-		this.heroQuest.movimentar(direction);
+		this.heroQuest.move(direction);
 	}
 
 	public void attack() {
@@ -653,8 +649,8 @@ public class GUI extends JFrame implements GUIInterface {
 					}
 			} else {
 				if (position instanceof Door) {
-					if (!((Door) position).isSecreta()) {
-						if (((Door) position).getPortaEstaAberta()) {
+					if (!((Door) position).isSecret()) {
+						if (((Door) position).isOpen()) {
 							path = "/images/tiles/doors/OpenDoor.png";
 						} else {
 							path = "/images/tiles/doors/ClosedDoor.png";
@@ -1118,12 +1114,11 @@ public class GUI extends JFrame implements GUIInterface {
 				}
 			}
 		}
-		
 		this.showVisibleCreaturesInQueue(); //precisa?
 	}
 
-	public int selectDoorToOpen(ArrayList<String> doorIds) {
-		String availableDoors = Strings.SELECTDOOR.toString();
+	public int selectDoorToOpenOrClose(ArrayList<String> doorIds) {
+		String availableDoors = Strings.SELECT_DOOR.toString();
 		for (int i = 0; i < doorIds.size(); i++) {
 			availableDoors += i + " - " + doorIds.get(i) + "\n";
 		}

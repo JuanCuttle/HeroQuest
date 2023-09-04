@@ -10,11 +10,11 @@ import view.AtorClientServer;
 
 public interface LogicInterface {
 	
-	void abrirPorta(int id);
+	void openDoor(int doorId);
 	
-	void abrirPortaTeclado();
+	void openDoorWithKeyboard();
 	
-	void movimentar(DirectionEnum direcao);
+	void move(DirectionEnum direction);
 	
 	Creature getCurrentCreature();
 	

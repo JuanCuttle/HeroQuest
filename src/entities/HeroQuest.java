@@ -82,125 +82,110 @@ public class HeroQuest implements LogicInterface {
 		this.inSession = valor;
 	}
 	
-	public void abrirPorta(int idPorta) {
-		Creature criatura = this.getCurrentCreature();
-		if (criatura instanceof Barbarian || criatura instanceof Wizard
-				|| criatura instanceof Elf || criatura instanceof Dwarf){
-			
-			boolean daVez = this.verificaSeJogadorDaVez();
-			if (daVez) {
-				Door porta = this.getPorta(idPorta);
-				boolean perto = this.verificaSePertoDaPorta(
-						(PlayableCharacter) criatura, porta);
+	public void openDoor(int doorId) {
+		Creature creature = this.getCurrentCreature();
+		if (creature instanceof PlayableCharacter){
+			boolean isItTheCurrentPlayersTurn = this.verifyIfItIsCurrentPlayersTurn();
+			if (isItTheCurrentPlayersTurn) {
+				Door door = this.getPorta(doorId);
+				boolean isDoorReachable = this.verifyIfPlayerIsNearDoor(
+						(PlayableCharacter) creature, door);
 				
-				boolean secreta = porta.isSecreta();
-				if (!secreta){
-					if (perto) {
-						//boolean aberta = porta.getPortaEstaAberta();
-						
-							OpenDoor lance = new OpenDoor();
-							lance.setDoorId(idPorta);
-							this.tratarLance(lance);
-							this.enviarLance(lance);
-							
-					} else {
-						this.GUI.reportError(Strings.DOOROUTOFRANGE.toString());
-					}
-				}
-			} else {
-				this.GUI
-						.reportError(Strings.NOTYOURTURN.toString());
-			}
-		} else {
-			this.GUI
-			.reportError(Strings.CANTOPENDOOR.toString());
-		}
-	}
-	
-	public void abrirPortaTeclado() {
-		Creature criatura = this.getCurrentCreature();
-		if (criatura instanceof Barbarian || criatura instanceof Wizard
-				|| criatura instanceof Elf || criatura instanceof Dwarf){
-
-			boolean daVez = this.verificaSeJogadorDaVez();
-			if (daVez) {
-				byte linha = criatura.getCurrentPosition().getRow();
-				byte coluna = criatura.getCurrentPosition().getColumn();
-				Position norte = this.getPosition((byte)(linha-1), (byte)coluna);
-				Position leste = this.getPosition((byte)(linha), (byte)(coluna+1));
-				Position sul = this.getPosition((byte)(linha+1), (byte)coluna);
-				Position oeste = this.getPosition((byte)(linha), (byte)(coluna-1));
-				
-				ArrayList<String> portaIds = new ArrayList<>();
-				ArrayList<String> portaId = new ArrayList<>();
-				
-				if (norte instanceof Door){
-					if (!((Door) norte).isSecreta()){
-						portaId.add(""+norte.getRow()+norte.getColumn());
-						portaIds.add(Strings.NORTH.toString());
-					}
-				} if (leste instanceof Door){
-					if (!((Door) leste).isSecreta()){
-						portaId.add(""+leste.getRow()+leste.getColumn());
-						portaIds.add(Strings.EAST.toString());
-					}
-				} if (sul instanceof Door){
-					if (!((Door) sul).isSecreta()){
-						portaId.add(""+sul.getRow()+sul.getColumn());
-						portaIds.add(Strings.SOUTH.toString());
-					}
-				} if (oeste instanceof Door){
-					if (!((Door) oeste).isSecreta()){
-						portaId.add(""+oeste.getRow()+oeste.getColumn());
-						portaIds.add(Strings.WEST.toString());
-					}
-				}
-				
-				
-				if (!portaIds.isEmpty()) {
-					
-					int escolhida = this.GUI.selectDoorToOpen(portaIds);
-					int idPorta = Integer.parseInt(portaId.get(escolhida));
-				
-					//Door porta = this.getPorta(idPorta);
-				
-					/*boolean perto = this.verificaSePertoDaPorta(
-							(PlayableCharacter) criatura, porta);*/
-					//if (perto) {
-					
+				boolean isDoorHidden = door.isSecret();
+				if (!isDoorHidden) {
+					if (isDoorReachable) {
 						OpenDoor lance = new OpenDoor();
-						lance.setDoorId(idPorta);
+						lance.setDoorId(doorId);
 						this.tratarLance(lance);
 						this.enviarLance(lance);
-		 
-				} else {
-					this.GUI.reportError(Strings.DOOROUTOFRANGE.toString());
+					} else {
+						this.GUI.reportError(Strings.DOOR_OUT_OF_RANGE.toString());
+					}
 				}
 			} else {
-				this.GUI
-						.reportError(Strings.NOTYOURTURN.toString());
+				this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 			}
 		} else {
-			this.GUI
-			.reportError(Strings.CANTOPENDOOR.toString());
+			this.GUI.reportError(Strings.CANT_OPEN_DOOR.toString());
+		}
+	}
+	
+	public void openDoorWithKeyboard() {
+		Creature creature = this.getCurrentCreature();
+		if (creature instanceof PlayableCharacter) {
+			boolean isItTheCurrentPlayersTurn = this.verifyIfItIsCurrentPlayersTurn();
+			if (isItTheCurrentPlayersTurn) {
+				byte creatureRow = creature.getCurrentPosition().getRow();
+				byte creatureColumn = creature.getCurrentPosition().getColumn();
+
+				Position northTile = this.getPosition((byte)(creatureRow-1), creatureColumn);
+				Position eastTile = this.getPosition(creatureRow, (byte)(creatureColumn+1));
+				Position southTile = this.getPosition((byte)(creatureRow+1), creatureColumn);
+				Position westTile = this.getPosition(creatureRow, (byte)(creatureColumn-1));
+				
+				ArrayList<String> directionsWithOpenableDoors = new ArrayList<>();
+				ArrayList<String> openableDoorIds = new ArrayList<>();
+				String doorId;
+				
+				if (northTile instanceof Door) {
+					if (!((Door) northTile).isSecret()) {
+						doorId = "" + northTile.getRow() + northTile.getColumn();
+						openableDoorIds.add(doorId);
+						directionsWithOpenableDoors.add(Strings.NORTH.toString());
+					}
+				} if (eastTile instanceof Door) {
+					if (!((Door) eastTile).isSecret()) {
+						doorId = "" + eastTile.getRow() + eastTile.getColumn();
+						openableDoorIds.add(doorId);
+						directionsWithOpenableDoors.add(Strings.EAST.toString());
+					}
+				} if (southTile instanceof Door) {
+					if (!((Door) southTile).isSecret()) {
+						doorId = "" + southTile.getRow() + southTile.getColumn();
+						openableDoorIds.add(doorId);
+						directionsWithOpenableDoors.add(Strings.SOUTH.toString());
+					}
+				} if (westTile instanceof Door) {
+					if (!((Door) westTile).isSecret()) {
+						doorId = "" + westTile.getRow() + westTile.getColumn();
+						openableDoorIds.add(doorId);
+						directionsWithOpenableDoors.add(Strings.WEST.toString());
+					}
+				}
+
+				if (!directionsWithOpenableDoors.isEmpty()) {
+					
+					int chosenDoorDirection = this.GUI.selectDoorToOpenOrClose(directionsWithOpenableDoors);
+					int selectedDoorId = Integer.parseInt(openableDoorIds.get(chosenDoorDirection));
+					
+					OpenDoor lance = new OpenDoor();
+					lance.setDoorId(selectedDoorId);
+					this.tratarLance(lance);
+					this.enviarLance(lance);
+				} else {
+					this.GUI.reportError(Strings.DOOR_OUT_OF_RANGE.toString());
+				}
+			} else {
+				this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
+			}
+		} else {
+			this.GUI.reportError(Strings.CANT_OPEN_DOOR.toString());
 		}
 	}
 	
 
-	private boolean verificaSeJogadorDaVez() {
-		int idCriaturaLocal, idCriaturaDaVez;
-		idCriaturaDaVez = this.getCurrentCreature().getID();
+	private boolean verifyIfItIsCurrentPlayersTurn() {
+		int localCreatureId, currentTurnCreatureId;
+		currentTurnCreatureId = this.getCurrentCreature().getID();
 		if (this.localAdventurer != null) {
-			idCriaturaLocal = (this.localAdventurer).getPlayableCharacter()
+			localCreatureId = (this.localAdventurer).getPlayableCharacter()
 					.getID();
-			return idCriaturaLocal == idCriaturaDaVez;
+			return localCreatureId == currentTurnCreatureId;
 		} else {
-			//for (int i = 0; i < this.creatureQueue.size() - players.size() + 1; i++) {
-			
 			// Attempt of fixing null pointer exception (index 19 inaccessible)
 			for (int i = 0; i < this.creatureQueue.size() - players.size(); i++) {
-				idCriaturaLocal = (this.localZargon).getMonster(i).getID();
-				if (idCriaturaDaVez == idCriaturaLocal)
+				localCreatureId = (this.localZargon).getMonster(i).getID();
+				if (currentTurnCreatureId == localCreatureId)
 					return true;
 			}
 			return false;
@@ -238,154 +223,139 @@ public class HeroQuest implements LogicInterface {
 				|| (pos1.equals(pos2));
 	}
 
-	private boolean verificaSePertoDaPorta(PlayableCharacter character,
-			Door porta) {
-		byte linhaAventureiro, colunaAventureiro, linhaPorta, colunaPorta;
-		linhaAventureiro = character.getCurrentPosition().getRow();
-		colunaAventureiro = character.getCurrentPosition().getColumn();
-		linhaPorta = porta.getRow();
-		colunaPorta = porta.getColumn();
-		return (linhaAventureiro == linhaPorta && colunaAventureiro == colunaPorta - 1)
-				|| (linhaAventureiro == linhaPorta && colunaAventureiro == colunaPorta + 1)
-				|| (colunaAventureiro == colunaPorta && linhaAventureiro == linhaPorta - 1)
-				|| (colunaAventureiro == colunaPorta && linhaAventureiro == linhaPorta + 1);
+	private boolean verifyIfPlayerIsNearDoor(PlayableCharacter adventurer,
+											 Door door) {
+		byte adventurerRow, adventurerColumn, doorRow, doorColumn;
+		adventurerRow = adventurer.getCurrentPosition().getRow();
+		adventurerColumn = adventurer.getCurrentPosition().getColumn();
+		doorRow = door.getRow();
+		doorColumn = door.getColumn();
+		return (adventurerRow == doorRow && adventurerColumn == doorColumn - 1)
+				|| (adventurerRow == doorRow && adventurerColumn == doorColumn + 1)
+				|| (adventurerColumn == doorColumn && adventurerRow == doorRow - 1)
+				|| (adventurerColumn == doorColumn && adventurerRow == doorRow + 1);
 	}
 
-	public void movimentar(DirectionEnum direcao) {
-		boolean daVez = this.verificaSeJogadorDaVez();
-		if (daVez) {
-			Creature criatura = this.getCurrentCreature();
+	public void move(DirectionEnum direction) {
+		if (this.verifyIfItIsCurrentPlayersTurn()) {
+			Creature creature = this.getCurrentCreature();
 			
-			if (criatura.getStatus() == StatusEnum.SLEEPING){
-				this.GUI.reportError(Strings.SLEEPFREEZE.toString());
+			if (StatusEnum.SLEEPING.equals(creature.getStatus())){
+				this.GUI.reportError(Strings.SLEEP_FREEZE.toString());
 			} else {
-			
-				byte movimento = criatura.getMovement();
-				if (movimento > 0) {
-					Position posicaoAtual = criatura.getCurrentPosition();
-					byte linha = posicaoAtual.getRow();
-					byte coluna = posicaoAtual.getColumn();
-					Position novaPosicao;
+				byte remainingMovement = creature.getMovement();
+				if (remainingMovement > 0) {
+					Position currentPosition = creature.getCurrentPosition();
+					byte row = currentPosition.getRow();
+					byte column = currentPosition.getColumn();
+					Position newPosition;
 					try {
-						novaPosicao = this.getNovaPosicao(direcao, linha, coluna);
-						Move lance = new Move();
-					
-					
-						lance.setSourceRow(linha);
-						lance.setSourceColumn(coluna);
-						lance.setDestinationRow(novaPosicao.getRow());
-						lance.setDestinationColumn(novaPosicao.getColumn());
+						newPosition = this.getNovaPosicao(direction, row, column);
 
-						Trap trap = novaPosicao.getTrap();
+						Movement movement = new Movement();
+						movement.setSourceRow(row);
+						movement.setSourceColumn(column);
+						movement.setDestinationRow(newPosition.getRow());
+						movement.setDestinationColumn(newPosition.getColumn());
+
+						Trap trap = newPosition.getTrap();
 					
 						if (trap != null) {
-							byte dano = trap.getDeliveredDamage();
-							lance.setDamage(dano);
+							byte trapDamage = trap.getDeliveredDamage();
+							movement.setDamage(trapDamage);
 							
-							if (trap instanceof FallingRock){
+							if (trap instanceof FallingRock) {
 								TrapEvasionMovementEnum evasionOption = this.GUI.showFallingRockMovementOptions();
-								
-								
-								switch(direcao){
-									case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
-													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
-													if (novaPosicao instanceof Wall){
-														evasionOption = TrapEvasionMovementEnum.BACKWARD;
-													}
-												}
-												break;
-												}
-									case DOWN: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
-													novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
-													if (novaPosicao instanceof Wall){
-														evasionOption = TrapEvasionMovementEnum.BACKWARD;
-													}
-												}
-												break;
-												}
-									case LEFT: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
-													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
-													if (novaPosicao instanceof Wall){
-														evasionOption = TrapEvasionMovementEnum.BACKWARD;
-													}
-												}
-												break;
-												}
-									default: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
-													novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
-													if (novaPosicao instanceof Wall){
-														evasionOption = TrapEvasionMovementEnum.BACKWARD;
-													}
-												}
-											break;
-											}
+
+								switch(direction){
+									case UP: {
+										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+											newPosition = map.getPosition((byte) (newPosition.getRow()-1), movement.getDestinationColumn());
+										}
+										break;
+									}
+									case DOWN: {
+										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+											newPosition = map.getPosition((byte) (newPosition.getRow()+1), movement.getDestinationColumn());
+										}
+										break;
+									}
+									case LEFT: {
+										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+											newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()-1));
+										}
+										break;
+									}
+									default: {
+										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
+											newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()+1));
+										}
+										break;
+									}
 								}
+								if (newPosition instanceof Wall) {
+									evasionOption = TrapEvasionMovementEnum.BACKWARD;
+								}
+								movement.setDirection(direction);
+								movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
+
+							} else if (trap instanceof Pit) {
 								
-								lance.setDirection(direcao);
-								lance.setFallingRockMovementEnum(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
-							} else if (trap instanceof Pit){
-								
-								if (trap.getVisible()){
+								if (trap.getVisible()) {
 								
 									TrapEvasionMovementEnum evasionOption = this.GUI.showPitJumpingOptions();
 									
-									switch(direcao){
-										case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-														novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
-														if (novaPosicao instanceof Wall) {
-															evasionOption = TrapEvasionMovementEnum.BACKWARD;
-														}
-													}
-													break;
-													}
-										case DOWN: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-														novaPosicao = map.getPosition((byte) (novaPosicao.getRow()+1), lance.getDestinationColumn());
-														if (novaPosicao instanceof Wall) {
-															evasionOption = TrapEvasionMovementEnum.BACKWARD;
-														}
-													}
-													break;
-													}
-										case LEFT: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-														novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()-1));
-														if (novaPosicao instanceof Wall) {
-															evasionOption = TrapEvasionMovementEnum.BACKWARD;
-														}
-													}
-													break;
-													}
-										default: {if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-														novaPosicao = map.getPosition(lance.getDestinationRow(), (byte) (novaPosicao.getColumn()+1));
-														if (novaPosicao instanceof Wall) {
-															evasionOption = TrapEvasionMovementEnum.BACKWARD;
-														}
-													}
-													break;
-													}
+									switch(direction) {
+										case UP: {
+											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+												newPosition = map.getPosition((byte) (newPosition.getRow()-1), movement.getDestinationColumn());
+											}
+											break;
+										}
+										case DOWN: {
+											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+												newPosition = map.getPosition((byte) (newPosition.getRow()+1), movement.getDestinationColumn());
+											}
+											break;
+										}
+										case LEFT: {
+											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+												newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()-1));
+											}
+											break;
+										}
+										default: {
+											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
+												newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()+1));
+											}
+											break;
+										}
 									}
-									
-									lance.setDirection(direcao);
-									lance.setFallingRockMovementEnum(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
-									} else {
-										lance.setDirection(direcao);
-										lance.setFallingRockMovementEnum(TrapEvasionMovementEnum.getIdByEnum(TrapEvasionMovementEnum.FALLEN_INTO_PIT));
+									if (newPosition instanceof Wall) {
+										evasionOption = TrapEvasionMovementEnum.BACKWARD;
 									}
+									movement.setDirection(direction);
+									movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
+
+								} else {
+									movement.setDirection(direction);
+									movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(TrapEvasionMovementEnum.FALLEN_INTO_PIT));
+								}
 							}
 						}
 					
-						this.tratarLance(lance);
-						this.enviarLance(lance);
+						this.tratarLance(movement);
+						this.enviarLance(movement);
 
 					} catch (PositionNotEmptyException e) {
-						this.GUI.reportError(Strings.PHYSICSLAWS.toString());
+						this.GUI.reportError(Strings.PHYSICS_LAWS.toString());
 					}
 				} else {
-					this.GUI
-							.reportError(Strings.NOMOVELEFT.toString());
+					this.GUI.reportError(Strings.NO_MOVE_LEFT.toString());
 					}
 				}
 			} else {
-				this.GUI.reportError(Strings.NOTYOURTURN.toString());
+				this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 			}
 	}
 
@@ -414,7 +384,7 @@ public class HeroQuest implements LogicInterface {
 				|| novaPosicao instanceof Wall
 				|| novaPosicao instanceof Furniture
 				|| (novaPosicao instanceof Door && !((Door) novaPosicao)
-						.getPortaEstaAberta())
+						.isOpen())
 				|| (novaPosicao.getTrap() != null && novaPosicao.getTrap() instanceof FallingRock && novaPosicao.getTrap().getTriggered())) {
 			throw new PositionNotEmptyException();
 		} else {
@@ -423,7 +393,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void atacar() {
-		boolean daVez = this.verificaSeJogadorDaVez();
+		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
 		if (daVez) {
 			Creature atacante = this.getCurrentCreature();
 			
@@ -456,7 +426,7 @@ public class HeroQuest implements LogicInterface {
 				}
 			}
 		} else {
-			this.GUI.reportError(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
 	}
 
@@ -535,7 +505,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void usarMagia() {
-		boolean daVez = this.verificaSeJogadorDaVez();
+		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
 		if (daVez) {
 			Creature atacante = this.getCurrentCreature();
 			if (atacante instanceof Wizard) {
@@ -605,7 +575,7 @@ public class HeroQuest implements LogicInterface {
 				this.GUI.reportError(Strings.DOESNTUSESPELLS.toString());
 			}
 		} else {
-			this.GUI.reportError(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
 	}
 
@@ -692,8 +662,8 @@ public class HeroQuest implements LogicInterface {
 	public void tratarLance(Action action) {
 		String actionType = action.getClass().getSimpleName();
 		switch (ActionTypeEnum.getByName(actionType)) {
-			case MOVE:
-				this.tratarMovimento((Move) action);
+			case MOVEMENT:
+				this.tratarMovimento((Movement) action);
 				break;
 			case OPEN_DOOR:
 				this.tratarAbrirPorta((OpenDoor) action);
@@ -916,8 +886,8 @@ public class HeroQuest implements LogicInterface {
 						}
 					}
 					if (posicaoAtual instanceof Door){
-						if (((Door) posicaoAtual).isSecreta()){
-							((Door) posicaoAtual).setSecreta(false);
+						if (((Door) posicaoAtual).isSecret()){
+							((Door) posicaoAtual).setSecret(false);
 						}
 						if (this.map instanceof MelarsMaze){
 							if (((Door) posicaoAtual).getID() == 118){ // Throne room door
@@ -1008,7 +978,7 @@ public class HeroQuest implements LogicInterface {
 		return null;
 	}
 
-	private void tratarMovimento(Move lance) {
+	private void tratarMovimento(Movement lance) {
 		Creature criatura;
 		byte body;
 		byte linha;
@@ -1072,10 +1042,10 @@ public class HeroQuest implements LogicInterface {
 					//novaPosicao.getTrap().setTriggered(false);
 					
 					// se foi para frente ou para tras (se caiu no pit, fica nele)
-					if (!TrapEvasionMovementEnum.FALLEN_INTO_PIT.equals(lance.getFallingRockMovementEnum())){
+					if (!TrapEvasionMovementEnum.FALLEN_INTO_PIT.equals(lance.getTrapEvasionMovementId())){
 						novaPosicao.removeCreature();
 						
-						TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(lance.getFallingRockMovementEnum());
+						TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(lance.getTrapEvasionMovementId());
 						switch(lance.getDirection()){
 						case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
 										novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
@@ -1120,7 +1090,7 @@ public class HeroQuest implements LogicInterface {
 				if (novaPosicao.getTrap() instanceof FallingRock){
 					novaPosicao.removeCreature();
 
-					TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(lance.getFallingRockMovementEnum());
+					TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(lance.getTrapEvasionMovementId());
 					switch(lance.getDirection()){
 					case UP: {	if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
 									novaPosicao = map.getPosition((byte) (novaPosicao.getRow()-1), lance.getDestinationColumn());
@@ -1193,12 +1163,12 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	private void tratarAbrirPorta(OpenDoor lance) {
-		int idPorta = lance.getDoorId();
-		Door porta = this.getPorta(idPorta);
-		if (!porta.getPortaEstaAberta()){
-			porta.abrirPorta();
+		int doorId = lance.getDoorId();
+		Door door = this.getPorta(doorId);
+		if (!door.isOpen()){
+			door.openDoor();
 		} else {
-			porta.fecharPorta();
+			door.closeDoor();
 		}
 	}
 	
@@ -1317,7 +1287,7 @@ public class HeroQuest implements LogicInterface {
 
 	public void procurarTesouro() {
 		Creature caster = this.getCurrentCreature();
-		boolean daVez = this.verificaSeJogadorDaVez();
+		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
 		if (daVez) {
 			if (caster instanceof Barbarian || caster instanceof Wizard
 					|| caster instanceof Elf || caster instanceof Dwarf){
@@ -1333,7 +1303,7 @@ public class HeroQuest implements LogicInterface {
 			}
 		} else {
 			this.GUI
-				.reportError(Strings.NOTYOURTURN.toString());
+				.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
 	}
 
@@ -1509,7 +1479,7 @@ public class HeroQuest implements LogicInterface {
 
 	public void procurarArmadilhaOuPortaSecreta() {
 		Creature caster = this.getCurrentCreature();
-		boolean daVez = this.verificaSeJogadorDaVez();
+		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
 		if (daVez ) {
 			if (caster instanceof Barbarian || caster instanceof Wizard
 					|| caster instanceof Elf || caster instanceof Dwarf){
@@ -1523,18 +1493,18 @@ public class HeroQuest implements LogicInterface {
 				this.GUI.reportError(Strings.MONSTERCANTUNDERSTAND.toString());
 			}
 		} else {
-			this.GUI.reportError(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
 	}
 
 	public void finalizarJogada() {
-		boolean daVez = this.verificaSeJogadorDaVez();
+		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
 		if (daVez) {
 			EndTurn lance = new EndTurn();
 			this.tratarLance(lance);
 			this.enviarLance(lance);
 		} else {
-			this.GUI.reportError(Strings.NOTYOURTURN.toString());
+			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
 	}
 

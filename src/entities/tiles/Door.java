@@ -8,18 +8,18 @@ public class Door extends Position {
 	protected boolean open;
 	private int id;
 	
-	private boolean secreta = false;
+	private boolean secret = false;
 	
 	public Door(int row, int column, int id) {
 		super((byte)row, (byte)column);
 		this.id = id;
 	}
 
-	public boolean getPortaEstaAberta() {
+	public boolean isOpen() {
 		return this.open;
 	}
 
-	public void abrirPorta() {
+	public void openDoor() {
 		this.open = true;
 	}
 
@@ -27,16 +27,15 @@ public class Door extends Position {
 		return id;
 	}
 	
-	public void fecharPorta(){
+	public void closeDoor(){
 		this.open = false;
 	}
 	
-	public boolean isSecreta(){
-		return this.secreta;
+	public boolean isSecret(){
+		return this.secret;
 	}
-	public void setSecreta(boolean secreta){
-		this.secreta = secreta;
+	public void setSecret(boolean secret){
+		this.secret = secret;
 	}
-	
 
 }

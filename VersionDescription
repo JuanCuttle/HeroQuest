@@ -119,3 +119,7 @@ Can be troublesome with Creature objects (change not made through ID)
 	Net Steps: Add Fire Spells to Balur (The Fire Mage).
 			   Take Spells away from players until found, in Legacy of the Orc Warlord.
 			   Implement items.
+
+40) Refactor verifyIfItIsPlayersTurn() (if currentCreature instanceof PlayableCharacter ... else ...
+41) Verify need to update creatureQueue in updatePlayerSurroundings()
+42) Fix creatureQueue blackened buttons

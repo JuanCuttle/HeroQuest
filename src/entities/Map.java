@@ -213,7 +213,7 @@ public class Map {
 		jogo.doors.add((Door)positions[17][37]);
 		jogo.doors.add((Door)positions[18][38]);
 		jogo.doors.add((Door)positions[22][31]);
-		jogo.doors.get(7).setSecreta(true); // Set secreta
+		jogo.doors.get(7).setSecret(true); // Set secreta
 		
 	}
 	public void generateTraps() {

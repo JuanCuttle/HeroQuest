@@ -512,7 +512,7 @@ public class BasicMap {
 	protected void generateHiddenDoor(HeroQuest game, int row, int column){
 		positions[row][column] = new Door(row,column,Integer.parseInt(row+""+column));
 		game.doors.add((Door)positions[row][column]);
-		game.doors.get(game.doors.size()-1).setSecreta(true);
+		game.doors.get(game.doors.size()-1).setSecret(true);
 	}
 	
 	protected void generateBlockade(int row, int column){

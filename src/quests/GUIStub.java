@@ -141,8 +141,8 @@ public class GUIStub extends JFrame {
 					}
 			} else {
 				if (posicao instanceof Door) {
-					if (!((Door) posicao).isSecreta()) {
-						if (((Door) posicao).getPortaEstaAberta()) {
+					if (!((Door) posicao).isSecret()) {
+						if (((Door) posicao).isOpen()) {
 							path = "/images/tiles/doors/OpenDoor.png";
 						} else {
 							path = "/images/tiles/doors/ClosedDoor.png";

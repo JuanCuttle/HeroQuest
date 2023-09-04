@@ -10,7 +10,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  DOOROUTOFRANGE {
+	  DOOR_OUT_OF_RANGE {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "N�o est� perto da porta.";
@@ -19,7 +19,7 @@ public enum Strings {
 	      }
 	  },
 
-	  NOTYOURTURN {
+	  NOT_YOUR_TURN {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "N�o � o jogador da vez.";
@@ -37,7 +37,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  CANTOPENDOOR {
+	  CANT_OPEN_DOOR {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Monstros n�o s�o capazes de abrir portas!";
@@ -46,7 +46,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  SLEEPFREEZE {
+	  SLEEP_FREEZE {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� est� dormindo, n�o pode se mover!";
@@ -55,7 +55,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  PHYSICSLAWS {
+	  PHYSICS_LAWS {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Respeite as leis da f�sica!";
@@ -64,7 +64,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  NOMOVELEFT {
+	  NO_MOVE_LEFT {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� n�o tem movimento suficiente nesta rodada.";
@@ -687,11 +687,11 @@ public enum Strings {
 	      }
 	  },
 	  
-	  SELECTDOOR {
+	  SELECT_DOOR {
 	      public String toString() {
 	    	  switch(GUI.language){
-	    	  	case Portugues: return "Escolha a porta a ser aberta: \n";
-	    	  	default: return "Choose the door to be opened: \n";
+	    	  	case Portugues: return "Escolha a porta a ser aberta/fechada: \n";
+	    	  	default: return "Choose the door to be opened/closed: \n";
 	    	  }
 	      }
 	  },
