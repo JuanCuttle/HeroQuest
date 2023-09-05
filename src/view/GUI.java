@@ -400,10 +400,10 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public Spell selectSpell(ArrayList<Spell> availableSpells) {
-		String inputDialog = Strings.SELECTSPELL.toString();
+		String inputDialog = Strings.SELECT_SPELL.toString();
 		for (int i = 0; i < availableSpells.size(); i++) {
 			inputDialog += "\n" + i + " - "
-					+ availableSpells.get(i).getSpellId();
+					+ SpellNameEnum.getEnumNameById(availableSpells.get(i).getSpellId());
 		}
 		String option = JOptionPane.showInputDialog(inputDialog);
 		int index = Integer.parseInt(option);
@@ -1079,17 +1079,17 @@ public class GUI extends JFrame implements GUIInterface {
 		if (statusEnum != null) {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL + spell.getSpellId()
-					+ Strings.ANDTHECREATURE + target.getClass().getSimpleName()
-					+ Strings.MODIFIEDIN + damage
-					+ Strings.BPMODSTATUS + statusEnum
-					+ Strings.EXCLMARK);
+					+ Strings.MURMURED_SPELL + SpellNameEnum.getEnumNameById(spell.getSpellId())
+					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
+					+ Strings.MODIFIED_IN + damage
+					+ Strings.BP_MODIFIED_STATUS + statusEnum
+					+ Strings.EXCLAMATION_MARK);
 		} else {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL + spell.getSpellId()
-					+ Strings.ANDTHECREATURE + target.getClass().getSimpleName()
-					+ Strings.MODIFIEDIN + damage + Strings.BPMODSNOTATUS);
+					+ Strings.MURMURED_SPELL + SpellNameEnum.getEnumNameById(spell.getSpellId())
+					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
+					+ Strings.MODIFIED_IN + damage + Strings.BP_MODIFIED_NOT_STATUS);
 		}
 
 	}

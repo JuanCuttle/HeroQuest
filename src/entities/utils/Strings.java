@@ -283,7 +283,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  SELECTSPELL {
+	  SELECT_SPELL {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Digite o n�mero correspondente � magia que deseja usar: ";
@@ -591,7 +591,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  MURMUREDSPELL {
+	  MURMURED_SPELL {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return " murmurou algumas palavras m�gicas (";
@@ -600,7 +600,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  ANDTHECREATURE {
+	  AND_THE_CREATURE {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "), e a criatura ";
@@ -609,7 +609,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  MODIFIEDIN {
+	  MODIFIED_IN {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return " modificou em ";
@@ -618,7 +618,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  BPMODSTATUS {
+	  BP_MODIFIED_STATUS {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return " seus Body points, e conferiu a ele o estado ";
@@ -627,7 +627,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  BPMODSNOTATUS {
+	  BP_MODIFIED_NOT_STATUS {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return " seus Body points!";
@@ -636,7 +636,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  EXCLMARK {
+	  EXCLAMATION_MARK {
 	      public String toString() {
 	          return "!";
 	      }
