@@ -149,7 +149,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 			return monsters;
 	}
 	
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+	public boolean verifyWinningConditions(HeroQuest game) {
 		
 		Position p = game.getCreaturePorID(14).getCurrentPosition(); // Sir Ragnar
 		
@@ -167,21 +167,22 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	}
 	
 	public void specialOcurrence(HeroQuest game){
-		if (!foundRagnar){ // If haven't found yet
-			if (game.getCreaturePorID(14).isVisible()){ // found him
+		if (!foundRagnar) {
+			Creature sirRagnar = game.getCreaturePorID(14);
+			if (sirRagnar.isVisible()) {
 				foundRagnar = true;
 				ArrayList<Door> doors = game.doors;
-				for (Door d : doors){
+				for (Door d : doors) {
 					d.openDoor();
 				}
 				
-				for (Position[] p : this.positions){
-					for (Position pos : p){
+				for (Position[] p : this.positions) {
+					for (Position pos : p) {
 						pos.setVisible(true);
 					}
 				}
 				
-				for (Creature c : game.getCreatureQueue()){
+				for (Creature c : game.getCreatureQueue()) {
 					c.setVisible(true);
 				}
 				

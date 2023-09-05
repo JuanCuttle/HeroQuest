@@ -392,7 +392,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void attack() {
-		this.heroQuest.atacar();
+		this.heroQuest.attack();
 	}
 
 	public void useSpell() {
@@ -561,7 +561,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void announceHeroesWon() {
-		this.textArea.setText(Strings.HERO_WON.toString());
+		this.textArea.setText(Strings.HEROES_WON.toString());
 	}
 
 	public void announceZargonWon() {

@@ -12,6 +12,7 @@ import entities.Items;
 import entities.enemies.Monster;
 import entities.enemies.Orc;
 import entities.Position;
+import enums.FurnitureDirectionEnum;
 import enums.StatusEnum;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
@@ -36,20 +37,19 @@ public class LairOfTheOrcWarlord extends BasicMap {
 		
 		numberOfCreatures = 13;
 		
-		table1Position = new byte[]{0, 9, 9}; // 0 for horizontal, 1 for vertical
+		table1Position = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 9, 9};
 		
-		table2Position = new byte[]{1, 22, 11};
+		table2Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 22, 11};
 		
-		bookcase1Position = new byte[]{1, 16, 4};
+		bookcase1Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 16, 4};
 		
-		wepRackPosition = new byte[]{1, 4, 7};
+		wepRackPosition = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 4, 7};
 		
-		fireplacePosition = new byte[]{0, 8, 5}; // 0 to face down, 1 to face up
+		fireplacePosition = new byte[]{FurnitureDirectionEnum.DOWN.getId(), 8, 5};
 		
 		generateFurniture();
 	}
 	
-	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
 		generate3x1(wepRackPosition);
 		generate1x3(fireplacePosition);
@@ -60,7 +60,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 	
 	private void generate1x3(byte[] furniture) {
 		int i = furniture[1];
-		int j = furniture[2];
+		int j;
 		for (int y = 0; y < 3; y++){
 			j = furniture[2]+y;
 			this.positions[i][j] = new Furniture((byte)i, (byte)j);
@@ -68,7 +68,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 	}
 
 	private void generate3x1(byte[] furniture) {
-		int i = furniture[1];
+		int i;
 		int j = furniture[2];
 		for (int x = 0; x < 3; x++){
 			i = furniture[1]+x;
@@ -78,9 +78,9 @@ public class LairOfTheOrcWarlord extends BasicMap {
 
 	private void generate2x3(byte[] furniture){
 		if (furniture != null){
-			int i = furniture[1];
-			int j = furniture[2];
-			if (furniture[0] == 0){ // if horizontal
+			int i;
+			int j;
+			if (furniture[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
 				for (int x = 0; x < 2; x++){
 					for (int y = 0; y < 3; y++){
 						i = furniture[1]+x;
@@ -88,7 +88,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
-			} else { // if vertical
+			} else {
 				for (int x = 0; x < 3; x++){
 					for (int y = 0; y < 2; y++){
 						i = furniture[1]+x;
@@ -101,7 +101,6 @@ public class LairOfTheOrcWarlord extends BasicMap {
 	}
 
 	public void generateRocks(){
-		// Rocks
 		for (byte i = 1; i < 3; i++){
 			generateBlockade(3, i);
 			generateBlockade(15, i);
@@ -133,7 +132,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 		
 		Treasure spear = new Treasure(-1);
 		spear.setItem(Items.Spear);
-		positions[6][6].setTreasure(spear); // Spear
+		positions[6][6].setTreasure(spear);
 	}
 	
 	public ArrayList<Monster> createMonsters(HeroQuest game){
@@ -163,9 +162,9 @@ public class LairOfTheOrcWarlord extends BasicMap {
 			return monsters;
 	}
 	
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+	public boolean verifyWinningConditions(HeroQuest game) {
 		Creature ulag = game.getCreaturePorID(6);
-		if (ulag.getStatus() == StatusEnum.DEAD){
+		if (StatusEnum.DEAD.equals(ulag.getStatus())){
 			return true;
 		}
 		return false;

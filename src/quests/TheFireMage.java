@@ -2,6 +2,7 @@ package quests;
 
 import java.util.ArrayList;
 
+import enums.FurnitureDirectionEnum;
 import enums.StatusEnum;
 import entities.enemies.ChaosSorcerer;
 import entities.Creature;
@@ -38,14 +39,13 @@ public class TheFireMage extends BasicMap {
 		
 		numberOfCreatures = 15;
 		
-		table1Position = new byte[]{0, 21, 21}; // 0 for horizontal, 1 for vertical
+		table1Position = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 21, 21};
 		
-		bookOnTablePosition = new byte[]{1, 13, 16};
+		bookOnTablePosition = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 13, 16};
 		
 		generateFurniture();
 	}
 	
-	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
 		generate2x3(bookOnTablePosition);
 		generate2x3(table1Position);
@@ -53,9 +53,9 @@ public class TheFireMage extends BasicMap {
 	
 	private void generate2x3(byte[] furniture){
 		if (furniture != null){
-			int i = furniture[1];
-			int j = furniture[2];
-			if (furniture[0] == 0){ // if horizontal
+			int i;
+			int j;
+			if (furniture[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
 				for (int x = 0; x < 2; x++){
 					for (int y = 0; y < 3; y++){
 						i = furniture[1]+x;
@@ -63,7 +63,7 @@ public class TheFireMage extends BasicMap {
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
-			} else { // if vertical
+			} else {
 				for (int x = 0; x < 3; x++){
 					for (int y = 0; y < 2; y++){
 						i = furniture[1]+x;
@@ -76,7 +76,6 @@ public class TheFireMage extends BasicMap {
 	}
 
 	public void generateRocks(){
-		// Rocks
 		for (byte i = 1; i < 3; i++){
 			generateBlockade(3, i);
 		}
@@ -120,7 +119,6 @@ public class TheFireMage extends BasicMap {
 	}
 	
 	public void generateTraps(){
-		// Pits
 		for (int i = 1; i < 3; i++){
 			positions[i][3].setTrap(new Pit());
 		}
@@ -130,7 +128,6 @@ public class TheFireMage extends BasicMap {
 			positions[i][11].setTrap(new Pit());
 		}
 		
-		// Spears
 		for (byte i = 1; i < 3; i++){
 			generateBlockade(9, i);
 			generateBlockade(18, i);
@@ -140,7 +137,7 @@ public class TheFireMage extends BasicMap {
 	public void generateTreasures(){
 		Treasure questTreasure = new Treasure(150);
 		questTreasure.setItem(Items.WandOfRecall);
-		positions[17][30].setTreasure(questTreasure); // Quest treasure
+		positions[17][30].setTreasure(questTreasure);
 	}
 	
 	public ArrayList<Monster> createMonsters(HeroQuest game){
@@ -167,9 +164,9 @@ public class TheFireMage extends BasicMap {
 			return monsters;
 	}
 	
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+	public boolean verifyWinningConditions(HeroQuest game) {
 		Creature balur = game.getCreaturePorID(15);
-		if (balur.getStatus() == StatusEnum.DEAD){
+		if (StatusEnum.DEAD.equals(balur.getStatus())){
 			return true;
 		}
 		return false;

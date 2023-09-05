@@ -65,10 +65,10 @@ Can be troublesome with Creature objects (change not made through ID)
 			  New Monsters added: Orc and Gargoyle.
 			  GUI improvements for differing number of creatures in Quest, plus handy line/column indicator.
 			  Moved Monster creation to Quest map, to ease comprehension.
-			  Adventurer and stairs positioning moved to Quest for same reason.
+			  Hero and stairs positioning moved to Quest for same reason.
 			  Victory conditions also moved to Quest map for changing conditions (slay a certain enemy or find the stairs).
 			  Changing amount of side buttons according to the needs of each Quest.
-			  Adventurer ID automatically adjusted to number of enemies in Quest.
+			  Hero ID automatically adjusted to number of enemies in Quest.
 			  Solution to side buttons understood and explained/documented in code.
 			  General bug-squishing.
 	PROBLEMS: verificaSeJogadorDaVez ArrayIndexOutOfBounds persists.
@@ -107,7 +107,7 @@ Can be troublesome with Creature objects (change not made through ID)
 34) Upgrades: New Quest, The Maze!
 35) Upgrades: New Quest, Lair of The Orc Warlord!
 			  When you find Sir Ragnar, everything becomes visible and doors are open!
-			  Added Spear (if owned, adventurer can attack diagonally!).
+			  Added Spear (if owned, hero can attack diagonally!).
 			  Fixed abusable bug in Lair of The Orc Warlord.
 			  Added movement modifier for certain bosses.
 36) Upgrades: New Quest, Prince Magnus' gold!
@@ -123,3 +123,8 @@ Can be troublesome with Creature objects (change not made through ID)
 40) Refactor verifyIfItIsPlayersTurn() (if currentCreature instanceof PlayableCharacter ... else ...
 41) Verify need to update creatureQueue in updatePlayerSurroundings()
 42) Fix creatureQueue blackened buttons
+43) Create unit tests
+44) Revise Class hierarchy
+45) Remove unused Classes
+46) Recreate PolarWarbear quest (reuse basicMap + defaultCreatureQueue in Zargon)
+47) Revise TheFireMage traps and create ChaosSorcerer (with Chaos Spells)

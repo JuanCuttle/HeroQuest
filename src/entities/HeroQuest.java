@@ -201,39 +201,37 @@ public class HeroQuest implements LogicInterface {
 		return null;
 	}
 
-	private boolean verificaSeDistanciaPossivel(Position pos1, Position pos2, boolean hasSpear) {
-		int linhaAtacante, colunaAtacante, linhaAlvo, colunaAlvo;
-		linhaAtacante = pos1.getRow();
-		colunaAtacante = pos1.getColumn();
-		linhaAlvo = pos2.getRow();
-		colunaAlvo = pos2.getColumn();
+	private boolean checkIfAttackerReachesTarget(Position attackerPosition, Position targetPosition, boolean attackerHasSpear) {
+		int attackerRow = attackerPosition.getRow();
+		int attackerColumn = attackerPosition.getColumn();
+		int targetRow = targetPosition.getRow();
+		int targetColumn = targetPosition.getColumn();
 		boolean result = false;
-		if (hasSpear){
+		if (attackerHasSpear){
 			// add diagonal
-			result = (linhaAtacante == linhaAlvo-1 && colunaAtacante == colunaAlvo-1)
-					|| (linhaAtacante == linhaAlvo+1 && colunaAtacante == colunaAlvo+1)
-					|| (linhaAtacante == linhaAlvo+1 && colunaAtacante == colunaAlvo-1)
-					|| (linhaAtacante == linhaAlvo-1 && colunaAtacante == colunaAlvo+1);
+			result = (attackerRow == targetRow-1 && attackerColumn == targetColumn-1)
+					|| (attackerRow == targetRow+1 && attackerColumn == targetColumn+1)
+					|| (attackerRow == targetRow+1 && attackerColumn == targetColumn-1)
+					|| (attackerRow == targetRow-1 && attackerColumn == targetColumn+1);
 		}
 		return result
-				|| (linhaAtacante == linhaAlvo && colunaAtacante == colunaAlvo - 1)
-				|| (linhaAtacante == linhaAlvo && colunaAtacante == colunaAlvo + 1)
-				|| (colunaAtacante == colunaAlvo && linhaAtacante == linhaAlvo - 1)
-				|| (colunaAtacante == colunaAlvo && linhaAtacante == linhaAlvo + 1)
-				|| (pos1.equals(pos2));
+				|| (attackerRow == targetRow && attackerColumn == targetColumn - 1)
+				|| (attackerRow == targetRow && attackerColumn == targetColumn + 1)
+				|| (attackerColumn == targetColumn && attackerRow == targetRow - 1)
+				|| (attackerColumn == targetColumn && attackerRow == targetRow + 1)
+				|| (attackerPosition.equals(targetPosition));
 	}
 
-	private boolean verifyIfPlayerIsNearDoor(PlayableCharacter adventurer,
+	private boolean verifyIfPlayerIsNearDoor(PlayableCharacter hero,
 											 Door door) {
-		byte adventurerRow, adventurerColumn, doorRow, doorColumn;
-		adventurerRow = adventurer.getCurrentPosition().getRow();
-		adventurerColumn = adventurer.getCurrentPosition().getColumn();
-		doorRow = door.getRow();
-		doorColumn = door.getColumn();
-		return (adventurerRow == doorRow && adventurerColumn == doorColumn - 1)
-				|| (adventurerRow == doorRow && adventurerColumn == doorColumn + 1)
-				|| (adventurerColumn == doorColumn && adventurerRow == doorRow - 1)
-				|| (adventurerColumn == doorColumn && adventurerRow == doorRow + 1);
+		byte heroRow = hero.getCurrentPosition().getRow();
+		byte heroColumn = hero.getCurrentPosition().getColumn();
+		byte doorRow = door.getRow();
+		byte doorColumn = door.getColumn();
+		return (heroRow == doorRow && heroColumn == doorColumn - 1)
+				|| (heroRow == doorRow && heroColumn == doorColumn + 1)
+				|| (heroColumn == doorColumn && heroRow == doorRow - 1)
+				|| (heroColumn == doorColumn && heroRow == doorRow + 1);
 	}
 
 	public void move(DirectionEnum direction) {
@@ -392,37 +390,33 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	public void atacar() {
-		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
-		if (daVez) {
-			Creature atacante = this.getCurrentCreature();
+	public void attack() {
+		if (this.verifyIfItIsCurrentPlayersTurn()) {
+			Creature attacker = this.getCurrentCreature();
 			
-			if (atacante.getStatus() == StatusEnum.SLEEPING){
-				this.GUI.reportError(Strings.SLEEPNOATT.toString());
-			} else{
-				Position posicaoAtacante = atacante.getCurrentPosition();
+			if (StatusEnum.SLEEPING.equals(attacker.getStatus())) {
+				this.GUI.reportError(Strings.SLEEP_NO_ATTACK.toString());
+			} else {
+				Position attackerPosition = attacker.getCurrentPosition();
 				boolean hasSpear = false;
-				// If its an adventurer and has a spear, can attack diagonally
-				if (!(atacante.getClass().getSuperclass().getSimpleName().equals("Monster")) &&
-						((PlayableCharacter) atacante).getItems(this.map).contains(Items.Spear)){
+				if (checkIfAttackerIsAHeroAndHasSpear(attacker)){
 					hasSpear = true;
 				}
-				ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1,
-						posicaoAtacante);
-				Creature alvo = this.GUI.selectTarget(possiveisAlvos);
-				Position posicaoAlvo = alvo.getCurrentPosition();
-				boolean possivel = this.verificaSeDistanciaPossivel(
-						posicaoAtacante, posicaoAlvo, hasSpear);
-				if (possivel) {
-					byte dano = this.calcularDanoDoAtaque(atacante, alvo);
-					Attack lance = new Attack();
-					lance.setValue(dano);
-					lance.setTargetID(alvo.getID()); ///////////////////////////////////////////
-					this.tratarLance(lance);
-					this.enviarLance(lance);
+				ArrayList<Creature> possibleTargets = this.getPossibleTargets(1,
+						attackerPosition);
+				Creature selectedTarget = this.GUI.selectTarget(possibleTargets);
+				Position selectedTargetPosition = selectedTarget.getCurrentPosition();
+				boolean isTargetReachable = this.checkIfAttackerReachesTarget(
+						attackerPosition, selectedTargetPosition, hasSpear);
+				if (isTargetReachable) {
+					byte damage = this.calculateAttackDamage(attacker, selectedTarget);
+					Attack action = new Attack();
+					action.setValue(damage);
+					action.setTargetID(selectedTarget.getID());
+					this.tratarLance(action);
+					this.enviarLance(action);
 				} else {
-					this.GUI
-						.reportError(Strings.OUTOFRANGE.toString());
+					this.GUI.reportError(Strings.TARGET_OUT_OF_RANGE.toString());
 				}
 			}
 		} else {
@@ -430,7 +424,12 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private ArrayList<Creature> getPossiveisAlvos(int area, Position pos) {
+	private boolean checkIfAttackerIsAHeroAndHasSpear(Creature attacker) {
+		return attacker instanceof PlayableCharacter &&
+				((PlayableCharacter) attacker).getItems(this.map).contains(Items.Spear);
+	}
+
+	private ArrayList<Creature> getPossibleTargets(int area, Position pos) {
 		ArrayList<Creature> possiveisAlvos = new ArrayList<Creature>();
 		byte linha = pos.getRow();
 		byte coluna = pos.getColumn();
@@ -447,7 +446,7 @@ public class HeroQuest implements LogicInterface {
 		return possiveisAlvos;
 	}
 
-	private byte calcularDanoDoAtaque(Creature atacante, Creature alvo) {
+	private byte calculateAttackDamage(Creature atacante, Creature alvo) {
 		byte atkDiceAmount, defDiceAmount, damage, defence, probabilidade, result;
 		boolean hit;
 		damage = 0;
@@ -517,7 +516,7 @@ public class HeroQuest implements LogicInterface {
 							.selectSpell(magiasDisponiveis);
 					Position posicaoAtual = atacante.getCurrentPosition();
 					ArrayList<Creature> possiveisAlvos = this
-							.getPossiveisAlvos((byte) 2, posicaoAtual);
+							.getPossibleTargets((byte) 2, posicaoAtual);
 					Creature alvo = this.GUI
 							.selectTarget(possiveisAlvos);
 					boolean sucesso = this.calcularSucessoDaMagia(atacante,
@@ -556,7 +555,7 @@ public class HeroQuest implements LogicInterface {
 							.selectSpell(magiasDisponiveis);
 					Position posicaoAtual = atacante.getCurrentPosition();
 					ArrayList<Creature> possiveisAlvos = this
-							.getPossiveisAlvos((byte) 2, posicaoAtual);
+							.getPossibleTargets((byte) 2, posicaoAtual);
 					Creature alvo = this.GUI
 							.selectTarget(possiveisAlvos);
 					boolean sucesso = this.calcularSucessoDaMagia(atacante,
@@ -882,7 +881,7 @@ public class HeroQuest implements LogicInterface {
 					if (posicaoAtual.getTreasure() != null){
 						if (posicaoAtual.getTreasure().isTrap()){
 							posicaoAtual.getTreasure().setAsTrap(false);
-							this.GUI.showMessagePopup(Strings.DISARMTREASURETRAP.toString());
+							this.GUI.showMessagePopup(Strings.DISARMED_TREASURE_TRAP.toString());
 						}
 					}
 					if (posicaoAtual instanceof Door){
@@ -1227,7 +1226,7 @@ public class HeroQuest implements LogicInterface {
 		daVez.setMovement();
 		
 		// Courage status removal
-		ArrayList<Creature> possiveisAlvos = this.getPossiveisAlvos(1, daVez.getCurrentPosition());
+		ArrayList<Creature> possiveisAlvos = this.getPossibleTargets(1, daVez.getCurrentPosition());
 		if (possiveisAlvos.size() == 1){ // Cannot any enemies
 			if (daVez.getStatus() == StatusEnum.COURAGE){
 				daVez.setStatus(StatusEnum.NEUTRAL);
@@ -1538,7 +1537,7 @@ public class HeroQuest implements LogicInterface {
 	private void encerramentoDaPartida() {
 		boolean aventureirosVivos = this.verificarSeJogadoresVivos();
 		if (aventureirosVivos) {
-			boolean condicoesCumpridas = this.map.verificarCondicoesDeVitoria(this);
+			boolean condicoesCumpridas = this.map.verifyWinningConditions(this);
 			if (condicoesCumpridas) {
 				// Save player file
 				if (this.localAdventurer != null) {

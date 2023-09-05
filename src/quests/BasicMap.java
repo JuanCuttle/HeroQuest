@@ -601,22 +601,22 @@ public class BasicMap {
 		return bookcase3Position;
 	}
 
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
-		boolean vitoria = false;
+	public boolean verifyWinningConditions(HeroQuest game) {
+		boolean victory = false;
 		for (int i = 0; i < game.getCreatureQueue().size(); i++) {
 			if (game.getCreatureQueue().get(i).getID() > 19
 					&& game.getCreatureQueue().get(i).getID() < 24) {
-				Position pos = game.getCreatureQueue().get(i).getCurrentPosition();
-				int linha = pos.getRow();
-				int coluna = pos.getColumn();
-				if (linha == 24 && coluna == 24 || linha == 24 && coluna == 25
-						|| linha == 25 && coluna == 24 || linha == 25
-						&& coluna == 25) {
-					vitoria = true;
+				Position heroPosition = game.getCreatureQueue().get(i).getCurrentPosition();
+				int heroRow = heroPosition.getRow();
+				int heroColumn = heroPosition.getColumn();
+				if (heroRow == 24 && heroColumn == 24 || heroRow == 24 && heroColumn == 25
+						|| heroRow == 25 && heroColumn == 24 || heroRow == 25
+						&& heroColumn == 25) {
+					victory = true;
 				}
 			}
 		}
-		return vitoria;
+		return victory;
 	}
 
 	public int getCreatureQueueSize() {

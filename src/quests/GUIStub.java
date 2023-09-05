@@ -31,21 +31,19 @@ public class GUIStub extends JFrame {
 	protected BasicMap map;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					HeroQuest game = new HeroQuest();
-					BasicMap map = new TheFireMage(game);
-					GUIStub frame = new GUIStub(map);
-					game.setMap(map);
-					frame.setVisible(true);
-					map.createMonsters(game);
-					frame.atualizarInterfaceGrafica();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            try {
+                HeroQuest game = new HeroQuest();
+                BasicMap map = new TheFireMage(game);
+                GUIStub frame = new GUIStub(map);
+                game.setMap(map);
+                frame.setVisible(true);
+                map.createMonsters(game);
+                frame.atualizarInterfaceGrafica();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 	}
 
 	public GUIStub(BasicMap map) {

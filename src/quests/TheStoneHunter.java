@@ -2,6 +2,7 @@ package quests;
 
 import java.util.ArrayList;
 
+import enums.FurnitureDirectionEnum;
 import enums.StatusEnum;
 import entities.enemies.ChaosWarrior;
 import entities.Creature;
@@ -40,16 +41,15 @@ public class TheStoneHunter extends BasicMap {
 		
 		numberOfCreatures = 12;
 		
-		table1Position = new byte[]{1, 16, 27}; // 0 for horizontal, 1 for vertical
+		table1Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 16, 27};
 		
-		wepRackPosition = new byte[]{1, 21, 33};
+		wepRackPosition = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 21, 33};
 		
-		deskPosition = new byte[]{0, 20, 21};
+		deskPosition = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 20, 21};
 		
 		generateFurniture();
 	}
 	
-	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
 		generate3x1(wepRackPosition);
 		generate2x3(table1Position);
@@ -57,10 +57,10 @@ public class TheStoneHunter extends BasicMap {
 	}
 	
 	private void generate2x3LR(byte[] furniture) {
-		int i = furniture[1];
-		int j = furniture[2];
-		for (int x = 0; x < 3; x++){
-			for (int y = 0; y < 2; y++){
+		int i;
+		int j;
+		for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 2; y++) {
 				i = furniture[1]+x;
 				j = furniture[2]+y;
 				this.positions[i][j] = new Furniture((byte)i, (byte)j);
@@ -69,29 +69,29 @@ public class TheStoneHunter extends BasicMap {
 	}
 
 	private void generate3x1(byte[] furniture) {
-		int i = furniture[1];
+		int i;
 		int j = furniture[2];
-		for (int x = 0; x < 3; x++){
+		for (int x = 0; x < 3; x++) {
 			i = furniture[1]+x;
 			this.positions[i][j] = new Furniture((byte)i, (byte)j);
 		}
 	}
 
-	private void generate2x3(byte[] furniture){
-		if (furniture != null){
-			int i = furniture[1];
-			int j = furniture[2];
-			if (furniture[0] == 0){ // if horizontal
-				for (int x = 0; x < 2; x++){
-					for (int y = 0; y < 3; y++){
+	private void generate2x3(byte[] furniture) {
+		if (furniture != null) {
+			int i;
+			int j;
+			if (furniture[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+				for (int x = 0; x < 2; x++) {
+					for (int y = 0; y < 3; y++) {
 						i = furniture[1]+x;
 						j = furniture[2]+y;
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
-			} else { // if vertical
-				for (int x = 0; x < 3; x++){
-					for (int y = 0; y < 2; y++){
+			} else {
+				for (int x = 0; x < 3; x++) {
+					for (int y = 0; y < 2; y++) {
 						i = furniture[1]+x;
 						j = furniture[2]+y;
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
@@ -102,7 +102,6 @@ public class TheStoneHunter extends BasicMap {
 	}
 
 	public void generateRocks(){
-		// Rocks
 		for (byte i = 18; i < 20; i++){
 			generateBlockade(9, i);
 			generateBlockade(19, i);
@@ -170,9 +169,9 @@ public class TheStoneHunter extends BasicMap {
 			return monsters;
 	}
 	
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+	public boolean verifyWinningConditions(HeroQuest game) {
 		Creature karlen = game.getCreaturePorID(6);
-		if (karlen.getStatus() == StatusEnum.DEAD){
+		if (StatusEnum.DEAD.equals(karlen.getStatus())){
 			return true;
 		}
 		return false;
@@ -180,9 +179,10 @@ public class TheStoneHunter extends BasicMap {
 	
 	public void specialOcurrence(HeroQuest game){
 		if (!foundKarlen){
-			if (game.getCreaturePorID(6).isVisible()){
+			Creature karlen = game.getCreaturePorID(6);
+			if (karlen.isVisible()){
 				foundKarlen = true;
-				game.getAtorJogador().showMessagePopup(Strings.FOUNDKARLEN.toString());
+				game.getAtorJogador().showMessagePopup(Strings.FOUND_KARLEN.toString());
 			}
 		}
 	}

@@ -2,15 +2,12 @@ package quests;
 
 import java.util.ArrayList;
 
-import entities.players.Barbarian;
+import entities.players.*;
 import entities.Creature;
-import entities.players.Dwarf;
-import entities.players.Elf;
 import entities.HeroQuest;
 import entities.enemies.Monster;
 import entities.enemies.Orc;
 import entities.utils.Strings;
-import entities.players.Wizard;
 
 public class TheMaze extends BasicMap {
 		
@@ -34,7 +31,6 @@ public class TheMaze extends BasicMap {
 		}
 		
 		public void generateRocks(){
-			// Rocks
 			for (byte i = 18; i < 20; i++){
 				generateBlockade(3, i);
 			}
@@ -98,25 +94,22 @@ public class TheMaze extends BasicMap {
 				return monsters;
 		}
 		
-		public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+		public boolean verifyWinningConditions(HeroQuest game) {
 			int stairsRow = stairsPosition[0];
 			int stairsColumn = stairsPosition[1];
 			
-			boolean stairs = true;
+			boolean areAllHeroesOnStairs = true;
 			ArrayList<Creature> creatureQueue = game.getCreatureQueue();
-			// Goes through creatures
 			for (int i = 0; i < creatureQueue.size(); i++) {
-					Creature criatura = creatureQueue.get(i);
-					if (criatura instanceof Barbarian || criatura instanceof Wizard
-							|| criatura instanceof Elf || criatura instanceof Dwarf) {
-						// If there is an adventurer who isn't on stairs, game is not finished yet
-						if (!onStairs(criatura.getCurrentPosition(), stairsRow, stairsColumn)){
-							stairs = false;
+					Creature creature = creatureQueue.get(i);
+					if (creature instanceof PlayableCharacter) {
+						if (!onStairs(creature.getCurrentPosition(), stairsRow, stairsColumn)){
+							areAllHeroesOnStairs = false;
 							break;
 						}
 					}
 			}
-			return stairs;
+			return areAllHeroesOnStairs;
 		}
 
 }

@@ -18,7 +18,7 @@ public interface LogicInterface {
 	
 	Creature getCurrentCreature();
 	
-	void atacar();
+	void attack();
 	
 	void usarMagia();
 	

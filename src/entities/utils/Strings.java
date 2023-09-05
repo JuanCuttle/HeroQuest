@@ -73,7 +73,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  SLEEPNOATT {
+	  SLEEP_NO_ATTACK {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� est� dormindo, n�o pode atacar!";
@@ -82,7 +82,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  OUTOFRANGE {
+	  TARGET_OUT_OF_RANGE {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "N�o � poss�vel atacar um alvo t�o distante.";
@@ -411,10 +411,10 @@ public enum Strings {
 	      }
 	  },
 	  
-	  HERO_WON {
+	  HEROES_WON {
 	      public String toString() {
 	    	  switch(GUI.language){
-	    	  	case Portugues: return "Parab�ns aos aventureiros!\n Voc�s foram vitoriosos!!!";
+	    	  	case Portugues: return "Parab�ns aos heróis!\n Voc�s foram vitoriosos!!!";
 		    	default: return "Congratulations to the heroes!\n You were victorious!!!";
 	    	  }
 	      }
@@ -705,17 +705,17 @@ public enum Strings {
 	      }
 	  },
 	  
-	  DISARMTREASURETRAP {
+	  DISARMED_TREASURE_TRAP {
 		  public String toString() {
 	    	  if(GUI.language == LanguageEnum.Portugues){
-	    		  return "O aventureiro desarmou uma armadilha em um tesouro!";
+	    		  return "O hero desarmou uma armadilha em um tesouro!";
 	    	  } else {
-	    		  return "The adventurer has disarmed a trap in a treasure chest!";
+	    		  return "The hero has disarmed a trap in a treasure chest!";
 	    	  }
 	      }
 	  },
 	  
-	  REVEALEDTHRONEPASSAGE {
+	  THRONE_PASSAGE_REVEALED {
 		  public String toString() {
 	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O trono se moveu para revelar uma passagem secreta!";
@@ -1168,7 +1168,7 @@ public enum Strings {
 	      }		
 	  },
 	  
-	  FOUNDKARLEN {
+	  FOUND_KARLEN {
 		  public String toString() {
 	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "O Zumbi nesta sala � Karlne. Enquanto trabalhava em uma magia de Chaos ele foi consumido "

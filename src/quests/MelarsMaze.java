@@ -16,6 +16,7 @@ import entities.tiles.Spear;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
 import entities.enemies.Zombie;
+import enums.FurnitureDirectionEnum;
 
 public class MelarsMaze extends BasicMap {
 	
@@ -40,20 +41,19 @@ public class MelarsMaze extends BasicMap {
 		
 		numberOfCreatures = 12;
 		
-		table1Position = new byte[]{0, 12, 16}; // 0 for horizontal, 1 for vertical
+		table1Position = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 12, 16};
 		
-		bookcase1Position = new byte[]{0, 16, 16};
+		bookcase1Position = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 16, 16};
 		
-		bookcase2Position = new byte[]{0, 16, 19};
+		bookcase2Position = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 16, 19};
 		
-		thronePosition = new byte[]{1, 11, 7}; // 0 to face right, 1 to face left
+		thronePosition = new byte[]{FurnitureDirectionEnum.LEFT.getId(), 11, 7};
 		
-		deskPosition = new byte[]{1, 10, 11};
+		deskPosition = new byte[]{FurnitureDirectionEnum.LEFT.getId(), 10, 11};
 		
 		generateFurniture();
 	}
 	
-	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
 		generate1x1(thronePosition);
 		generate1x3(bookcase1Position);
@@ -64,7 +64,7 @@ public class MelarsMaze extends BasicMap {
 	
 	private void generate1x3(byte[] furniture) {
 		int i = furniture[1];
-		int j = furniture[2];
+		int j;
 		for (int y = 0; y < 3; y++){
 			j = furniture[2]+y;
 			this.positions[i][j] = new Furniture((byte)i, (byte)j);
@@ -72,8 +72,8 @@ public class MelarsMaze extends BasicMap {
 	}
 
 	private void generate2x3LR(byte[] furniture) {
-		int i = furniture[1];
-		int j = furniture[2];
+		int i;
+		int j;
 		for (int x = 0; x < 3; x++){
 			for (int y = 0; y < 2; y++){
 				i = furniture[1]+x;
@@ -91,9 +91,9 @@ public class MelarsMaze extends BasicMap {
 
 	private void generate2x3(byte[] furniture){
 		if (furniture != null){
-			int i = furniture[1];
-			int j = furniture[2];
-			if (furniture[0] == 0){ // if horizontal
+			int i;
+			int j;
+			if (furniture[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
 				for (int x = 0; x < 2; x++){
 					for (int y = 0; y < 3; y++){
 						i = furniture[1]+x;
@@ -101,7 +101,7 @@ public class MelarsMaze extends BasicMap {
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
-			} else { // if vertical
+			} else {
 				for (int x = 0; x < 3; x++){
 					for (int y = 0; y < 2; y++){
 						i = furniture[1]+x;
@@ -114,7 +114,6 @@ public class MelarsMaze extends BasicMap {
 	}
 
 	public void generateRocks(){
-		// Rocks
 		for (byte i = 1; i < 3; i++){
 			generateBlockade(13, i);
 		}
@@ -195,8 +194,9 @@ public class MelarsMaze extends BasicMap {
 			return monsters;
 	}
 	
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
-		return positions[14][17].getTreasure().getItem() == null; // Quest treasure taken
+	public boolean verifyWinningConditions(HeroQuest game) {
+		boolean isQuestTreasureTaken = positions[14][17].getTreasure().getItem() == null;
+		return isQuestTreasureTaken;
 	}
 	
 	public void moveThrone(HeroQuest game){
@@ -206,7 +206,7 @@ public class MelarsMaze extends BasicMap {
 			throneMoved = true;
 			positions[11][7] = new Room((byte)11, (byte)7);
 			generate1x1(thronePosition);
-			game.getAtorJogador().showMessagePopup(Strings.REVEALEDTHRONEPASSAGE.toString());
+			game.getAtorJogador().showMessagePopup(Strings.THRONE_PASSAGE_REVEALED.toString());
 		}
 	}
 }

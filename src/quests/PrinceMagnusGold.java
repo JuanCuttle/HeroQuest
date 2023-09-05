@@ -13,6 +13,7 @@ import entities.tiles.Pit;
 import entities.tiles.Spear;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
+import enums.FurnitureDirectionEnum;
 
 public class PrinceMagnusGold extends BasicMap {
 	public PrinceMagnusGold(HeroQuest game){
@@ -34,21 +35,20 @@ public class PrinceMagnusGold extends BasicMap {
 		
 		numberOfCreatures = 14;
 		
-		table1Position = new byte[]{1, 21, 4}; // 0 for horizontal, 1 for vertical
+		table1Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 21, 4};
 		
 		generateFurniture();
 	}
 	
-	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
 		generate2x3(table1Position);
 	}
 	
 	private void generate2x3(byte[] furniture){
 		if (furniture != null){
-			int i = furniture[1];
-			int j = furniture[2];
-			if (furniture[0] == 0){ // if horizontal
+			int i;
+			int j;
+			if (furniture[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
 				for (int x = 0; x < 2; x++){
 					for (int y = 0; y < 3; y++){
 						i = furniture[1]+x;
@@ -56,7 +56,7 @@ public class PrinceMagnusGold extends BasicMap {
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
-			} else { // if vertical
+			} else {
 				for (int x = 0; x < 3; x++){
 					for (int y = 0; y < 2; y++){
 						i = furniture[1]+x;
@@ -69,7 +69,6 @@ public class PrinceMagnusGold extends BasicMap {
 	}
 
 	public void generateRocks(){
-		// Rocks
 		for (byte i = 1; i < 3; i++){
 			generateBlockade(i, 17);
 		}
@@ -116,7 +115,6 @@ public class PrinceMagnusGold extends BasicMap {
 	}
 	
 	public void generateTreasures(){
-		// Return after quest
 		Treasure tr = new Treasure(250);
 		positions[12][17].setTreasure(tr);
 		
@@ -150,8 +148,8 @@ public class PrinceMagnusGold extends BasicMap {
 			return monsters;
 	}
 	
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
-		return 	game.getPosition((byte)12, (byte)17).getTreasure().getGoldAmount() == -1 && 
+	public boolean verifyWinningConditions(HeroQuest game) {
+		return  game.getPosition((byte)12, (byte)17).getTreasure().getGoldAmount() == -1 &&
 				game.getPosition((byte)13, (byte)16).getTreasure().getGoldAmount() == -1 &&
 				game.getPosition((byte)16, (byte)16).getTreasure().getGoldAmount() == -1;
 	}

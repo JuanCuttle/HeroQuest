@@ -2,10 +2,8 @@ package quests;
 
 import java.util.ArrayList;
 
-import entities.players.Barbarian;
+import entities.players.*;
 import entities.Creature;
-import entities.players.Dwarf;
-import entities.players.Elf;
 import entities.enemies.Fimir;
 import entities.tiles.Furniture;
 import entities.enemies.Goblin;
@@ -15,7 +13,7 @@ import entities.enemies.Orc;
 import entities.tiles.Pit;
 import entities.Position;
 import entities.utils.Strings;
-import entities.players.Wizard;
+import enums.FurnitureDirectionEnum;
 
 public class LegacyOfTheOrcWarlord extends BasicMap {
 	
@@ -39,18 +37,17 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 		
 		numberOfCreatures = 19;
 		
-		table1Position = new byte[]{1, 13, 18}; // 0 for horizontal, 1 for vertical
+		table1Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 13, 18};
 		
-		table2Position = new byte[]{0, 21, 26};
+		table2Position = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 21, 26};
 		
-		rackPosition = new byte[]{1, 9, 27};
+		rackPosition = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 9, 27};
 		
-		bookcase1Position = new byte[]{1, 4, 7};
+		bookcase1Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 4, 7};
 		
 		generateFurniture();
 	}
 	
-	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
 		generate3x1(bookcase1Position);
 		generate2x3(table1Position);
@@ -59,7 +56,7 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 	}
 	
 	private void generate3x1(byte[] furniture) {
-		int i = furniture[1];
+		int i;
 		int j = furniture[2];
 		for (int x = 0; x < 3; x++){
 			i = furniture[1]+x;
@@ -69,9 +66,9 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 	
 	private void generate2x3(byte[] furniture){
 		if (furniture != null){
-			int i = furniture[1];
-			int j = furniture[2];
-			if (furniture[0] == 0){ // if horizontal
+			int i;
+			int j;
+			if (furniture[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
 				for (int x = 0; x < 2; x++){
 					for (int y = 0; y < 3; y++){
 						i = furniture[1]+x;
@@ -79,7 +76,7 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
-			} else { // if vertical
+			} else {
 				for (int x = 0; x < 3; x++){
 					for (int y = 0; y < 2; y++){
 						i = furniture[1]+x;
@@ -92,7 +89,6 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 	}
 
 	public void generateRocks(){
-		// Rocks
 		for (byte i = 18; i < 20; i++){
 			generateBlockade(3, i);
 		}
@@ -161,29 +157,26 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 		return foundEquipment;
 	}
 	
-	public boolean verificarCondicoesDeVitoria(HeroQuest game) {
+	public boolean verifyWinningConditions(HeroQuest game) {
 		Position equipment = game.getPosition((byte)5, (byte)5);
 		foundEquipment = equipment.isVisible(); // If treasure has been found
 		
 		int stairsRow = stairsPosition[0];
 		int stairsColumn = stairsPosition[1];
 		
-		boolean stairs = true;
+		boolean areAllHeroesOnStairs = true;
 		ArrayList<Creature> creatureQueue = game.getCreatureQueue();
-		// Goes through creatures
 		for (int i = 0; i < creatureQueue.size(); i++) {
-				Creature criatura = creatureQueue.get(i);
-				if (criatura instanceof Barbarian || criatura instanceof Wizard
-						|| criatura instanceof Elf || criatura instanceof Dwarf) {
-					// If there is an adventurer who isn't on stairs, game is not finished yet
-					if (!onStairs(criatura.getCurrentPosition(), stairsRow, stairsColumn)){
-						stairs = false;
+				Creature creature = creatureQueue.get(i);
+				if (creature instanceof PlayableCharacter) {
+					if (!onStairs(creature.getCurrentPosition(), stairsRow, stairsColumn)){
+						areAllHeroesOnStairs = false;
 						break;
 					}
 				}
 		}
 		
-		return foundEquipment && stairs; // If collected equipment and found exit
+		return foundEquipment && areAllHeroesOnStairs;
 	}
 	
 }
