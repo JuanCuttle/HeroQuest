@@ -20,7 +20,7 @@ public interface LogicInterface {
 	
 	void attack();
 	
-	void usarMagia();
+	void castSpell();
 	
 	ArrayList<Creature> getCreatureQueue();
 	

@@ -23,7 +23,7 @@ public interface GUIInterface {
 	
 	void attack();
 	
-	void useSpell();
+	void castSpell();
 	
 	Spell selectSpell(ArrayList<Spell> availableSpells);
 	

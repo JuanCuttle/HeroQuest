@@ -6,12 +6,12 @@ import enums.StatusEnum;
 public class Spell implements Jogada {
 	
 	private static final long serialVersionUID = -5887762451618737398L;
-	protected String name;
+	protected byte spellId;
 	protected StatusEnum deliveredStatus;
 	protected byte deliveredDamage;
 	
-	public Spell(String name, StatusEnum statusEnum, byte damage) {
-		this.name = name;
+	public Spell(byte spellId, StatusEnum statusEnum, byte damage) {
+		this.spellId = spellId;
 		this.deliveredStatus = statusEnum;
 		this.deliveredDamage = damage;
 	}
@@ -24,8 +24,8 @@ public class Spell implements Jogada {
 		return this.deliveredStatus;
 	}
 
-	public String getName() {
-		return this.name;
+	public byte getSpellId() {
+		return this.spellId;
 	}
 	
 	public void setDamage(byte damage) {

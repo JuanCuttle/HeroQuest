@@ -51,7 +51,7 @@ public class GUIStub extends JFrame {
 		
 		setTitle(Strings.HEROQUEST.toString());
 
-		this.boardButtons = new JButton[map.getNumberOfRows()][map.getNumberOfColumns()];
+		this.boardButtons = new JButton[map.getTotalNumberOfRows()][map.getTotalNumberOfColumns()];
 		// this.botoesCriaturas = new ArrayList<JButton>();
 		// this.heroQuest = new HeroQuest(new AtorJogador());
 
@@ -69,7 +69,7 @@ public class GUIStub extends JFrame {
 		setFocusable(true);
 		requestFocusInWindow();
 		
-		for (int j = 0; j < map.getNumberOfColumns(); j++) {
+		for (int j = 0; j < map.getTotalNumberOfColumns(); j++) {
 			JButton botao = new JButton();
 			botao.setText(""+j);
 			botao.setBounds(120 + (j * 23), 49 + (-1 * 23), 23, 23);
@@ -77,7 +77,7 @@ public class GUIStub extends JFrame {
 			botao.setVisible(true);
 			contentPane.add(botao);
 		}
-		for (int i = 0; i < map.getNumberOfRows(); i++) {
+		for (int i = 0; i < map.getTotalNumberOfRows(); i++) {
 			JButton botao = new JButton();
 			botao.setText(""+i);
 			botao.setBounds(120 + (-1 * 23), 49 + (i * 23), 23, 23);
@@ -87,8 +87,8 @@ public class GUIStub extends JFrame {
 		}
 
 		// Create the board's buttons
-		for (int i = 0; i < map.getNumberOfRows(); i++) {
-			for (int j = 0; j < map.getNumberOfColumns(); j++) {
+		for (int i = 0; i < map.getTotalNumberOfRows(); i++) {
+			for (int j = 0; j < map.getTotalNumberOfColumns(); j++) {
 				JButton botao = new JButton();
 				botao.setName("" + i + j);
 				botao.setBounds(120 + (j * 23), 49 + (i * 23), 23, 23);
@@ -516,8 +516,8 @@ public class GUIStub extends JFrame {
 	}
 
 	public void atualizarInterfaceGrafica() {
-		for (byte i = 0; i < map.getNumberOfRows(); i++) {
-			for (byte j = 0; j < map.getNumberOfColumns(); j++) {
+		for (byte i = 0; i < map.getTotalNumberOfRows(); i++) {
+			for (byte j = 0; j < map.getTotalNumberOfColumns(); j++) {
 				//Position posicao = this.heroQuest.getPosition(i, j);
 				Position posicao = this.map.getPosition(i, j);
 				this.atualizarBotao(this.boardButtons[i][j], posicao);

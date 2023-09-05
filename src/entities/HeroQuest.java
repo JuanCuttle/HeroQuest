@@ -9,13 +9,13 @@ import javax.swing.JOptionPane;
 
 import entities.actions.*;
 import entities.enemies.Monster;
+import entities.enemies.Mummy;
+import entities.enemies.Skeleton;
+import entities.enemies.Zombie;
 import entities.players.*;
 import entities.tiles.*;
 import entities.utils.Strings;
-import enums.ActionTypeEnum;
-import enums.DirectionEnum;
-import enums.TrapEvasionMovementEnum;
-import enums.StatusEnum;
+import enums.*;
 import interfaces.LogicInterface;
 import quests.BasicMap;
 import quests.MelarsMaze;
@@ -402,9 +402,9 @@ public class HeroQuest implements LogicInterface {
 				if (checkIfAttackerIsAHeroAndHasSpear(attacker)){
 					hasSpear = true;
 				}
-				ArrayList<Creature> possibleTargets = this.getPossibleTargets(1,
+				ArrayList<Creature> availableTargets = this.getAvailableTargets(1,
 						attackerPosition);
-				Creature selectedTarget = this.GUI.selectTarget(possibleTargets);
+				Creature selectedTarget = this.GUI.selectTarget(availableTargets);
 				Position selectedTargetPosition = selectedTarget.getCurrentPosition();
 				boolean isTargetReachable = this.checkIfAttackerReachesTarget(
 						attackerPosition, selectedTargetPosition, hasSpear);
@@ -429,21 +429,21 @@ public class HeroQuest implements LogicInterface {
 				((PlayableCharacter) attacker).getItems(this.map).contains(Items.Spear);
 	}
 
-	private ArrayList<Creature> getPossibleTargets(int area, Position pos) {
-		ArrayList<Creature> possiveisAlvos = new ArrayList<Creature>();
-		byte linha = pos.getRow();
-		byte coluna = pos.getColumn();
-		for (int i = linha - area; i <= linha + area; i++) {
-			for (int j = coluna - area; j <= coluna + area; j++) {
-				if (i >= 0 && i < this.map.getNumberOfRows() && j >= 0 && j < this.map.getNumberOfColumns()) {
-					Position posicao = this.map.getPosition((byte)i, (byte)j);
-					if (posicao.getCreature() != null) {
-						possiveisAlvos.add(posicao.getCreature());
+	private ArrayList<Creature> getAvailableTargets(int area, Position sourcePosition) {
+		ArrayList<Creature> availableTargets = new ArrayList<>();
+		byte sourceRow = sourcePosition.getRow();
+		byte sourceColumn = sourcePosition.getColumn();
+		for (int i = sourceRow - area; i <= sourceRow + area; i++) {
+			for (int j = sourceColumn - area; j <= sourceColumn + area; j++) {
+				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()) {
+					Position position = this.map.getPosition((byte)i, (byte)j);
+					if (position.getCreature() != null) {
+						availableTargets.add(position.getCreature());
 					}
 				}
 			}
 		}
-		return possiveisAlvos;
+		return availableTargets;
 	}
 
 	private byte calculateAttackDamage(Creature atacante, Creature alvo) {
@@ -503,30 +503,26 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	public void usarMagia() {
-		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
-		if (daVez) {
-			Creature atacante = this.getCurrentCreature();
-			if (atacante instanceof Wizard) {
-				ArrayList<Spell> magiasDisponiveis = ((Wizard) atacante)
+	public void castSpell() {
+		if (this.verifyIfItIsCurrentPlayersTurn()) {
+			Creature caster = this.getCurrentCreature();
+			if (caster instanceof Wizard) {
+				ArrayList<Spell> availableSpells = ((Wizard) caster)
 						.getSpells();
-				byte mind = atacante.getMind();
-				if (mind > 0) {
-					Spell magia = this.GUI
-							.selectSpell(magiasDisponiveis);
-					Position posicaoAtual = atacante.getCurrentPosition();
-					ArrayList<Creature> possiveisAlvos = this
-							.getPossibleTargets((byte) 2, posicaoAtual);
-					Creature alvo = this.GUI
-							.selectTarget(possiveisAlvos);
-					boolean sucesso = this.calcularSucessoDaMagia(atacante,
-							alvo, magia);
-					if (sucesso) {
+				byte availableMind = caster.getMind();
+				if (availableMind > 0) {
+					Spell selectedSpell = this.GUI.selectSpell(availableSpells);
+					Position casterCurrentPosition = caster.getCurrentPosition();
+					ArrayList<Creature> availableTargets = this.getAvailableTargets((byte) 2, casterCurrentPosition);
+					Creature selectedTarget = this.GUI.selectTarget(availableTargets);
+					boolean wasSpellSuccessful = this.calculateSpellSuccess(
+							selectedTarget, selectedSpell);
+					if (wasSpellSuccessful) {
 						CastSpell lance = new CastSpell();
-						if (magia.getStatus() == StatusEnum.SLEEPING){ // determinar o numero de rodadas a dormir
+						if (selectedSpell.getStatus() == StatusEnum.SLEEPING){ // determinar o numero de rodadas a dormir
 							byte roundsToSleep = 0;
 							byte dado = 0;
-							byte mindAlvo = alvo.getMind();
+							byte mindAlvo = selectedTarget.getMind();
 							while(dado != 5){
 								for (byte i = 0; i < mindAlvo; i++){
 									roundsToSleep++;
@@ -538,27 +534,27 @@ public class HeroQuest implements LogicInterface {
 							}
 							lance.setRoundsToSleep(roundsToSleep);
 						}
-						lance.setSpell(magia);
-						lance.setTargetID(alvo.getID());
+						lance.setSpell(selectedSpell);
+						lance.setTargetID(selectedTarget.getID());
 						this.tratarLance(lance);
 						this.enviarLance(lance);
 					}
 				} else {
 					this.GUI.reportError(Strings.NOMIND.toString());
 				}
-			} else if (atacante instanceof Elf) {
-				ArrayList<Spell> magiasDisponiveis = ((Elf) atacante)
+			} else if (caster instanceof Elf) {
+				ArrayList<Spell> magiasDisponiveis = ((Elf) caster)
 						.getSpells();
-				byte mind = atacante.getMind();
+				byte mind = caster.getMind();
 				if (mind > 0) {
 					Spell magia = this.GUI
 							.selectSpell(magiasDisponiveis);
-					Position posicaoAtual = atacante.getCurrentPosition();
+					Position posicaoAtual = caster.getCurrentPosition();
 					ArrayList<Creature> possiveisAlvos = this
-							.getPossibleTargets((byte) 2, posicaoAtual);
+							.getAvailableTargets((byte) 2, posicaoAtual);
 					Creature alvo = this.GUI
 							.selectTarget(possiveisAlvos);
-					boolean sucesso = this.calcularSucessoDaMagia(atacante,
+					boolean sucesso = this.calculateSpellSuccess(
 							alvo, magia);
 					if (sucesso) {
 						CastSpell lance = new CastSpell();
@@ -582,76 +578,68 @@ public class HeroQuest implements LogicInterface {
 		return this.creatureQueue;
 	}
 
-	private boolean calcularSucessoDaMagia(Creature caster, Creature target,
-			Spell spell) {
-		byte dano;
-		//int probabilidade;
-		boolean success; //, defendeu;
-		dano = spell.getDamage();
-		success = true;
+	private boolean calculateSpellSuccess(Creature target, Spell spell) {
+		byte spellDamage;
+		boolean success = true;
+		spellDamage = spell.getDamage();
 
-		if (spell.getName() == "Ball of Flame"){
-			// 2 de dano, menos 1 por cada 5 ou 6 rolados em 2 dados
-			byte dado1 = (byte)(Math.random()*6);
-			byte dado2 = (byte)(Math.random()*6);
+		if (spell.getSpellId() == SpellNameEnum.BALL_OF_FLAME.getId()) {
+			byte valueOnFirstDie = (byte)(Math.random() * 6 + 1);
+			byte valueOnSecondDie = (byte)(Math.random() * 6 + 1);
 			
-			if (dado1 > 3) {
-				dano++;
+			if (valueOnFirstDie > 4) {
+				spellDamage++;
 			}
-			if (dado2 > 3) {
-				dano++;
+
+			if (valueOnSecondDie > 4) {
+				spellDamage++;
 			}
-			spell.setDamage(dano);
+
+			spell.setDamage(spellDamage);
 			
-			if (dano == 0) {
+			if (spellDamage == 0) {
 				success = false;
-				this.GUI.showMessagePopup(Strings.MAGICFAIL.toString());
+				this.GUI.showMessagePopup(Strings.SPELL_FAILED.toString());
 			}
 		}
 		
-		if (spell.getName() == "Fire of Wrath") {
-			// 1 de dano, 0 se conseguir rolar 5 ou 6 em um dado
-			byte dado = (byte)(Math.random()*6);
+		if (spell.getSpellId() == SpellNameEnum.FIRE_OF_WRATH.getId()) {
+			byte valueOnDie = (byte)(Math.random() * 6 + 1);
 			
-			if (dado > 3) {
-				dano++;
+			if (valueOnDie > 4) {
+				spellDamage++;
 			}
-			spell.setDamage(dano);
+
+			spell.setDamage(spellDamage);
 			
-			if (dano == 0) {
+			if (spellDamage == 0) {
 				success = false;
-				this.GUI.showMessagePopup(Strings.MAGICFAIL.toString());
+				this.GUI.showMessagePopup(Strings.SPELL_FAILED.toString());
 			}
 		}
 		
-		if (spell.getName() == "Sleep"){
-			
-			String nomeAlvo = target.getClass().getSimpleName();
-			if (nomeAlvo == "Zombie" || nomeAlvo == "Mummy" || nomeAlvo == "Skeleton"){
+		if (spell.getSpellId() == SpellNameEnum.SLEEP.getId()) {
+
+			if (isTargetUndead(target)) {
 				success = false;
 			} else {
-				// bota para dormir, se n�o rolar 1 6 em (mind) dados
-				byte mind = target.getMind();
-				byte dado;
-				for (byte i = 0; i < mind; i++){
-					dado = (byte)(Math.random()*6);
-					if (dado == 5){
+				byte targetMind = target.getMind();
+				byte valueOnDie;
+				for (byte i = 0; i < targetMind; i++) {
+					valueOnDie = (byte)(Math.random() * 6 + 1);
+					if (valueOnDie == 6) {
 						success = false;
-						this.GUI.showMessagePopup(Strings.MAGICFAIL.toString());
+						this.GUI.showMessagePopup(Strings.SPELL_FAILED.toString());
 						break;
 					}
 				}
 			}
 		}
-		
-		/*if (dano < 0) {
-			probabilidade = 3;
-			defendeu = new Random().nextInt(probabilidade) == 0;
-			if (defendeu) {
-				success = false;
-			}
-		}*/
 		return success;
+	}
+
+	private static boolean isTargetUndead(Creature target) {
+		return target instanceof Zombie || target instanceof Mummy || target instanceof Skeleton;
 	}
 
 	public void enviarLance(Action action) {
@@ -808,7 +796,7 @@ public class HeroQuest implements LogicInterface {
 		character = (PlayableCharacter) posicaoAtual.getCreature();
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				if (i >= 0 && i < this.map.getNumberOfRows() && j >= 0 && j < this.map.getNumberOfColumns()){
+				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()){
 					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
 					Treasure tesouro = posicaoAtual.getTreasure();
 					if (tesouro != null) {
@@ -859,7 +847,7 @@ public class HeroQuest implements LogicInterface {
 		boolean removeuArmadilhas = false;
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				if (i >= 0 && i < this.map.getNumberOfRows() && j >= 0 && j < this.map.getNumberOfColumns()) {
+				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()) {
 					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
 					if (posicaoAtual.getTrap() != null) {
 						posicaoAtual.makeTrapVisible();
@@ -1148,7 +1136,7 @@ public class HeroQuest implements LogicInterface {
 
 		for (int i = linha - 2; i <= linha + 2; i++) {
 			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				if (i >= 0 && j >= 0 && i < this.map.getNumberOfRows() && j < this.map.getNumberOfColumns()) {
+				if (i >= 0 && j >= 0 && i < this.map.getTotalNumberOfRows() && j < this.map.getTotalNumberOfColumns()) {
 					Position posicao = this.map.getPosition((byte)i, (byte)j);
 					posicao.setVisible(true);
 					if (posicao.getCreature() != null)
@@ -1226,7 +1214,7 @@ public class HeroQuest implements LogicInterface {
 		daVez.setMovement();
 		
 		// Courage status removal
-		ArrayList<Creature> possiveisAlvos = this.getPossibleTargets(1, daVez.getCurrentPosition());
+		ArrayList<Creature> possiveisAlvos = this.getAvailableTargets(1, daVez.getCurrentPosition());
 		if (possiveisAlvos.size() == 1){ // Cannot any enemies
 			if (daVez.getStatus() == StatusEnum.COURAGE){
 				daVez.setStatus(StatusEnum.NEUTRAL);

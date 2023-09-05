@@ -109,7 +109,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  MAGICFAIL {
+	  SPELL_FAILED {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "O encantamento parece perigoso, mas o conjurador se desconcentra e o feiti�o se desfaz...";
@@ -292,7 +292,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  SELECTTARGET {
+	  SELECT_TARGET {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Digite o n�mero correspondente ao alvo escolhido: ";

@@ -20,8 +20,8 @@ public class BasicMap {
 	
 	public Position[][] positions; 
 
-	protected byte numberOfRows;
-	protected byte numberOfColumns;
+	protected byte totalNumberOfRows;
+	protected byte totalNumberOfColumns;
 	
 	protected HeroQuest heroQuest;
 	
@@ -49,9 +49,9 @@ public class BasicMap {
 	protected int numberOfCreatures;
 	
 	public BasicMap() {
-		this.numberOfRows = 29;
-		this.numberOfColumns = 38;
-		positions = new Position[numberOfRows][numberOfColumns];
+		this.totalNumberOfRows = 29;
+		this.totalNumberOfColumns = 38;
+		positions = new Position[totalNumberOfRows][totalNumberOfColumns];
 		generateCleanMap();
 		generateCorridors();
 		//generateRooms();
@@ -84,13 +84,13 @@ public class BasicMap {
 
 	protected void mapBorders() {
 		// Map borders
-		int lastColumn = this.numberOfColumns-1;
-		int lastRow = this.numberOfRows-1;
-		for (byte i = 0; i < numberOfColumns; i++) {
+		int lastColumn = this.totalNumberOfColumns -1;
+		int lastRow = this.totalNumberOfRows -1;
+		for (byte i = 0; i < totalNumberOfColumns; i++) {
 			positions[0][i] = new Wall(0,i);
 			positions[lastRow][i] = new Wall(lastRow,i);
 		}
-		for (byte i = 0; i < numberOfRows; i++) {
+		for (byte i = 0; i < totalNumberOfRows; i++) {
 			positions[i][0] = new Wall(i,0);
 			positions[i][lastColumn] = new Wall(i,lastColumn);
 		}
@@ -111,8 +111,8 @@ public class BasicMap {
 	}
 
 	protected void bottomRightWalls(){
-		int numberOfRows = this.numberOfRows-1;
-		int numberOfColumns = this.numberOfColumns-1;
+		int numberOfRows = this.totalNumberOfRows -1;
+		int numberOfColumns = this.totalNumberOfColumns -1;
 		// Room 1
 		// Columns
 		for (byte i = 3; i < 8; i++) {
@@ -169,7 +169,7 @@ public class BasicMap {
 	}
 
 	protected void topRightWalls(){
-		int numberOfColumns = this.numberOfColumns-1;
+		int numberOfColumns = this.totalNumberOfColumns -1;
 		// Room 1
 		// Columns
 		for (byte i = 3; i < 8; i++) {
@@ -224,7 +224,7 @@ public class BasicMap {
 	}
 	
 	protected void bottomLeftWalls(){
-		int numberOfRows = this.numberOfRows-1;
+		int numberOfRows = this.totalNumberOfRows -1;
 		// Room 1
 		// Columns
 		for (byte i = 3; i < 9; i++) {
@@ -341,8 +341,8 @@ public class BasicMap {
 	}
 	public void generateCleanMap() {
 		System.out.println("Debug: initializing map");
-		for(byte i = 0; i < numberOfRows; i++)
-			for(byte j = 0; j < numberOfColumns; j++) {
+		for(byte i = 0; i < totalNumberOfRows; i++)
+			for(byte j = 0; j < totalNumberOfColumns; j++) {
 				positions[i][j] = new Room(i,j);
 			}
 	}
@@ -528,12 +528,12 @@ public class BasicMap {
 		monsters.add(m);
 	}
 	
-	public byte getNumberOfRows() {
-		return numberOfRows;
+	public byte getTotalNumberOfRows() {
+		return totalNumberOfRows;
 	}
 
-	public byte getNumberOfColumns() {
-		return numberOfColumns;
+	public byte getTotalNumberOfColumns() {
+		return totalNumberOfColumns;
 	}
 	
 	public byte[] getStairsPosition() {

@@ -104,7 +104,7 @@ public class GUI extends JFrame implements GUIInterface {
 		game.setAtorJogador(this);
 		this.heroQuest = game;//new HeroQuest(this);
 		BasicMap map = this.heroQuest.getMap();
-		this.boardButtons = new JButton[map.getNumberOfRows()][map.getNumberOfColumns()];
+		this.boardButtons = new JButton[map.getTotalNumberOfRows()][map.getTotalNumberOfColumns()];
 		this.creatureButtons = new ArrayList<JButton>();
 		addKeyListener(listener);
 
@@ -178,7 +178,7 @@ public class GUI extends JFrame implements GUIInterface {
 		requestFocusInWindow();
 
 		// Create Column and Row index buttons, to orient the player
-		for (int j = 0; j < map.getNumberOfColumns(); j++) {
+		for (int j = 0; j < map.getTotalNumberOfColumns(); j++) {
 			JButton botao = new JButton();
 			botao.setText(""+j);
 			botao.setBounds(173 + (j * 23), 112 + (-1 * 23), 23, 23);
@@ -186,7 +186,7 @@ public class GUI extends JFrame implements GUIInterface {
 			botao.setVisible(true);
 			contentPane.add(botao);
 		}
-		for (int i = 0; i < map.getNumberOfRows(); i++) {
+		for (int i = 0; i < map.getTotalNumberOfRows(); i++) {
 			JButton botao = new JButton();
 			botao.setText(""+i);
 			botao.setBounds(173 + (-1 * 23), 112 + (i * 23), 23, 23);
@@ -196,8 +196,8 @@ public class GUI extends JFrame implements GUIInterface {
 		}
 		
 		// Create game board buttons
-		for (int i = 0; i < map.getNumberOfRows(); i++) {
-			for (int j = 0; j < map.getNumberOfColumns(); j++) {
+		for (int i = 0; i < map.getTotalNumberOfRows(); i++) {
+			for (int j = 0; j < map.getTotalNumberOfColumns(); j++) {
 				JButton botao = new JButton();
 				botao.setName("" + i + j);
 				botao.setBounds(173 + (j * 23), 112 + (i * 23), 23, 23);
@@ -330,7 +330,7 @@ public class GUI extends JFrame implements GUIInterface {
 		this.useSpellButton.setBorder(invisivel);
 		this.useSpellButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				useSpell();
+				castSpell();
 			}
 		});
 		this.useSpellButton.addKeyListener(listener);
@@ -371,7 +371,7 @@ public class GUI extends JFrame implements GUIInterface {
 		this.heroQuest.selecionarPersonagem();
 	}
 
-	public void abrirPortaTeclado() {
+	public void openDoorWithKeyboard() {
 		this.heroQuest.openDoorWithKeyboard();
 	}
 
@@ -395,15 +395,15 @@ public class GUI extends JFrame implements GUIInterface {
 		this.heroQuest.attack();
 	}
 
-	public void useSpell() {
-		this.heroQuest.usarMagia();
+	public void castSpell() {
+		this.heroQuest.castSpell();
 	}
 
 	public Spell selectSpell(ArrayList<Spell> availableSpells) {
 		String inputDialog = Strings.SELECTSPELL.toString();
 		for (int i = 0; i < availableSpells.size(); i++) {
 			inputDialog += "\n" + i + " - "
-					+ availableSpells.get(i).getName();
+					+ availableSpells.get(i).getSpellId();
 		}
 		String option = JOptionPane.showInputDialog(inputDialog);
 		int index = Integer.parseInt(option);
@@ -411,7 +411,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public Creature selectTarget(ArrayList<Creature> availableTargets) {
-		String inputDialog = Strings.SELECTTARGET.toString();
+		String inputDialog = Strings.SELECT_TARGET.toString();
 		for (int i = 0; i < availableTargets.size(); i++) {
 			inputDialog += "\n" + i + " - "
 					+ availableTargets.get(i).getClass().getSimpleName();
@@ -422,8 +422,8 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void refreshGUI() {
-		for (byte i = 0; i < this.heroQuest.getMap().getNumberOfRows(); i++) {
-			for (byte j = 0; j < this.heroQuest.getMap().getNumberOfColumns(); j++) {
+		for (byte i = 0; i < this.heroQuest.getMap().getTotalNumberOfRows(); i++) {
+			for (byte j = 0; j < this.heroQuest.getMap().getTotalNumberOfColumns(); j++) {
 				Position position = this.heroQuest.getPosition(i, j);
 				this.refreshTile(this.boardButtons[i][j], position);
 			}
@@ -1079,7 +1079,7 @@ public class GUI extends JFrame implements GUIInterface {
 		if (statusEnum != null) {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL + spell.getName()
+					+ Strings.MURMUREDSPELL + spell.getSpellId()
 					+ Strings.ANDTHECREATURE + target.getClass().getSimpleName()
 					+ Strings.MODIFIEDIN + damage
 					+ Strings.BPMODSTATUS + statusEnum
@@ -1087,7 +1087,7 @@ public class GUI extends JFrame implements GUIInterface {
 		} else {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMUREDSPELL + spell.getName()
+					+ Strings.MURMUREDSPELL + spell.getSpellId()
 					+ Strings.ANDTHECREATURE + target.getClass().getSimpleName()
 					+ Strings.MODIFIEDIN + damage + Strings.BPMODSNOTATUS);
 		}
@@ -1108,7 +1108,7 @@ public class GUI extends JFrame implements GUIInterface {
 
 		for (byte i = (byte) (currentRow - 2); i <= currentRow + 2; i++) {
 			for (byte j = (byte) (currentColumn - 2); j <= currentColumn + 2; j++) {
-				if (i >= 0 && i < this.heroQuest.getMap().getNumberOfRows() && j >= 0 && j < this.heroQuest.getMap().getNumberOfColumns()) {
+				if (i >= 0 && i < this.heroQuest.getMap().getTotalNumberOfRows() && j >= 0 && j < this.heroQuest.getMap().getTotalNumberOfColumns()) {
 					Position position = this.heroQuest.getPosition(i, j);
 					this.refreshTile(this.boardButtons[i][j], position);
 				}

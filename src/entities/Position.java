@@ -41,8 +41,8 @@ public class Position implements Jogada {
 		this.creature = null;
 	}
 
-	public void setCreature(Creature criatura) {
-		this.creature = criatura;
+	public void setCreature(Creature creature) {
+		this.creature = creature;
 	}
 
 	public void setTrap(Trap trap) {

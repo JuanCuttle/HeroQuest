@@ -1,6 +1,7 @@
 package entities.players;
 
 import entities.Spell;
+import enums.SpellNameEnum;
 import enums.StatusEnum;
 
 import java.util.*;
@@ -12,7 +13,7 @@ public class Wizard extends PlayableCharacter {
 
 	public Wizard() {
 		super(4, 6, 1, 2);
-		this.spells = new ArrayList<Spell>();
+		this.spells = new ArrayList<>();
 	}
 
 	public ArrayList<Spell> getSpells() {
@@ -20,13 +21,13 @@ public class Wizard extends PlayableCharacter {
 	}
 	
 	public void createSpells() {
-		Spell swift_Wind = new Spell("Swift Wind", StatusEnum.AGILITY_UP, (byte) 0);
-		Spell tempest = new Spell("Tempest", StatusEnum.CURSED, (byte) 0);
-		Spell ball_of_Flame = new Spell("Ball of Flame", null, (byte) -2);
-		Spell courage = new Spell("Courage", StatusEnum.COURAGE, (byte) 0);
-		Spell fire_of_Wrath = new Spell("Fire of Wrath", null, (byte) -1);
-		Spell sleep = new Spell("Sleep", StatusEnum.SLEEPING, (byte) 0);
-		Spell water_of_Healing = new Spell("Water of Healing", null, (byte) 4);
+		Spell swift_Wind = new Spell(SpellNameEnum.SWIFT_WIND.getId(), StatusEnum.AGILITY_UP, (byte) 0);
+		Spell tempest = new Spell(SpellNameEnum.TEMPEST.getId(), StatusEnum.CURSED, (byte) 0);
+		Spell ball_of_Flame = new Spell(SpellNameEnum.BALL_OF_FLAME.getId(), null, (byte) -2);
+		Spell courage = new Spell(SpellNameEnum.COURAGE.getId(), StatusEnum.COURAGE, (byte) 0);
+		Spell fire_of_Wrath = new Spell(SpellNameEnum.FIRE_OF_WRATH.getId(), null, (byte) -1);
+		Spell sleep = new Spell(SpellNameEnum.SLEEP.getId(), StatusEnum.SLEEPING, (byte) 0);
+		Spell water_of_Healing = new Spell(SpellNameEnum.WATER_OF_HEALING.getId(), null, (byte) 4);
 		this.spells.add(swift_Wind);
 		this.spells.add(tempest);
 		this.spells.add(ball_of_Flame);
@@ -36,7 +37,7 @@ public class Wizard extends PlayableCharacter {
 		this.spells.add(water_of_Healing);
 	}
 	
-	public void removeSpellFromBook(Spell magia) {
-		this.spells.remove(magia);
+	public void removeSpellFromBook(Spell spell) {
+		this.spells.remove(spell);
 	}
 }

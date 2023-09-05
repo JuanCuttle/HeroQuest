@@ -128,3 +128,5 @@ Can be troublesome with Creature objects (change not made through ID)
 45) Remove unused Classes
 46) Recreate PolarWarbear quest (reuse basicMap + defaultCreatureQueue in Zargon)
 47) Revise TheFireMage traps and create ChaosSorcerer (with Chaos Spells)
+48) Break down interfaces into smaller ones
+49) Separate class responsibilities (instead of everything being in HeroQuest.java)
