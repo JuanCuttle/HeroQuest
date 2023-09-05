@@ -130,3 +130,5 @@ Can be troublesome with Creature objects (change not made through ID)
 47) Revise TheFireMage traps and create ChaosSorcerer (with Chaos Spells)
 48) Break down interfaces into smaller ones
 49) Separate class responsibilities (instead of everything being in HeroQuest.java)
+50) Make Action processing work using enums and ids instead of Strings
+51) Fix TrapEvasionMovementEnum

@@ -344,7 +344,7 @@ public class GUI extends JFrame implements GUIInterface {
 		this.searchForTrapsButton.setBorder(invisivel);
 		this.searchForTrapsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				searchTrapsAndHiddenDoors();
+				searchForTrapsAndHiddenDoors();
 			}
 		});
 		this.searchForTrapsButton.addKeyListener(listener);
@@ -358,7 +358,7 @@ public class GUI extends JFrame implements GUIInterface {
 		this.searchForTreasureButton.setBorder(invisivel);
 		this.searchForTreasureButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				searchTreasure();
+				searchForTreasure();
 			}
 		});
 		this.searchForTreasureButton.addKeyListener(listener);
@@ -431,7 +431,7 @@ public class GUI extends JFrame implements GUIInterface {
 		this.showVisibleCreaturesInQueue();
 	}
 
-	public void searchTreasure() {
+	public void searchForTreasure() {
 		this.heroQuest.searchForTreasure();
 	}
 
@@ -440,12 +440,12 @@ public class GUI extends JFrame implements GUIInterface {
 		cs.setVisible(true);
 	}
 
-	public void searchTrapsAndHiddenDoors() {
-		this.heroQuest.procurarArmadilhaOuPortaSecreta();
+	public void searchForTrapsAndHiddenDoors() {
+		this.heroQuest.searchForTrapsAndHiddenDoors();
 	}
 
 	public void endTurn() {
-		this.heroQuest.finalizarJogada();
+		this.heroQuest.endTurn();
 	}
 
 	public String obtainPlayerName() {
@@ -543,7 +543,7 @@ public class GUI extends JFrame implements GUIInterface {
 	public void startGame() {
 		boolean isConnected = false;
 		boolean isInterrupted = false;
-		boolean inSession = this.heroQuest.getInSession();
+		boolean inSession = this.heroQuest.getIsGameInSession();
 		if (inSession) {
 			isInterrupted = true;
 		} else {

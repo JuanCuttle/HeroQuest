@@ -43,9 +43,9 @@ public class KeyboardListener implements KeyListener {
 				break;
 			case KeyEvent.VK_S: this.user.castSpell();
 				break;
-			case KeyEvent.VK_R: this.user.searchTrapsAndHiddenDoors();
+			case KeyEvent.VK_R: this.user.searchForTrapsAndHiddenDoors();
 				break;
-			case KeyEvent.VK_T: this.user.searchTreasure();
+			case KeyEvent.VK_T: this.user.searchForTreasure();
 				break;
 			case KeyEvent.VK_O: this.user.openDoorWithKeyboard();
 				break;

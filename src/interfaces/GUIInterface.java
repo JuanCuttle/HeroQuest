@@ -31,11 +31,11 @@ public interface GUIInterface {
 	
 	void refreshGUI();
 	
-	void searchTreasure();
+	void searchForTreasure();
 	
 	void showCharacterSelectionScreen();
 	
-	void searchTrapsAndHiddenDoors();
+	void searchForTrapsAndHiddenDoors();
 	
 	void endTurn();
 	

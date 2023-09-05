@@ -15,13 +15,14 @@ import entities.Position;
 import entities.SirRagnar;
 import entities.utils.Strings;
 import entities.tiles.Treasure;
+import enums.FurnitureDirectionEnum;
 
 
 public class TheRescueOfSirRagnar extends BasicMap {
 	
 	private boolean foundRagnar = false;
 	
-	public TheRescueOfSirRagnar(HeroQuest game){
+	public TheRescueOfSirRagnar(HeroQuest game) {
 		super();
 		description = Strings.THERESCUEOFSIRRAGNAR.toString();
 		generateDoors(game);
@@ -39,16 +40,15 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		
 		numberOfCreatures = 14;
 		
-		table1Position = new byte[]{0, 4, 26}; // 0 for horizontal, 1 for vertical
+		table1Position = new byte[]{FurnitureDirectionEnum.HORIZONTAL.getId(), 4, 26};
 		
-		table2Position = new byte[]{1, 22, 9};
+		table2Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 22, 9};
 		
-		bookcase1Position = new byte[]{1, 10, 25};
+		bookcase1Position = new byte[]{FurnitureDirectionEnum.VERTICAL.getId(), 10, 25};
 		
 		generateFurniture();
 	}
 	
-	// Converts positions where there is furniture into class Furniture, so that they become solid
 	private void generateFurniture() {
 		generate3x1(bookcase1Position);
 		generate2x3(table1Position);
@@ -56,7 +56,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	}
 	
 	private void generate3x1(byte[] furniture) {
-		int i = furniture[1];
+		int i;
 		int j = furniture[2];
 		for (int x = 0; x < 3; x++){
 			i = furniture[1]+x;
@@ -64,21 +64,21 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		}
 	}
 
-	private void generate2x3(byte[] furniture){
-		if (furniture != null){
-			int i = furniture[1];
-			int j = furniture[2];
-			if (furniture[0] == 0){ // if horizontal
-				for (int x = 0; x < 2; x++){
-					for (int y = 0; y < 3; y++){
+	private void generate2x3(byte[] furniture) {
+		if (furniture != null) {
+			int i;
+			int j;
+			if (furniture[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+				for (int x = 0; x < 2; x++) {
+					for (int y = 0; y < 3; y++) {
 						i = furniture[1]+x;
 						j = furniture[2]+y;
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
 					}
 				}
-			} else { // if vertical
-				for (int x = 0; x < 3; x++){
-					for (int y = 0; y < 2; y++){
+			} else {
+				for (int x = 0; x < 3; x++) {
+					for (int y = 0; y < 2; y++) {
 						i = furniture[1]+x;
 						j = furniture[2]+y;
 						this.positions[i][j] = new Furniture((byte)i, (byte)j);
@@ -88,22 +88,21 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		}
 	}
 
-	public void generateRocks(){
-		// Rocks
-		for (byte i = 18; i < 20; i++){
+	public void generateRocks() {
+		for (byte i = 18; i < 20; i++) {
 			generateBlockade(9, i);
 		}
 		
 		generateBlockade(14, 3);
 		generateBlockade(14, 34);
 		
-		for (byte i = 26; i < 28; i++){
+		for (byte i = 26; i < 28; i++) {
 			generateBlockade(i, 14);
 			generateBlockade(i, 20);
 		}
 	}
 	
-	public void generateDoors(HeroQuest game){
+	public void generateDoors(HeroQuest game) {
 		generateNormalDoor(game, 6, 24);
 		generateNormalDoor(game, 8, 27);
 		generateNormalDoor(game, 9, 22);
@@ -117,7 +116,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		generateHiddenDoor(game, 19, 12);
 	}
 	
-	public void generateTreasures(){
+	public void generateTreasures() {
 		Treasure t = new Treasure(-1);
 		t.setAsTrap(true);
 		t.setItem(Items.PotionOfHealing);
@@ -125,7 +124,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		positions[12][27].setTreasure(new Treasure(50)); // And potion of healing (4 bp)
 	}
 	
-	public ArrayList<Monster> createMonsters(HeroQuest game){
+	public ArrayList<Monster> createMonsters(HeroQuest game) {
 			ArrayList<Monster> monsters =  new ArrayList<>();
 		
 			int i = 0;
@@ -151,22 +150,22 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
 		
-		Position p = game.getCreaturePorID(14).getCurrentPosition(); // Sir Ragnar
+		Position sirRagnarCurrentPosition = game.getCreaturePorID(14).getCurrentPosition(); // Sir Ragnar
 		
-		int row = p.getRow();
-		int column = p.getColumn();
+		int currentSirRagnarRow = sirRagnarCurrentPosition.getRow();
+		int currentSirRagnarColumn = sirRagnarCurrentPosition.getColumn();
 		
 		// If Sir Ragnar is on stairs
-		if ((row == stairsPosition[0] && column == stairsPosition[1])
-				| (row == stairsPosition[0]+1 && column == stairsPosition[1])
-				| (row == stairsPosition[0] && column == stairsPosition[1]+1)
-				| (row == stairsPosition[0]+1 && column == stairsPosition[1]+1)){
+		if ((currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1])
+				| (currentSirRagnarRow == stairsPosition[0]+1 && currentSirRagnarColumn == stairsPosition[1])
+				| (currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1]+1)
+				| (currentSirRagnarRow == stairsPosition[0]+1 && currentSirRagnarColumn == stairsPosition[1]+1)){
 			return true;
 		}
 		return false;
 	}
 	
-	public void specialOcurrence(HeroQuest game){
+	public void specialOcurrence(HeroQuest game) {
 		if (!foundRagnar) {
 			Creature sirRagnar = game.getCreaturePorID(14);
 			if (sirRagnar.isVisible()) {

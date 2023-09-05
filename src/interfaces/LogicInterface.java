@@ -32,19 +32,19 @@ public interface LogicInterface {
 	
 	void selectCharacter() throws ClassNotFoundException;
 	
-	void selectChosenCharacter(int resultado) throws ClassNotFoundException;
+	void processCharacterSelection(int selectedCharacterId) throws ClassNotFoundException;
 	
-	void procurarArmadilhaOuPortaSecreta();
+	void searchForTrapsAndHiddenDoors();
 	
-	void finalizarJogada();
+	void endTurn();
 	
 	boolean isConnected();
 	
 	void setConnected(boolean connected);
 	
-	boolean getInSession();
+	boolean getIsGameInSession();
 	
-	void finalizarJogo();
+	void endGame();
 	
 	void iniciarNovaPartida(int posicao);
 	

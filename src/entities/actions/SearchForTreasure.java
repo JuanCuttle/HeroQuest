@@ -1,8 +1,8 @@
 package entities.actions;
 
-public class SearchTraps extends Action {
+public class SearchForTreasure extends Action {
 
-	private static final long serialVersionUID = -8442030273252018701L;
+	private static final long serialVersionUID = -8334075615667812844L;
 	
 	protected byte sourceRow;
 	protected byte sourceColumn;

@@ -39,7 +39,7 @@ public class HeroQuest implements LogicInterface {
 	protected static boolean elfAvailable;
 	protected static boolean dwarfAvailable;
 	protected boolean connected;
-	protected boolean inSession;
+	protected boolean gameInSession;
 	protected Adventurer localAdventurer;
 	protected Zargon localZargon;
 	public String localPlayerName = "";
@@ -57,13 +57,9 @@ public class HeroQuest implements LogicInterface {
 		elfAvailable = true;
 		dwarfAvailable = true;
 		this.connected = false;
-		this.inSession = false;
+		this.gameInSession = false;
 		this.localAdventurer = null;
 		this.localZargon = null;
-		
-		//this.map = new Map(this);
-		//this.atorJogador.selectQuest(this);
-		//this.map = new TheTrial(this); // Uncomment to make game work, comment to make stub work
 	}
 
 	public boolean isConnected() {
@@ -74,12 +70,12 @@ public class HeroQuest implements LogicInterface {
 		this.connected = connected;
 	}
 
-	public boolean getInSession() {
-		return this.inSession;
+	public boolean getIsGameInSession() {
+		return this.gameInSession;
 	}
 
-	public void setInSession(boolean valor) {
-		this.inSession = valor;
+	public void setGameInSession(boolean gameInSession) {
+		this.gameInSession = gameInSession;
 	}
 	
 	public void openDoor(int doorId) {
@@ -671,11 +667,11 @@ public class HeroQuest implements LogicInterface {
 				//this.atorJogador.exibirCriaturas();
 				this.tratarFinalizarJogada(action);
 				break;
-			case SEARCH_TRAPS:
-				this.tratarProcurarArmadilha((SearchTraps) action);
+			case SEARCH_FOR_TRAPS_AND_HIDDEN_DOORS:
+				this.tratarProcurarArmadilha((SearchForTrapsAndHiddenDoors) action);
 				break;
-			case SEARCH_TREASURE:
-				this.tratarProcurarTesouro((SearchTreasure) action);
+			case SEARCH_FOR_TREASURE:
+				this.tratarProcurarTesouro((SearchForTreasure) action);
 				break;
 			case SELECT_CHARACTER:
 				this.tratarSelecionarPersonagem((SelectCharacter) action);
@@ -782,7 +778,7 @@ public class HeroQuest implements LogicInterface {
 		this.GUI.showVisibleCreaturesInQueue();
 	}
 
-	private void tratarProcurarTesouro(SearchTreasure lance) {
+	private void tratarProcurarTesouro(SearchForTreasure lance) {
 		boolean foundGold = false;
 		boolean foundItem = false;
 		String itemName = "";
@@ -839,7 +835,7 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void tratarProcurarArmadilha(SearchTraps lance) {
+	private void tratarProcurarArmadilha(SearchForTrapsAndHiddenDoors lance) {
 		int linha = lance.getSourceRow();
 		int coluna = lance.getSourceColumn();
 		Position posicaoAtual;
@@ -971,8 +967,7 @@ public class HeroQuest implements LogicInterface {
 		byte linha;
 		byte coluna;
 		
-		
-		
+
 		Position posicaoAtual = map.getPosition(lance.getSourceRow(), lance.getSourceColumn());
 		
 		Position novaPosicao = map.getPosition(lance.getDestinationRow(), lance.getDestinationColumn());
@@ -980,30 +975,19 @@ public class HeroQuest implements LogicInterface {
 		
 		criatura = this.getCurrentCreature();
 		
-		
-		linha = posicaoAtual.getRow();
-		coluna = posicaoAtual.getColumn();
-		
 		posicaoAtual.removeCreature();
 		criatura.decreaseMovement();
 		
-		this.map.atualizarPosicao(posicaoAtual, linha, coluna);
+		this.map.updatePosition(posicaoAtual);
 		
 		novaPosicao.setCreature(criatura);
 		criatura.setCurrentPosition(novaPosicao);
+
+		this.map.updatePosition(novaPosicao);
 		
-		linha = novaPosicao.getRow();
-		coluna = novaPosicao.getColumn();
-		this.map.atualizarPosicao(novaPosicao, linha, coluna);
-		
-		this.setAreaVisible(linha, coluna);
-		
-		//this.setAreavisibleTeste(linha, coluna, novaPosicao.getClass().getSimpleName());
-		
+		this.setAreaVisible(novaPosicao.getRow(), novaPosicao.getColumn());
+
 		byte dano = lance.getDamage();
-		////////Trap trap = novaPosicao.getTrap();   gerada nova se a posicao nao e enviada
-		// solucao = enviar dano da trap do pc da origem do movimento
-		////if (trap != null) {
 		if (novaPosicao.getTrap() != null) {
 			//boolean visivel = trap.getVisible();
 			//System.out.println(""+visivel);
@@ -1068,7 +1052,7 @@ public class HeroQuest implements LogicInterface {
 						
 						linha = novaPosicao.getRow();
 						coluna = novaPosicao.getColumn();
-						this.map.atualizarPosicao(novaPosicao, linha, coluna);
+						this.map.updatePosition(novaPosicao);
 						
 						this.setAreaVisible(linha, coluna);
 					}
@@ -1113,7 +1097,7 @@ public class HeroQuest implements LogicInterface {
 					
 					linha = novaPosicao.getRow();
 					coluna = novaPosicao.getColumn();
-					this.map.atualizarPosicao(novaPosicao, linha, coluna);
+					this.map.updatePosition(novaPosicao);
 					
 					this.setAreaVisible(linha, coluna);
 					
@@ -1277,7 +1261,7 @@ public class HeroQuest implements LogicInterface {
 			Creature caster = this.getCurrentCreature();
 			if (caster instanceof PlayableCharacter) {
 				Position source = caster.getCurrentPosition();
-				SearchTreasure action = new SearchTreasure();
+				SearchForTreasure action = new SearchForTreasure();
 				action.setSourceRow(source.getRow());
 				action.setSourceColumn(source.getColumn());
 				this.processAction(action);
@@ -1294,14 +1278,14 @@ public class HeroQuest implements LogicInterface {
 		boolean doesSaveFileWithPlayerNameExist = this.GUI.checkSaveFileExists(localPlayerName);
 		if (doesSaveFileWithPlayerNameExist) {
 			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRM_LOAD_FILE);
-			if (choice == 0) {
+			if (choice == JOptionPane.YES_OPTION) {
 				ArrayList<String> fileInformation = null;
 				try {
 					fileInformation = this.GUI.readSaveFile(localPlayerName);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				this.selectChosenCharacter(Integer.parseInt(fileInformation.get(0)));
+				this.processCharacterSelection(Integer.parseInt(fileInformation.get(0)));
 				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(fileInformation.get(1)));
 			} else {
 				this.GUI.showCharacterSelectionScreen();
@@ -1311,7 +1295,7 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 	
-	public void selectChosenCharacter(int selectedCharacterId) throws ClassNotFoundException{
+	public void processCharacterSelection(int selectedCharacterId) throws ClassNotFoundException {
 		boolean isCharacterAvailable;
 		Zargon playerZargon = new Zargon(this);
 		Adventurer playerAdventurer = new Adventurer();
@@ -1416,51 +1400,27 @@ public class HeroQuest implements LogicInterface {
 
 	private void killCreature(int creatureID) {
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			Creature criatura = this.creatureQueue.get(i);
-			if (criatura.getID() == creatureID) {
-				criatura.setStatus(StatusEnum.DEAD);
-				Position pos = criatura.getCurrentPosition();
+			Creature creature = this.creatureQueue.get(i);
+			if (creature.getID() == creatureID) {
+				creature.setStatus(StatusEnum.DEAD);
+				Position pos = creature.getCurrentPosition();
 				pos.removeCreature();
-				this.map.atualizarPosicao(pos, pos.getRow(), pos.getColumn());
+				this.map.updatePosition(pos);
 				pos.setVisible(true);
-				
-
-				
-				//this.creatureQueue.remove(criatura);
-				//this.localZargon.monsters.remove(criatura);
-				//this.creatureQueue.trimToSize();
-				//this.localZargon.monsters.trimToSize();
-				//this.removerCriaturaPorID(creatureID);
-				
-				//this.atorJogador.atualizarInterfaceGrafica();
 			}
 		}
 	}
 
-	/*
-	 * private void removerCriaturaPorID(int creatureID) { int i = 0; int j = 0;
-	 * for (i = 0; i < this.creatureQueue.size(); i++) { if
-	 * (this.creatureQueue.get(i).getID() == creatureID) {
-	 * this.creatureQueue.remove(i); break; } } this.creatureQueue.trimToSize();
-	 * /*for (j = i; j < this.creatureQueue.size()-1; j++) {
-	 * this.creatureQueue.set(j, this.creatureQueue.get(j+1)); }
-	 * this.creatureQueue.remove(j+1);
-	 * 
-	 * this.atorJogador.exibirCriaturas(); }
-	 */
-
-	public void procurarArmadilhaOuPortaSecreta() {
-		Creature caster = this.getCurrentCreature();
-		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
-		if (daVez ) {
-			if (caster instanceof Barbarian || caster instanceof Wizard
-					|| caster instanceof Elf || caster instanceof Dwarf){
-				Position posicao = caster.getCurrentPosition();
-				SearchTraps lance = new SearchTraps();
-				lance.setSourceColumn(posicao.getColumn());
-				lance.setSourceRow(posicao.getRow());
-				processAction(lance);
-				sendAction(lance);
+	public void searchForTrapsAndHiddenDoors() {
+		if (this.verifyIfItIsCurrentPlayersTurn()) {
+			Creature caster = this.getCurrentCreature();
+			if (caster instanceof PlayableCharacter){
+				Position casterPosition = caster.getCurrentPosition();
+				SearchForTrapsAndHiddenDoors action = new SearchForTrapsAndHiddenDoors();
+				action.setSourceColumn(casterPosition.getColumn());
+				action.setSourceRow(casterPosition.getRow());
+				processAction(action);
+				sendAction(action);
 			} else {
 				this.GUI.reportError(Strings.MONSTER_CANT_UNDERSTAND_COMMAND.toString());
 			}
@@ -1469,26 +1429,25 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	public void finalizarJogada() {
-		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
-		if (daVez) {
-			EndTurn lance = new EndTurn();
-			this.processAction(lance);
-			this.sendAction(lance);
+	public void endTurn() {
+		if (this.verifyIfItIsCurrentPlayersTurn()) {
+			EndTurn action = new EndTurn();
+			this.processAction(action);
+			this.sendAction(action);
 		} else {
 			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
 	}
 
-	public void finalizarJogo() {
+	public void endGame() {
 		int option = JOptionPane.showConfirmDialog(null, Strings.END_GAME.toString());
-		if (option == 0){
+		if (option == JOptionPane.YES_OPTION){
 			System.exit(0);
 		}
 	}
 
 	public void iniciarNovaPartida(int posicao) {
-		this.setInSession(true);
+		this.setGameInSession(true);
 		
 		//this.map = new Map(this);
 		
@@ -1537,13 +1496,13 @@ public class HeroQuest implements LogicInterface {
 					}
 				}
 				this.GUI.announceHeroesWon();
-				this.finalizarJogo();
+				this.endGame();
 			}
 		} else {
 			// Announce villain victory
 			this.GUI.announceZargonWon();
 			// End game
-			this.finalizarJogo();
+			this.endGame();
 		}
 	}
 

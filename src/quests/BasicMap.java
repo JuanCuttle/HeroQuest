@@ -496,8 +496,8 @@ public class BasicMap {
 			positions[4][i].setTreasure(new Treasure(50));
 		}
 	}
-	public void atualizarPosicao(Position novaPosicao, byte linha, byte coluna) {
-		this.positions[linha][coluna] = novaPosicao;
+	public void updatePosition(Position newPosition) {
+		this.positions[newPosition.getRow()][newPosition.getColumn()] = newPosition;
 	}
 	
 	public ArrayList<Monster> createMonsters(HeroQuest game){

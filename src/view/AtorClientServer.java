@@ -79,7 +79,7 @@ public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 		JOptionPane.showMessageDialog(null,
 				Strings.ERRORABORT.toString());
 				
-		this.heroQuest.finalizarJogo();
+		this.heroQuest.endGame();
 	}
 
 	public void iniciarNovaPartida(Integer posicao) {
