@@ -199,7 +199,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  ZARGONNOGOLD {
+	  ZARGON_DOES_NOT_CARRY_GOLD {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Zargon n�o carrega gold.";
@@ -429,7 +429,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  YOUHAVE {
+	  YOU_HAVE {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Voc� possui ";
@@ -438,7 +438,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  INVYCOINS {
+	  COINS_IN_INVENTORY {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return " moedas de ouro no seu invent�rio.";
@@ -1083,7 +1083,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  ITEMSOWNED {
+	  ITEMS_OWNED {
 		  public String toString(){
 			  if(GUI.language == LanguageEnum.Portugues){
 				  return "\nVoc� tamb�m possui os seguintes itens: \n";

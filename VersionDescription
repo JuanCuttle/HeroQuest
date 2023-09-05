@@ -132,3 +132,5 @@ Can be troublesome with Creature objects (change not made through ID)
 49) Separate class responsibilities (instead of everything being in HeroQuest.java)
 50) Make Action processing work using enums and ids instead of Strings
 51) Fix TrapEvasionMovementEnum
+52) Swap for loop formats to foreach
+53) Use unicode in Strings

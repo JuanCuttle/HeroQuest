@@ -82,10 +82,8 @@ public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 		this.heroQuest.endGame();
 	}
 
-	public void iniciarNovaPartida(Integer posicao) {
-		this.heroQuest.iniciarNovaPartida(posicao);
-
-		//this.heroQuest.selecionarPersonagem();
+	public void iniciarNovaPartida(Integer position) {
+		this.heroQuest.startNewGame();
 	}
 
 	public void receberJogada(Jogada jogada) {

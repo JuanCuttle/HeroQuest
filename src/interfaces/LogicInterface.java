@@ -46,11 +46,11 @@ public interface LogicInterface {
 	
 	void endGame();
 	
-	void iniciarNovaPartida(int posicao);
+	void startNewGame();
 	
-	void mostrarInventario();
+	void showInventory();
 	
-	void mostrarInformacoes(int creatureID);
+	void showCreatureInformation(int creatureID);
 	
 	Position getPosition(byte i, byte j);
 	

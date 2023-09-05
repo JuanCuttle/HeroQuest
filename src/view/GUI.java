@@ -101,7 +101,7 @@ public class GUI extends JFrame implements GUIInterface {
 		setTitle(Strings.HEROQUEST.toString());
 		
 		// GUI attributes
-		game.setAtorJogador(this);
+		game.setGUI(this);
 		this.heroQuest = game;//new HeroQuest(this);
 		BasicMap map = this.heroQuest.getMap();
 		this.boardButtons = new JButton[map.getTotalNumberOfRows()][map.getTotalNumberOfColumns()];
@@ -575,20 +575,20 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void showInventory() {
-		this.heroQuest.mostrarInventario();
+		this.heroQuest.showInventory();
 	}
 
 	public void showInventory(int gold, ArrayList<Items> items) {
-		String itemString = Strings.ITEMSOWNED.toString();
+		String itemList = Strings.ITEMS_OWNED.toString();
 		for (Items item : items){
-			itemString += item + "\n";
+			itemList += item + "\n";
 		}
-		this.textArea.setText(Strings.YOUHAVE.toString() + gold
-				+ Strings.INVYCOINS +itemString);
+		this.textArea.setText(Strings.YOU_HAVE.toString() + gold
+				+ Strings.COINS_IN_INVENTORY + itemList);
 	}
 
-	public void showCreatureInformation(int characterID) {
-		this.heroQuest.mostrarInformacoes(characterID);
+	public void showCreatureInformation(int creatureId) {
+		this.heroQuest.showCreatureInformation(creatureId);
 	}
 
 	public void showCreatureInformation(byte body, byte mind, byte movement,

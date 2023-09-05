@@ -1207,7 +1207,7 @@ public class HeroQuest implements LogicInterface {
 		
 		this.map.specialOcurrence(this); // For TheRescueOfSirRagnar and TheStoneHunter
 		
-		this.encerramentoDaPartida();
+		this.endTheGame();
 		
 		/*Adventurer a = this.localAdventurer; 
 		if (a != null){
@@ -1446,29 +1446,20 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	public void iniciarNovaPartida(int posicao) {
+	public void startNewGame() {
 		this.setGameInSession(true);
-		
-		//this.map = new Map(this);
-		
-		//String idJogador = this.atorJogador.informarNomeJogador();
-		String idJogador = this.localPlayerName;
-		Player player = this.criarJogador(idJogador);
+
+		Player player = this.createPlayer(this.localPlayerName);
 		this.setLocalPlayer(player);
-		SendPlayer lance = new SendPlayer();
-		lance.setPlayer(player);
-		this.processAction(lance);
-		this.sendAction(lance);
+		SendPlayer action = new SendPlayer();
+		action.setPlayer(player);
+		this.processAction(action);
+		this.sendAction(action);
 		this.GUI.refreshGUI();
 	}
 
-	public void iniciarPartida(int numJog) {
-		this.getAtorClienteServidor().iniciarPartida(numJog);
-	}
-
-	private void encerramentoDaPartida() {
-		boolean aventureirosVivos = this.verificarSeJogadoresVivos();
-		if (aventureirosVivos) {
+	private void endTheGame() {
+		if (this.areHeroesAlive()) {
 			boolean condicoesCumpridas = this.map.verifyWinningConditions(this);
 			if (condicoesCumpridas) {
 				// Save player file
@@ -1506,60 +1497,47 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private boolean verificarSeJogadoresVivos() {
-		int qtdCriaturas = this.creatureQueue.size();
-		for (int i = 0; i < qtdCriaturas; i++) {
-			Creature criatura = this.creatureQueue.get(i);
-			if (criatura instanceof Barbarian || criatura instanceof Wizard
-					|| criatura instanceof Elf || criatura instanceof Dwarf) {
-				if (criatura.getStatus() != StatusEnum.DEAD)
+	private boolean areHeroesAlive() {
+		int creatureQueueSize = this.creatureQueue.size();
+		for (int i = 0; i < creatureQueueSize; i++) {
+			Creature creature = this.creatureQueue.get(i);
+			if (creature instanceof PlayableCharacter) {
+				if (StatusEnum.DEAD.equals(creature.getStatus()))
 					return true;
 			}
 		}
 		return false;
-		/*
-		 * int qtdPlayers = this.players.size(); int qtdadeMortos = 0; for(int
-		 * i=0; i<qtdPlayers; i++) { if (players.get(i) instanceof Adventurer) {
-		 * PlayableCharacter player = ((Adventurer)
-		 * players.get(i)).getPlayableCharacter(); if (player instanceof
-		 * Barbarian || player instanceof Wizard || player instanceof Elf ||
-		 * player instanceof Dwarf) { if (player.status == Status.DEAD) {
-		 * qtdadeMortos++; System.out.println(""+qtdadeMortos); } } } } if
-		 * (qtdadeMortos == qtdPlayers-1) { return true; } return false;
-		 */
 	}
 
-	private Player criarJogador(String idJogador) {
-		return new Player(idJogador);
+	private Player createPlayer(String playerName) {
+		return new Player(playerName);
 	}
 
-	public void mostrarInventario() {
-		//if (localAdventurer.getPlayableCharacter() != null) {
+	public void showInventory() {
 		if (this.localAdventurer != null) {
-			PlayableCharacter character = localAdventurer
-					.getPlayableCharacter();
-			int gold = character.getGold();
-			ArrayList<Items> items = character.getItems(this.map);
-			this.GUI.showInventory(gold, items);
+			PlayableCharacter character = localAdventurer.getPlayableCharacter();
+			int localPlayerGold = character.getGold();
+			ArrayList<Items> localPlayerItems = character.getItems(this.map);
+			this.GUI.showInventory(localPlayerGold, localPlayerItems);
 		} else {
-			this.GUI.reportError(Strings.ZARGONNOGOLD.toString());
+			this.GUI.reportError(Strings.ZARGON_DOES_NOT_CARRY_GOLD.toString());
 		}
 	}
 
-	public void mostrarInformacoes(int creatureID) {
-		Creature criatura = this.getCreatureFromQueue(creatureID);
-		if (criatura.isVisible() == true){
-			byte body = criatura.getBody();
-			byte mind = criatura.getMind();
-			byte movement = criatura.getMovement();
-			StatusEnum statusEnum = criatura.getStatus();
-			Position posicao = criatura.getCurrentPosition();
-			byte linha = posicao.getRow();
-			byte coluna = posicao.getColumn();
-			byte roundsToSleep = criatura.getRoundsToSleep();
+	public void showCreatureInformation(int creatureID) {
+		Creature creature = this.getCreatureFromQueue(creatureID);
+		if (creature.isVisible()) {
+			byte body = creature.getBody();
+			byte mind = creature.getMind();
+			byte movement = creature.getMovement();
+			StatusEnum status = creature.getStatus();
+			Position creatureCurrentPosition = creature.getCurrentPosition();
+			byte currentCreatureRow = creatureCurrentPosition.getRow();
+			byte currentCreatureColumn = creatureCurrentPosition.getColumn();
+			byte roundsToSleep = creature.getRoundsToSleep();
 		
-			this.GUI.showCreatureInformation(body, mind, movement, statusEnum,
-					linha, coluna, roundsToSleep);
+			this.GUI.showCreatureInformation(body, mind, movement, status,
+					currentCreatureRow, currentCreatureColumn, roundsToSleep);
 		} else {
 			this.GUI.showMessagePopup(Strings.UNKNOWN.toString());
 		}
@@ -1627,11 +1605,11 @@ public class HeroQuest implements LogicInterface {
 		this.map = map;
 	}
 
-	public void setAtorJogador(GUI GUI) {
+	public void setGUI(GUI GUI) {
 		this.GUI = GUI;
 	}
 
-	public GUI getAtorJogador() {
+	public GUI getGUI() {
 		return GUI;
 	}
 }
