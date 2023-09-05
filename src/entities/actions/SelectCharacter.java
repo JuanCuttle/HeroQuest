@@ -3,23 +3,20 @@ package entities.actions;
 import entities.Adventurer;
 import entities.Zargon;
 
-public class ChooseCharacter extends Action {
+public class SelectCharacter extends Action {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9130280307360862113L;
 	
-	protected byte value;
+	protected byte selectedCharacterId;
 	protected Zargon zargon;
 	protected Adventurer adventurer;
 
-	public byte getValue() {
-		return value;
+	public byte getSelectedCharacterId() {
+		return selectedCharacterId;
 	}
 
-	public void setValue(byte value) {
-		this.value = value;
+	public void setSelectedCharacterId(byte selectedCharacterId) {
+		this.selectedCharacterId = selectedCharacterId;
 	}
 
 	public Zargon getZargon() {
@@ -37,7 +34,5 @@ public class ChooseCharacter extends Action {
 	public void setAdventurer(Adventurer adventurer) {
 		this.adventurer = adventurer;
 	}
-	
-	
 
 }

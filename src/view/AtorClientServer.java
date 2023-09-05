@@ -90,7 +90,7 @@ public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 
 	public void receberJogada(Jogada jogada) {
 		Action action = (Action) jogada;
-		this.heroQuest.tratarLance(action);
+		this.heroQuest.processAction(action);
 	}
 
 	@Override

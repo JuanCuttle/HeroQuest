@@ -9,7 +9,7 @@ public enum ActionTypeEnum {
 	SEARCH_TRAPS(5, "SearchTraps"),
 	OPEN_DOOR(6, "OpenDoor"),
 	END_TURN(7, "EndTurn"),
-	CHOOSE_CHARACTER(8, "ChooseCharacter"),
+	SELECT_CHARACTER(8, "SelectCharacter"),
 	SEND_PLAYER(9, "SendPlayer");
 
 	private int id;
@@ -41,6 +41,6 @@ public enum ActionTypeEnum {
 			if (actionTypeEnum.name.equalsIgnoreCase(actionName))
 				return actionTypeEnum;
 		}
-		return CHOOSE_CHARACTER;
+		return SELECT_CHARACTER;
 	}
 }

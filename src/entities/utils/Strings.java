@@ -118,7 +118,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  CHARSELECTERROR {
+	  CHARACTER_SELECTION_ERROR {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Erro na sele��o de personagem. Tente novamente.";
@@ -172,7 +172,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  MONSTERCANTUNDERSTAND {
+	  MONSTER_CANT_UNDERSTAND_COMMAND {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "O monstro n�o � capaz de entender esse comando.";
@@ -181,7 +181,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  CHARUNAVAILABLE {
+	  CHARACTER_UNAVAILABLE {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Personagem n�o dispon�vel";
@@ -990,7 +990,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  CONFIRMLOADGAME {
+	  CONFIRM_LOAD_FILE {
 	      public String toString() {
 	    	  if(GUI.language == LanguageEnum.Portugues){
 	    		  return "Um arquivo com o seu nome j� existe, deseja carreg�-lo?";

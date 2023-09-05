@@ -24,15 +24,15 @@ public interface LogicInterface {
 	
 	ArrayList<Creature> getCreatureQueue();
 	
-	void enviarLance(Action action); // Comunica diretamente com AtorClienteServidor (requere)
+	void sendAction(Action action);
 	
-	void tratarLance(Action action); //requerida por AtorClientServer
+	void processAction(Action action);
 	
-	void procurarTesouro();
+	void searchForTreasure();
 	
-	void selecionarPersonagem() throws ClassNotFoundException;
+	void selectCharacter() throws ClassNotFoundException;
 	
-	void selecionarPersonagemEscolhida(int resultado) throws ClassNotFoundException;
+	void selectChosenCharacter(int resultado) throws ClassNotFoundException;
 	
 	void procurarArmadilhaOuPortaSecreta();
 	

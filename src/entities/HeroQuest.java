@@ -96,8 +96,8 @@ public class HeroQuest implements LogicInterface {
 					if (isDoorReachable) {
 						OpenDoor lance = new OpenDoor();
 						lance.setDoorId(doorId);
-						this.tratarLance(lance);
-						this.enviarLance(lance);
+						this.processAction(lance);
+						this.sendAction(lance);
 					} else {
 						this.GUI.reportError(Strings.DOOR_OUT_OF_RANGE.toString());
 					}
@@ -160,8 +160,8 @@ public class HeroQuest implements LogicInterface {
 					
 					OpenDoor lance = new OpenDoor();
 					lance.setDoorId(selectedDoorId);
-					this.tratarLance(lance);
-					this.enviarLance(lance);
+					this.processAction(lance);
+					this.sendAction(lance);
 				} else {
 					this.GUI.reportError(Strings.DOOR_OUT_OF_RANGE.toString());
 				}
@@ -342,8 +342,8 @@ public class HeroQuest implements LogicInterface {
 							}
 						}
 					
-						this.tratarLance(movement);
-						this.enviarLance(movement);
+						this.processAction(movement);
+						this.sendAction(movement);
 
 					} catch (PositionNotEmptyException e) {
 						this.GUI.reportError(Strings.PHYSICS_LAWS.toString());
@@ -413,8 +413,8 @@ public class HeroQuest implements LogicInterface {
 					Attack action = new Attack();
 					action.setValue(damage);
 					action.setTargetID(selectedTarget.getID());
-					this.tratarLance(action);
-					this.enviarLance(action);
+					this.processAction(action);
+					this.sendAction(action);
 				} else {
 					this.GUI.reportError(Strings.TARGET_OUT_OF_RANGE.toString());
 				}
@@ -536,8 +536,8 @@ public class HeroQuest implements LogicInterface {
 						}
 						lance.setSpell(selectedSpell);
 						lance.setTargetID(selectedTarget.getID());
-						this.tratarLance(lance);
-						this.enviarLance(lance);
+						this.processAction(lance);
+						this.sendAction(lance);
 					}
 				} else {
 					this.GUI.reportError(Strings.NOMIND.toString());
@@ -560,8 +560,8 @@ public class HeroQuest implements LogicInterface {
 						CastSpell lance = new CastSpell();
 						lance.setSpell(magia);
 						lance.setTargetID(alvo.getID());
-						this.tratarLance(lance);
-						this.enviarLance(lance);
+						this.processAction(lance);
+						this.sendAction(lance);
 					}
 				} else {
 					this.GUI.reportError(Strings.NOMIND.toString());
@@ -642,11 +642,11 @@ public class HeroQuest implements LogicInterface {
 		return target instanceof Zombie || target instanceof Mummy || target instanceof Skeleton;
 	}
 
-	public void enviarLance(Action action) {
+	public void sendAction(Action action) {
 		this.getAtorClienteServidor().enviarJogada(action);
 	}
 
-	public void tratarLance(Action action) {
+	public void processAction(Action action) {
 		String actionType = action.getClass().getSimpleName();
 		switch (ActionTypeEnum.getByName(actionType)) {
 			case MOVEMENT:
@@ -677,8 +677,8 @@ public class HeroQuest implements LogicInterface {
 			case SEARCH_TREASURE:
 				this.tratarProcurarTesouro((SearchTreasure) action);
 				break;
-			case CHOOSE_CHARACTER:
-				this.tratarSelecionarPersonagem((ChooseCharacter) action);
+			case SELECT_CHARACTER:
+				this.tratarSelecionarPersonagem((SelectCharacter) action);
 				this.GUI.refreshGUI();
 				break;
 		}
@@ -687,10 +687,10 @@ public class HeroQuest implements LogicInterface {
 	}
 	
 	// Inserir aqui a area visivel inicial por personagem
-	private void tratarSelecionarPersonagem(ChooseCharacter lance) {
+	private void tratarSelecionarPersonagem(SelectCharacter lance) {
 		PlayableCharacter character;
 		Adventurer playerA;
-		byte personagem = lance.getValue();
+		byte personagem = lance.getSelectedCharacterId();
 		byte[] position = new byte[2];
 
 		switch (personagem) {
@@ -775,7 +775,7 @@ public class HeroQuest implements LogicInterface {
 				
 				break;
 			default:
-				this.GUI.reportError(Strings.CHARSELECTERROR.toString());
+				this.GUI.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
 				break;
 		}
 		this.sortCreatureQueueByID();
@@ -1272,131 +1272,116 @@ public class HeroQuest implements LogicInterface {
 		this.creatureQueue.add(index, creature);
 	}
 
-	public void procurarTesouro() {
-		Creature caster = this.getCurrentCreature();
-		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
-		if (daVez) {
-			if (caster instanceof Barbarian || caster instanceof Wizard
-					|| caster instanceof Elf || caster instanceof Dwarf){
+	public void searchForTreasure() {
+		if (this.verifyIfItIsCurrentPlayersTurn()) {
+			Creature caster = this.getCurrentCreature();
+			if (caster instanceof PlayableCharacter) {
 				Position source = caster.getCurrentPosition();
-				SearchTreasure lance = new SearchTreasure();
-				lance.setSourceRow(source.getRow());
-				lance.setSourceColumn(source.getColumn());
-				this.tratarLance(lance);
-				this.enviarLance(lance);
+				SearchTreasure action = new SearchTreasure();
+				action.setSourceRow(source.getRow());
+				action.setSourceColumn(source.getColumn());
+				this.processAction(action);
+				this.sendAction(action);
 			} else {
-				this.GUI
-					.reportError(Strings.MONSTERCANTUNDERSTAND.toString());
+				this.GUI.reportError(Strings.MONSTER_CANT_UNDERSTAND_COMMAND.toString());
 			}
 		} else {
-			this.GUI
-				.reportError(Strings.NOT_YOUR_TURN.toString());
+			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
 	}
 
-	public void selecionarPersonagem() throws ClassNotFoundException {
-		boolean exists = this.GUI.checkSaveFileExists(localPlayerName);
-		if (exists){
-			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRMLOADGAME);
-			if (choice == 0){
-				ArrayList<String> values = null;
+	public void selectCharacter() throws ClassNotFoundException {
+		boolean doesSaveFileWithPlayerNameExist = this.GUI.checkSaveFileExists(localPlayerName);
+		if (doesSaveFileWithPlayerNameExist) {
+			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRM_LOAD_FILE);
+			if (choice == 0) {
+				ArrayList<String> fileInformation = null;
 				try {
-					values = this.GUI.readSaveFile(localPlayerName);
-					//System.out.println(values);
+					fileInformation = this.GUI.readSaveFile(localPlayerName);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				this.selecionarPersonagemEscolhida(Integer.parseInt(values.get(0)));
-				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(values.get(1)));
+				this.selectChosenCharacter(Integer.parseInt(fileInformation.get(0)));
+				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(fileInformation.get(1)));
 			} else {
 				this.GUI.showCharacterSelectionScreen();
 			}
 		} else {
 			this.GUI.showCharacterSelectionScreen();
 		}
-		//int resultado = this.atorJogador.mostrarOsCincoPersonagens();
 	}
 	
-	public void selecionarPersonagemEscolhida(int resultado) throws ClassNotFoundException{
-		boolean disponivel = false;
-		Zargon playerZ = new Zargon(this);
-		Adventurer playerA = new Adventurer();
+	public void selectChosenCharacter(int selectedCharacterId) throws ClassNotFoundException{
+		boolean isCharacterAvailable;
+		Zargon playerZargon = new Zargon(this);
+		Adventurer playerAdventurer = new Adventurer();
 		PlayableCharacter character;
-		ChooseCharacter lance = new ChooseCharacter();
-		lance.setValue((byte)resultado);
-		//JOptionPane.showMessageDialog(null, resultado);
-		switch (resultado) {
-			case 0:
-				disponivel = this.getZargonAvailable();
+		SelectCharacter action = new SelectCharacter();
+		action.setSelectedCharacterId((byte)selectedCharacterId);
+		switch (CharacterEnum.getEnumById(selectedCharacterId)) {
+			case ZARGON:
+				isCharacterAvailable = this.getZargonAvailable();
 				break;
-			case 1:
-				disponivel = this.getBarbarianAvailable();
+			case BARBARIAN:
+				isCharacterAvailable = this.getBarbarianAvailable();
 				break;
-			case 2:
-				disponivel = this.getWizardAvailable();
+			case WIZARD:
+				isCharacterAvailable = this.getWizardAvailable();
 				break;
-			case 3:
-				disponivel = this.getElfAvailable();
+			case ELF:
+				isCharacterAvailable = this.getElfAvailable();
 				break;
-			case 4:
-				disponivel = this.getDwarfAvailable();
+			case DWARF:
+				isCharacterAvailable = this.getDwarfAvailable();
 				break;
 			default:
-				this.GUI.reportError(Strings.CHARSELECTERROR.toString());
-				disponivel = false;
+				this.GUI.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
+				isCharacterAvailable = false;
 				break;
 		}
-		//System.out.println(this.getZargonAvailable()+"\n"+this.getBarbarianAvailable()+"\n"+this.getWizardAvailable()+"\n"+this.getElfAvailable()+"\n"+this.getDwarfAvailable());
-		if (disponivel) {
-			switch (resultado) {
-				case 0:
-					this.localZargon = playerZ;
-					lance.setZargon(playerZ);
-					
+		if (isCharacterAvailable) {
+			switch (CharacterEnum.getEnumById(selectedCharacterId)) {
+				case ZARGON:
+					this.localZargon = playerZargon;
+					action.setZargon(playerZargon);
 					break;
-				case 1:
+				case BARBARIAN:
 					character = new Barbarian();
-					character.setID((byte) (map.getCreatureQueueSize()-3));//26);
-					playerA.setPlayableCharacter(character);
-					this.localAdventurer = playerA;
-					lance.setAdventurer(playerA);
-	
+					character.setID((byte) (map.getCreatureQueueSize()-3));
+					playerAdventurer.setPlayableCharacter(character);
+					this.localAdventurer = playerAdventurer;
+					action.setAdventurer(playerAdventurer);
 					break;
-				case 2:
+				case WIZARD:
 					character = new Wizard();
-					character.setID((byte) (map.getCreatureQueueSize()-2));//27);
-					playerA.setPlayableCharacter(character);
-					this.localAdventurer = playerA;
-					lance.setAdventurer(playerA);
-	
+					character.setID((byte) (map.getCreatureQueueSize()-2));
+					playerAdventurer.setPlayableCharacter(character);
+					this.localAdventurer = playerAdventurer;
+					action.setAdventurer(playerAdventurer);
 					break;
-				case 3:
+				case ELF:
 					character = new Elf();
-					character.setID((byte) (map.getCreatureQueueSize()-1));//28);
-					playerA.setPlayableCharacter(character);
-					this.localAdventurer = playerA;
-					lance.setAdventurer(playerA);
-	
+					character.setID((byte) (map.getCreatureQueueSize()-1));
+					playerAdventurer.setPlayableCharacter(character);
+					this.localAdventurer = playerAdventurer;
+					action.setAdventurer(playerAdventurer);
 					break;
-				case 4:
+				case DWARF:
 					character = new Dwarf();
-					character.setID((byte) (map.getCreatureQueueSize()));//29);
-					playerA.setPlayableCharacter(character);
-					this.localAdventurer = playerA;
-					lance.setAdventurer(playerA);
-	
+					character.setID((byte) (map.getCreatureQueueSize()));
+					playerAdventurer.setPlayableCharacter(character);
+					this.localAdventurer = playerAdventurer;
+					action.setAdventurer(playerAdventurer);
 					break;
 				default:
-					this.GUI.reportError(Strings.CHARSELECTERROR.toString());
+					this.GUI.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
 					break;
 			}
-			this.tratarLance(lance);
-			this.enviarLance(lance);
-			
+			this.processAction(action);
+			this.sendAction(action);
 		} else {
-			this.GUI.reportError(Strings.CHARUNAVAILABLE.toString());
-			this.selecionarPersonagem();
+			this.GUI.reportError(Strings.CHARACTER_UNAVAILABLE.toString());
+			this.selectCharacter();
 		}
 	}
 
@@ -1474,10 +1459,10 @@ public class HeroQuest implements LogicInterface {
 				SearchTraps lance = new SearchTraps();
 				lance.setSourceColumn(posicao.getColumn());
 				lance.setSourceRow(posicao.getRow());
-				tratarLance(lance);
-				enviarLance(lance);
+				processAction(lance);
+				sendAction(lance);
 			} else {
-				this.GUI.reportError(Strings.MONSTERCANTUNDERSTAND.toString());
+				this.GUI.reportError(Strings.MONSTER_CANT_UNDERSTAND_COMMAND.toString());
 			}
 		} else {
 			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
@@ -1488,8 +1473,8 @@ public class HeroQuest implements LogicInterface {
 		boolean daVez = this.verifyIfItIsCurrentPlayersTurn();
 		if (daVez) {
 			EndTurn lance = new EndTurn();
-			this.tratarLance(lance);
-			this.enviarLance(lance);
+			this.processAction(lance);
+			this.sendAction(lance);
 		} else {
 			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
@@ -1513,8 +1498,8 @@ public class HeroQuest implements LogicInterface {
 		this.setLocalPlayer(player);
 		SendPlayer lance = new SendPlayer();
 		lance.setPlayer(player);
-		this.tratarLance(lance);
-		this.enviarLance(lance);
+		this.processAction(lance);
+		this.sendAction(lance);
 		this.GUI.refreshGUI();
 	}
 

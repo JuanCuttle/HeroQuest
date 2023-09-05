@@ -22,7 +22,7 @@ public enum SpellNameEnum {
         this.rule = rule;
     }
 
-    public static String getEnumNameById(int id) {
+    public static String getNameById(int id) {
         for (SpellNameEnum spellNameEnum : SpellNameEnum.values()) {
             if (spellNameEnum.equals(id)) {
                 return spellNameEnum.getName();

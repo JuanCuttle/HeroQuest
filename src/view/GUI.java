@@ -368,7 +368,7 @@ public class GUI extends JFrame implements GUIInterface {
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public void chooseCharacter() throws ClassNotFoundException {
-		this.heroQuest.selecionarPersonagem();
+		this.heroQuest.selectCharacter();
 	}
 
 	public void openDoorWithKeyboard() {
@@ -403,7 +403,7 @@ public class GUI extends JFrame implements GUIInterface {
 		String inputDialog = Strings.SELECT_SPELL.toString();
 		for (int i = 0; i < availableSpells.size(); i++) {
 			inputDialog += "\n" + i + " - "
-					+ SpellNameEnum.getEnumNameById(availableSpells.get(i).getSpellId());
+					+ SpellNameEnum.getNameById(availableSpells.get(i).getSpellId());
 		}
 		String option = JOptionPane.showInputDialog(inputDialog);
 		int index = Integer.parseInt(option);
@@ -432,7 +432,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void searchTreasure() {
-		this.heroQuest.procurarTesouro();
+		this.heroQuest.searchForTreasure();
 	}
 
 	public void showCharacterSelectionScreen() {
@@ -1079,7 +1079,7 @@ public class GUI extends JFrame implements GUIInterface {
 		if (statusEnum != null) {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMURED_SPELL + SpellNameEnum.getEnumNameById(spell.getSpellId())
+					+ Strings.MURMURED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
 					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
 					+ Strings.MODIFIED_IN + damage
 					+ Strings.BP_MODIFIED_STATUS + statusEnum
@@ -1087,7 +1087,7 @@ public class GUI extends JFrame implements GUIInterface {
 		} else {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMURED_SPELL + SpellNameEnum.getEnumNameById(spell.getSpellId())
+					+ Strings.MURMURED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
 					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
 					+ Strings.MODIFIED_IN + damage + Strings.BP_MODIFIED_NOT_STATUS);
 		}
