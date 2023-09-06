@@ -91,7 +91,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  NOMIND {
+	  NO_MIND_LEFT {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Mind insuficiente.";
@@ -100,7 +100,7 @@ public enum Strings {
 	      }
 	  },
 	  
-	  DOESNTUSESPELLS {
+	  CANT_USE_SPELLS {
 	      public String toString() {
 	    	  switch(GUI.language){
 	    	  	case Portugues: return "Seu personagem n�o usa magia.";

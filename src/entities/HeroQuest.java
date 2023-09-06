@@ -47,10 +47,9 @@ public class HeroQuest implements LogicInterface {
 
 	public HeroQuest(){
 		this.players = new ArrayList<>();
-		//this.atorJogador = ator; // link later
 		this.atorClienteServidor = new AtorClientServer(this);
-		this.creatureQueue = new ArrayList<Creature>();
-		this.doors = new ArrayList<Door>();
+		this.creatureQueue = new ArrayList<>();
+		this.doors = new ArrayList<>();
 		zargonAvailable = true;
 		barbarianAvailable = true;
 		wizardAvailable = true;
@@ -70,12 +69,36 @@ public class HeroQuest implements LogicInterface {
 		this.connected = connected;
 	}
 
-	public boolean getIsGameInSession() {
+	public boolean isGameInSession() {
 		return this.gameInSession;
 	}
 
 	public void setGameInSession(boolean gameInSession) {
 		this.gameInSession = gameInSession;
+	}
+
+	private boolean isBarbarianAvailable() {
+		return barbarianAvailable;
+	}
+
+	private boolean isWizardAvailable() {
+		return wizardAvailable;
+	}
+
+	private boolean isElfAvailable() {
+		return elfAvailable;
+	}
+
+	private boolean isDwarfAvailable() {
+		return dwarfAvailable;
+	}
+
+	public Creature getCurrentCreature() {
+		return this.creatureQueue.get(0);
+	}
+
+	public ArrayList<Creature> getCreatureQueue() {
+		return this.creatureQueue;
 	}
 	
 	public void openDoor(int doorId) {
@@ -83,7 +106,7 @@ public class HeroQuest implements LogicInterface {
 		if (creature instanceof PlayableCharacter){
 			boolean isItTheCurrentPlayersTurn = this.verifyIfItIsCurrentPlayersTurn();
 			if (isItTheCurrentPlayersTurn) {
-				Door door = this.getPorta(doorId);
+				Door door = this.getDoorById(doorId);
 				boolean isDoorReachable = this.verifyIfPlayerIsNearDoor(
 						(PlayableCharacter) creature, door);
 				
@@ -178,7 +201,6 @@ public class HeroQuest implements LogicInterface {
 					.getID();
 			return localCreatureId == currentTurnCreatureId;
 		} else {
-			// Attempt of fixing null pointer exception (index 19 inaccessible)
 			for (int i = 0; i < this.creatureQueue.size() - players.size(); i++) {
 				localCreatureId = (this.localZargon).getMonster(i).getID();
 				if (currentTurnCreatureId == localCreatureId)
@@ -189,9 +211,9 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private Door getPorta(int idPorta) {
+	private Door getDoorById(int doorId) {
 		for (int i = 0; i < this.doors.size(); i++) {
-			if (this.doors.get(i).getID() == idPorta)
+			if (this.doors.get(i).getID() == doorId)
 				return this.doors.get(i);
 		}
 		return null;
@@ -218,8 +240,7 @@ public class HeroQuest implements LogicInterface {
 				|| (attackerPosition.equals(targetPosition));
 	}
 
-	private boolean verifyIfPlayerIsNearDoor(PlayableCharacter hero,
-											 Door door) {
+	private boolean verifyIfPlayerIsNearDoor(PlayableCharacter hero, Door door) {
 		byte heroRow = hero.getCurrentPosition().getRow();
 		byte heroColumn = hero.getCurrentPosition().getColumn();
 		byte doorRow = door.getRow();
@@ -244,7 +265,7 @@ public class HeroQuest implements LogicInterface {
 					byte column = currentPosition.getColumn();
 					Position newPosition;
 					try {
-						newPosition = this.getNovaPosicao(direction, row, column);
+						newPosition = this.getNewPosition(direction, row, column);
 
 						Movement movement = new Movement();
 						movement.setSourceRow(row);
@@ -353,37 +374,39 @@ public class HeroQuest implements LogicInterface {
 			}
 	}
 
-	public Creature getCurrentCreature() {
-		return this.creatureQueue.get(0);
-	}
-
-	private Position getNovaPosicao(DirectionEnum direcao, byte linha, byte coluna)
-			throws PositionNotEmptyException {
-		Position novaPosicao = null;
-		switch (direcao) {
-		case DOWN:
-			novaPosicao = this.map.getPosition((byte) (linha + 1), coluna);
-			break;
-		case UP:
-			novaPosicao = this.map.getPosition((byte) (linha - 1), coluna);
-			break;
-		case LEFT:
-			novaPosicao = this.map.getPosition(linha, (byte) (coluna - 1));
-			break;
-		case RIGHT:
-			novaPosicao = this.map.getPosition(linha, (byte) (coluna + 1));
-			break;
+	private Position getNewPosition(DirectionEnum direction, byte row, byte column) throws PositionNotEmptyException {
+		Position newPosition = null;
+		switch (direction) {
+			case DOWN:
+				newPosition = this.map.getPosition((byte) (row + 1), column);
+				break;
+			case UP:
+				newPosition = this.map.getPosition((byte) (row - 1), column);
+				break;
+			case LEFT:
+				newPosition = this.map.getPosition(row, (byte) (column - 1));
+				break;
+			case RIGHT:
+				newPosition = this.map.getPosition(row, (byte) (column + 1));
+				break;
 		}
-		if (novaPosicao.getCreature() != null
-				|| novaPosicao instanceof Wall
-				|| novaPosicao instanceof Furniture
-				|| (novaPosicao instanceof Door && !((Door) novaPosicao)
-						.isOpen())
-				|| (novaPosicao.getTrap() != null && novaPosicao.getTrap() instanceof FallingRock && novaPosicao.getTrap().getTriggered())) {
+		if (newPosition.getCreature() != null
+				|| newPosition instanceof Wall
+				|| newPosition instanceof Furniture
+				|| isNewPositionAClosedDoor(newPosition)
+				|| doesNewPositionHaveATriggeredFallingRock(newPosition)) {
 			throw new PositionNotEmptyException();
 		} else {
-			return novaPosicao;
+			return newPosition;
 		}
+	}
+
+	private static boolean doesNewPositionHaveATriggeredFallingRock(Position newPosition) {
+		return newPosition.getTrap() != null && newPosition.getTrap() instanceof FallingRock && newPosition.getTrap().getTriggered();
+	}
+
+	private static boolean isNewPositionAClosedDoor(Position newPosition) {
+		return newPosition instanceof Door && !((Door) newPosition).isOpen();
 	}
 
 	public void attack() {
@@ -395,7 +418,7 @@ public class HeroQuest implements LogicInterface {
 			} else {
 				Position attackerPosition = attacker.getCurrentPosition();
 				boolean hasSpear = false;
-				if (checkIfAttackerIsAHeroAndHasSpear(attacker)){
+				if (checkIfAttackerIsAHeroAndHasSpear(attacker)) {
 					hasSpear = true;
 				}
 				ArrayList<Creature> availableTargets = this.getAvailableTargets(1,
@@ -442,52 +465,47 @@ public class HeroQuest implements LogicInterface {
 		return availableTargets;
 	}
 
-	private byte calculateAttackDamage(Creature atacante, Creature alvo) {
-		byte atkDiceAmount, defDiceAmount, damage, defence, probabilidade, result;
+	private byte calculateAttackDamage(Creature attacker, Creature defender) {
 		boolean hit;
-		damage = 0;
-		defence = 0;
-		atkDiceAmount = atacante.getAttackDiceAmount();
-		if (atacante.getCurrentPosition().getTrap() != null){
-			if (atacante.getCurrentPosition().getTrap() instanceof Pit){
-				atkDiceAmount--;
-			}
+		int damage = 0;
+		int defence = 0;
+		int atkDiceAmount = attacker.getAttackDiceAmount();
+		if (isCreatureInAPit(attacker)) {
+			atkDiceAmount--;
 		}
-		defDiceAmount = alvo.getDefenceDiceAmount();
-		if (alvo.getCurrentPosition().getTrap() != null){
-			if (alvo.getCurrentPosition().getTrap() instanceof Pit){
+		int defDiceAmount = defender.getDefenceDiceAmount();
+		if (isCreatureInAPit(defender)) {
 				defDiceAmount--;
-			}
 		}
-		if (alvo.getStatus() == StatusEnum.ROCK_SKIN){
+		if (StatusEnum.ROCK_SKIN.equals(defender.getStatus())) {
 			defDiceAmount++;
 		}
-		if (atacante.getStatus() == StatusEnum.COURAGE){
+		if (StatusEnum.COURAGE.equals(attacker.getStatus())) {
 			atkDiceAmount += 2;
 		}
-		probabilidade = 2;
+		int probability = 2;
 		for (byte i = 1; i <= atkDiceAmount; i++) {
-			hit = new Random().nextInt(probabilidade) == 0;
+			hit = new Random().nextInt(probability) == 0;
 			if (hit) {
 				damage++;
 			}
 		}
-		if (alvo instanceof Monster) {
-			probabilidade = 6;
+		if (defender instanceof Monster) {
+			probability = 6;
 		} else {
-			probabilidade = 3;
+			probability = 3;
 		}
-		if (alvo.getStatus() == StatusEnum.SLEEPING){
+		if (StatusEnum.SLEEPING.equals(defender.getStatus())) {
 			defence = 0;
 		} else {
 			for (byte i = 1; i <= defDiceAmount; i++) {
-				hit = new Random().nextInt(probabilidade) == 0;
+				hit = new Random().nextInt(probability) == 0;
 				if (hit) {
 					defence++;
 				}
 			}
 		}
-		result = (byte) (damage - defence);
+		byte result = (byte) (damage - defence);
 		
 		if (result >= 0) {
 			/*if(alvo.getStatus() == Status.ROCK_SKIN){
@@ -497,6 +515,11 @@ public class HeroQuest implements LogicInterface {
 		} else {
 			return 0;
 		}
+	}
+
+	private static boolean isCreatureInAPit(Creature creature) {
+		return creature.getCurrentPosition().getTrap() != null
+				&& creature.getCurrentPosition().getTrap() instanceof Pit;
 	}
 
 	public void castSpell() {
@@ -515,15 +538,15 @@ public class HeroQuest implements LogicInterface {
 							selectedTarget, selectedSpell);
 					if (wasSpellSuccessful) {
 						CastSpell lance = new CastSpell();
-						if (selectedSpell.getStatus() == StatusEnum.SLEEPING){ // determinar o numero de rodadas a dormir
+						if (StatusEnum.SLEEPING.equals(selectedSpell.getStatus())) {
 							byte roundsToSleep = 0;
-							byte dado = 0;
-							byte mindAlvo = selectedTarget.getMind();
-							while(dado != 5){
-								for (byte i = 0; i < mindAlvo; i++){
+							byte dieRoll = 0;
+							byte targetMind = selectedTarget.getMind();
+							while(dieRoll != 5) {
+								for (byte i = 0; i < targetMind; i++) {
 									roundsToSleep++;
-									dado = (byte)(Math.random()*6);
-									if (dado == 5){
+									dieRoll = (byte)(Math.random()*6);
+									if (dieRoll == 5) {
 										break;
 									}
 								}
@@ -536,42 +559,33 @@ public class HeroQuest implements LogicInterface {
 						this.sendAction(lance);
 					}
 				} else {
-					this.GUI.reportError(Strings.NOMIND.toString());
+					this.GUI.reportError(Strings.NO_MIND_LEFT.toString());
 				}
 			} else if (caster instanceof Elf) {
-				ArrayList<Spell> magiasDisponiveis = ((Elf) caster)
-						.getSpells();
+				ArrayList<Spell> availableSpells = ((Elf) caster).getSpells();
 				byte mind = caster.getMind();
 				if (mind > 0) {
-					Spell magia = this.GUI
-							.selectSpell(magiasDisponiveis);
-					Position posicaoAtual = caster.getCurrentPosition();
-					ArrayList<Creature> possiveisAlvos = this
-							.getAvailableTargets((byte) 2, posicaoAtual);
-					Creature alvo = this.GUI
-							.selectTarget(possiveisAlvos);
-					boolean sucesso = this.calculateSpellSuccess(
-							alvo, magia);
-					if (sucesso) {
-						CastSpell lance = new CastSpell();
-						lance.setSpell(magia);
-						lance.setTargetID(alvo.getID());
-						this.processAction(lance);
-						this.sendAction(lance);
+					Spell selectedSpell = this.GUI.selectSpell(availableSpells);
+					Position casterPosition = caster.getCurrentPosition();
+					ArrayList<Creature> availableTargets = this.getAvailableTargets((byte) 2, casterPosition);
+					Creature selectedTarget = this.GUI.selectTarget(availableTargets);
+					boolean wasSpellSuccessful = this.calculateSpellSuccess(selectedTarget, selectedSpell);
+					if (wasSpellSuccessful) {
+						CastSpell action = new CastSpell();
+						action.setSpell(selectedSpell);
+						action.setTargetID(selectedTarget.getID());
+						this.processAction(action);
+						this.sendAction(action);
 					}
 				} else {
-					this.GUI.reportError(Strings.NOMIND.toString());
+					this.GUI.reportError(Strings.NO_MIND_LEFT.toString());
 				}
 			} else {
-				this.GUI.reportError(Strings.DOESNTUSESPELLS.toString());
+				this.GUI.reportError(Strings.CANT_USE_SPELLS.toString());
 			}
 		} else {
 			this.GUI.reportError(Strings.NOT_YOUR_TURN.toString());
 		}
-	}
-
-	public ArrayList<Creature> getCreatureQueue() {
-		return this.creatureQueue;
 	}
 
 	private boolean calculateSpellSuccess(Creature target, Spell spell) {
@@ -1135,7 +1149,7 @@ public class HeroQuest implements LogicInterface {
 
 	private void tratarAbrirPorta(OpenDoor lance) {
 		int doorId = lance.getDoorId();
-		Door door = this.getPorta(doorId);
+		Door door = this.getDoorById(doorId);
 		if (!door.isOpen()){
 			door.openDoor();
 		} else {
@@ -1307,16 +1321,16 @@ public class HeroQuest implements LogicInterface {
 				isCharacterAvailable = this.getZargonAvailable();
 				break;
 			case BARBARIAN:
-				isCharacterAvailable = this.getBarbarianAvailable();
+				isCharacterAvailable = this.isBarbarianAvailable();
 				break;
 			case WIZARD:
-				isCharacterAvailable = this.getWizardAvailable();
+				isCharacterAvailable = this.isWizardAvailable();
 				break;
 			case ELF:
-				isCharacterAvailable = this.getElfAvailable();
+				isCharacterAvailable = this.isElfAvailable();
 				break;
 			case DWARF:
-				isCharacterAvailable = this.getDwarfAvailable();
+				isCharacterAvailable = this.isDwarfAvailable();
 				break;
 			default:
 				this.GUI.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
@@ -1382,22 +1396,6 @@ public class HeroQuest implements LogicInterface {
 		this.players.add(index, player);
 	}
 
-	private boolean getBarbarianAvailable() {
-		return barbarianAvailable;
-	}
-
-	private boolean getWizardAvailable() {
-		return wizardAvailable;
-	}
-
-	private boolean getElfAvailable() {
-		return elfAvailable;
-	}
-
-	private boolean getDwarfAvailable() {
-		return dwarfAvailable;
-	}
-
 	private void killCreature(int creatureID) {
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
 			Creature creature = this.creatureQueue.get(i);
@@ -1460,29 +1458,17 @@ public class HeroQuest implements LogicInterface {
 
 	private void endTheGame() {
 		if (this.areHeroesAlive()) {
-			boolean condicoesCumpridas = this.map.verifyWinningConditions(this);
-			if (condicoesCumpridas) {
-				// Save player file
+			boolean haveConditionsBeenMet = this.map.verifyWinningConditions(this);
+			if (haveConditionsBeenMet) {
 				if (this.localAdventurer != null) {
 					try {
 						int heroType;
-						PlayableCharacter a = this.localAdventurer.getPlayableCharacter();
-						if (a.getStatus() != StatusEnum.DEAD){
-							switch (a.getClass().getSimpleName()){
-								case "Barbarian": heroType = 1;
-												break;
-								case "Wizard": heroType = 2;
-												break;
-								case "Elf": heroType = 3;
-												break;
-								default: heroType = 4;
-												break;
-										
-							}
-							this.GUI.writeSaveFile(localPlayerName, heroType, a.getGold(), a.getItems(this.map));
+						PlayableCharacter localPlayableCharacter = this.localAdventurer.getPlayableCharacter();
+						if (StatusEnum.DEAD.equals(localPlayableCharacter.getStatus())) {
+							heroType = CharacterEnum.getIdByName(localPlayableCharacter.getClass().getSimpleName());
+							this.GUI.writeSaveFile(localPlayerName, heroType, localPlayableCharacter.getGold(), localPlayableCharacter.getItems(this.map));
 						}
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -1490,9 +1476,7 @@ public class HeroQuest implements LogicInterface {
 				this.endGame();
 			}
 		} else {
-			// Announce villain victory
 			this.GUI.announceZargonWon();
-			// End game
 			this.endGame();
 		}
 	}
@@ -1553,17 +1537,8 @@ public class HeroQuest implements LogicInterface {
 		return criatura;
 	}
 
-	public Player getPlayerDaVez() {
-		return this.players.get(0);
-	}
-
 	private void setLocalPlayer(Player localPlayer) {
 		this.localPlayer = localPlayer;
-	}
-
-	public Creature getLastCreatureFromQueue() {
-		int last = this.creatureQueue.size() - 1;
-		return this.creatureQueue.get(last);
 	}
 
 	public Position getPosition(byte i, byte j) {

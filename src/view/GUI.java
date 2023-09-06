@@ -543,7 +543,7 @@ public class GUI extends JFrame implements GUIInterface {
 	public void startGame() {
 		boolean isConnected = false;
 		boolean isInterrupted = false;
-		boolean inSession = this.heroQuest.getIsGameInSession();
+		boolean inSession = this.heroQuest.isGameInSession();
 		if (inSession) {
 			isInterrupted = true;
 		} else {

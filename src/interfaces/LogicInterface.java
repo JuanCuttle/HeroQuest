@@ -42,7 +42,7 @@ public interface LogicInterface {
 	
 	void setConnected(boolean connected);
 	
-	boolean getIsGameInSession();
+	boolean isGameInSession();
 	
 	void endGame();
 	

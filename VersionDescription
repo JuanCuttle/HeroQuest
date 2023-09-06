@@ -134,3 +134,4 @@ Can be troublesome with Creature objects (change not made through ID)
 51) Fix TrapEvasionMovementEnum
 52) Swap for loop formats to foreach
 53) Use unicode in Strings
+54) Make player lose RockSkin status when damage is received (calculateAttackDamage())
