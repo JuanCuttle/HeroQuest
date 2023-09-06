@@ -836,14 +836,14 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 		if (foundGold){
-			this.GUI.showMessagePopup(Strings.THEPLAYER.toString()
+			this.GUI.showMessagePopup(Strings.THE_PLAYER.toString()
 					+ character.getClass().getSimpleName()
-					+ Strings.FOUNDGOLD.toString());
+					+ Strings.FOUND_GOLD.toString());
 		}
 		if (foundItem){
-			this.GUI.showMessagePopup(Strings.THEPLAYER.toString()
+			this.GUI.showMessagePopup(Strings.THE_PLAYER.toString()
 					+ character.getClass().getSimpleName()
-					+ Strings.FOUNDITEM.toString()+itemName);
+					+ Strings.FOUND_ITEM.toString()+itemName);
 		}
 	}
 
@@ -1174,7 +1174,7 @@ public class HeroQuest implements LogicInterface {
 				daVez.setRoundsToSleep(roundsToSleep);
 				if (roundsToSleep == 0){
 					daVez.setStatus(StatusEnum.NEUTRAL);
-					this.GUI.showMessagePopup(Strings.THECREATURE.toString()+daVez.getClass().getSimpleName()+Strings.WOKEUP.toString());
+					this.GUI.showMessagePopup(Strings.THE_CREATURE.toString()+daVez.getClass().getSimpleName()+Strings.WOKE_UP.toString());
 				}
 			}
 			finalizada = this.removeCreatureFromQueue();
@@ -1200,17 +1200,6 @@ public class HeroQuest implements LogicInterface {
 		this.map.specialOcurrence(this); // For TheRescueOfSirRagnar and TheStoneHunter
 		
 		this.endTheGame();
-		
-		/*Adventurer a = this.localAdventurer; 
-		if (a != null){
-			String creatureName = a.getPlayableCharacter().getClass().getSimpleName();
-			if (creatureName != null){
-				if (daVez.getClass().getSimpleName().equals(creatureName)){
-					this.atorJogador.mostrarMensagem(Strings.YOURTURN.toString()+Strings.REMAININGMOVES.toString()+daVez.getMovement());
-				}			
-			}
-		}*/
-		//System.out.println("" + criatura.getClass().getSimpleName());
 	}
 
 	private void sortCreatureQueueByID() {
@@ -1543,7 +1532,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void setServerAddress(String serverAddress) {
-		this.GUI.setTitle(this.GUI.getTitle()+ Strings.SERVER + serverAddress + Strings.COMMAPLAYER + this.localPlayerName);
+		this.GUI.setTitle(this.GUI.getTitle()+ Strings.SERVER + serverAddress + Strings.COMMA_PLAYER + this.localPlayerName);
 	}
 
 	public AtorClientServer getAtorClienteServidor() {

@@ -24,7 +24,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	
 	public TheRescueOfSirRagnar(HeroQuest game) {
 		super();
-		description = Strings.THERESCUEOFSIRRAGNAR.toString();
+		description = Strings.THE_RESCUE_OF_SIR_RAGNAR_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTreasures();
 		stairsPosition[0] = 12;

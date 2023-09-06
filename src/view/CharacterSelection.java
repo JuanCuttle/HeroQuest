@@ -31,7 +31,7 @@ public class CharacterSelection extends JFrame {
 		
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle(Strings.SELECTYOURCHAR.toString());
+		setTitle(Strings.SELECT_YOUR_CHARACTER.toString());
 		setBounds(250, 225, 440, 120);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setLayout(new FlowLayout());
@@ -57,7 +57,7 @@ public class CharacterSelection extends JFrame {
                 }
             });
 			{
-				Label label = new Label(Strings.TYPECHARNUMBER.toString());
+				Label label = new Label(Strings.TYPE_CHARACTER_NUMBER.toString());
 				contentPanel.add(label);
 			}
 			contentPanel.add(textField);
@@ -70,7 +70,7 @@ public class CharacterSelection extends JFrame {
 					JFrame cardScreen = new JFrame();
 					cardScreen.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 					
-					cardScreen.setTitle(Strings.ZARGONDESCRIPTION.toString());
+					cardScreen.setTitle(Strings.ZARGON_DESCRIPTION.toString());
 					cardScreen.setBounds(800, 200, 800, 600);
 					
 					ImagePanel ip = new ImagePanel(ImageEnum.ZARGON);

@@ -21,7 +21,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 
 	public LairOfTheOrcWarlord(HeroQuest game){
 		super();
-		description = Strings.LAIROFTHEORCWARLORD.toString();
+		description = Strings.LAIR_OF_THE_ORC_WARLORD_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTreasures();
 		stairsPosition[0] = 4;

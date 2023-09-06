@@ -30,7 +30,7 @@ public class Instructions extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Instructions.class.getResource("/images/players/Wizard.png")));
 		
 		setResizable(false);
-		setTitle(Strings.INSTRUCTMANUAL.toString());
+		setTitle(Strings.INSTRUCTION_MANUAL.toString());
 
 		setSize(1000, 720);
 		setResizable(false);
@@ -45,7 +45,7 @@ public class Instructions extends JFrame {
 		txtpnYouAreIn.setEditable(false);
 		txtpnYouAreIn.setFont(new Font("Viner Hand ITC", Font.PLAIN, 20));
 		txtpnYouAreIn
-				.setText(Strings.GUIDE.toString());
+				.setText(Strings.INSTRUCTIONS_TEXT.toString());
 		contentPane.add(txtpnYouAreIn, BorderLayout.CENTER);
 		
 		txtpnYouAreIn.setOpaque(false);

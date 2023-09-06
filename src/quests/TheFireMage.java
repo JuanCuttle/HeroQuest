@@ -22,7 +22,7 @@ public class TheFireMage extends BasicMap {
 	
 	public TheFireMage(HeroQuest game){
 		super();
-		description = Strings.THEFIREMAGE.toString();
+		description = Strings.THE_FIRE_MAGE_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTraps();
 		generateTreasures();

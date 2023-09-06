@@ -77,7 +77,7 @@ public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
 
 	public void finalizarPartidaComErro(String message) {
 		JOptionPane.showMessageDialog(null,
-				Strings.ERRORABORT.toString());
+				Strings.ERROR_ABORTED_GAME.toString());
 				
 		this.heroQuest.endGame();
 	}

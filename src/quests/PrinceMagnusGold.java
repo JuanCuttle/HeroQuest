@@ -18,7 +18,7 @@ import enums.FurnitureDirectionEnum;
 public class PrinceMagnusGold extends BasicMap {
 	public PrinceMagnusGold(HeroQuest game){
 		super();
-		description = Strings.PRINCEMAGNUSGOLD.toString();
+		description = Strings.PRINCE_MAGNUS_GOLD_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTreasures();
 		generateTraps();

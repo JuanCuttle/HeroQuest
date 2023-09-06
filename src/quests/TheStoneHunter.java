@@ -24,7 +24,7 @@ public class TheStoneHunter extends BasicMap {
 	
 	public TheStoneHunter(HeroQuest game){
 		super();
-		description = Strings.THESTONEHUNTER.toString();
+		description = Strings.THE_STONE_HUNTER_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTraps();
 		generateTreasures();

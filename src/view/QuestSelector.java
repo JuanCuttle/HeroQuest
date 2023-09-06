@@ -101,7 +101,7 @@ public class QuestSelector extends JFrame {
 		frame.setVisible(true);
 		
 		if (bm instanceof TheTrial){
-			frame.textArea.setText(frame.textArea.getText()+"\n"+Strings.THETRIAL.toString());
+			frame.textArea.setText(frame.textArea.getText()+"\n"+Strings.THE_TRIAL_DESCRIPTION.toString());
 			//JOptionPane.showMessageDialog(null, Strings.THETRIAL);
 		}
 	}

@@ -24,7 +24,7 @@ public class MelarsMaze extends BasicMap {
 
 	public MelarsMaze(HeroQuest game){
 		super();
-		description = Strings.MELARSMAZE.toString();
+		description = Strings.MELARS_MAZE_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTraps();
 		generateTreasures();

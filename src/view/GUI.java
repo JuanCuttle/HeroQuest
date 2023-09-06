@@ -135,7 +135,7 @@ public class GUI extends JFrame implements GUIInterface {
 		});
 		mnHelp.add(btnInstructions);
 
-		JButton btnCharSelect = new JButton(Strings.SELECTCHAR.toString());
+		JButton btnCharSelect = new JButton(Strings.SELECT_CHARACTER.toString());
 		btnCharSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -152,10 +152,10 @@ public class GUI extends JFrame implements GUIInterface {
 		JMenu mnSettings = new JMenu(Strings.SETTINGS.toString());
 		menuBar.add(mnSettings);
 
-		JButton btnMusic = new JButton(Strings.TRIGGERMUSIC.toString());
+		JButton btnMusic = new JButton(Strings.TOGGLE_MUSIC.toString());
 		mnSettings.add(btnMusic);
 		
-		JButton btnLanguage = new JButton(Strings.LANGUAGEBUTTON.toString());
+		JButton btnLanguage = new JButton(Strings.LANGUAGE_BUTTON.toString());
 		btnLanguage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				LanguageSelector ls = new LanguageSelector(getThis());
@@ -458,7 +458,7 @@ public class GUI extends JFrame implements GUIInterface {
 		String serverAddress = (Strings.OBTAIN_SERVER_ADDRESS.toString());
 		if (!autoConnectToServer) {
 			serverAddress = JOptionPane.showInputDialog(this,
-					(Strings.INPUTSERVERADDRESS.toString()), serverAddress);
+					(Strings.INPUT_SERVER_ADDRESS.toString()), serverAddress);
 		}
 		return serverAddress;
 	}
@@ -492,31 +492,31 @@ public class GUI extends JFrame implements GUIInterface {
 		String connectionResultMessage;
 		switch (result) {
 			case 0:
-				connectionResultMessage = Strings.SUCCESSFULCONNECT.toString();
+				connectionResultMessage = Strings.SUCCESSFUL_CONNECTION.toString();
 				break;
 			case 1:
-				connectionResultMessage = Strings.ALREADYCONNECTED.toString();
+				connectionResultMessage = Strings.ALREADY_CONNECTED.toString();
 				break;
 			case 2:
-				connectionResultMessage = Strings.FAILEDCONNECT.toString();
+				connectionResultMessage = Strings.FAILED_TO_CONNECT.toString();
 				break;
 			case 3:
-				connectionResultMessage = Strings.SUCCESSFULDISCONNECT.toString();
+				connectionResultMessage = Strings.SUCCESSFUL_DISCONNECTION.toString();
 				break;
 			case 4:
-				connectionResultMessage = Strings.DISCBEFORECONNECT.toString();
+				connectionResultMessage = Strings.DISCONNECTION_ATTEMPT_BEFORE_BEING_CONNECTED.toString();
 				break;
 			case 5:
-				connectionResultMessage = Strings.FAILEDDISCONNECT.toString();
+				connectionResultMessage = Strings.FAILED_DISCONNECTION.toString();
 				break;
 			case 6:
-				connectionResultMessage = Strings.SUCCESSFULSTART.toString();
+				connectionResultMessage = Strings.SUCCESSFUL_START.toString();
 				break;
 			case 7:
-				connectionResultMessage = Strings.STARTBEFORECONNECT.toString();
+				connectionResultMessage = Strings.START_ATTEMPT_BEFORE_CONNECTING.toString();
 				break;
 			case 13:
-				connectionResultMessage = Strings.UNINTERRUPTEDGAME.toString();
+				connectionResultMessage = Strings.GAME_NOT_INTERRUPTED.toString();
 				break;
 			default:
 				connectionResultMessage = "";
@@ -593,13 +593,13 @@ public class GUI extends JFrame implements GUIInterface {
 
 	public void showCreatureInformation(byte body, byte mind, byte movement,
 										StatusEnum statusEnum, int row, int column, Byte roundsToSleep) {
-		String output = Strings.CURRENTBP.toString() + body
-				+ Strings.CURRENTMP + mind + Strings.REMAININGMOVES
-				+ movement + Strings.CURRENTSTATUS + statusEnum + Strings.LINE + row
+		String output = Strings.CURRENT_BP.toString() + body
+				+ Strings.CURRENT_MP + mind + Strings.REMAINING_MOVEMENT
+				+ movement + Strings.CURRENT_STATUS + statusEnum + Strings.ROW + row
 				+ Strings.COLUMN + column;
 		if (roundsToSleep != null){
 			if (roundsToSleep != 0){
-				output += Strings.TTW.toString() + roundsToSleep;
+				output += Strings.TURNS_LEFT_TO_WAKE_UP.toString() + roundsToSleep;
 			}
 		}
 		this.textArea.setText(output);
@@ -609,7 +609,7 @@ public class GUI extends JFrame implements GUIInterface {
 		int numberOfPlayersInGame;
 		do {
 			String numberOfPlayers = JOptionPane
-					.showInputDialog(Strings.NUMBEROFPLAYERS.toString());
+					.showInputDialog(Strings.TYPE_THE_NUMBER_OF_PLAYERS.toString());
 			numberOfPlayersInGame = Integer.parseInt(numberOfPlayers);
 		} while (numberOfPlayersInGame < 2);
 		return numberOfPlayersInGame;
@@ -1050,28 +1050,28 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void showTrapActivationMessage(byte damage, Creature creature) {
-		this.textArea.setText(Strings.OHNO
+		this.textArea.setText(Strings.OH_NO
 						+ creature.getClass().getSimpleName()
-						+ Strings.ACTIVATEDTRAP + damage
-						+ Strings.OFBP);
+						+ Strings.ACTIVATED_TRAP + damage
+						+ Strings.OF_BP);
 	}
 
 	public void showAttackDamageMessage(Creature target, byte damage, boolean selfInflicted) {
 		if (selfInflicted) {
-			this.textArea.setText(Strings.THECREATURE
+			this.textArea.setText(Strings.THE_CREATURE
 					+ target.getClass().getSimpleName()
-					+ Strings.ATTEMPTSSEPPUKU + damage + Strings.OFDAMAGE);
+					+ Strings.ATTEMPTS_SEPPUKU + damage + Strings.OF_DAMAGE);
 		} else {
-			this.textArea.setText(Strings.THECREATURE
+			this.textArea.setText(Strings.THE_CREATURE
 					+ target.getClass().getSimpleName() + Strings.RECEIVED + damage
-					+ Strings.OFDAMAGE);
+					+ Strings.OF_DAMAGE);
 		}
 	}
 
 	public void announceCreatureDeath(Creature creature) {
-		this.textArea.setText(Strings.THECREATURE
+		this.textArea.setText(Strings.THE_CREATURE
 				+ creature.getClass().getSimpleName()
-				+ Strings.DIEDHONORABLY);
+				+ Strings.DIED_HONORABLY);
 	}
 
 	public void showEffectOfCastSpell(Creature caster, Spell spell, Creature target,
@@ -1095,9 +1095,9 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void announceUnfortunateDeath(Creature creature) {
-		this.textArea.setText(Strings.OHNO + " " + Strings.THECREATURE
+		this.textArea.setText(Strings.OH_NO + " " + Strings.THE_CREATURE
 				+ creature.getClass().getSimpleName()
-				+ Strings.DIEDONTRAP);
+				+ Strings.WAS_KILLED_BY_TRAP);
 	}
 
 	public void updatePlayerSurroundings() {
@@ -1164,7 +1164,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public TrapEvasionMovementEnum showFallingRockMovementOptions() {
-		String input = Strings.ROCKFALL.toString();
+		String input = Strings.ROCK_FALL.toString();
 		input += "0 - " + Strings.FORWARD;
 		input += "1 - " + Strings.BACKWARD;
 		String option = JOptionPane.showInputDialog(input);
@@ -1194,10 +1194,10 @@ public class GUI extends JFrame implements GUIInterface {
 		JMenuBar mBar = this.menuBar;
 		mBar.getMenu(0).setText(Strings.MENU.toString());
 		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(0)).setText(Strings.INSTRUCTIONS.toString());
-		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(1)).setText(Strings.SELECTCHAR.toString());
+		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(1)).setText(Strings.SELECT_CHARACTER.toString());
 		mBar.getMenu(1).setText(Strings.SETTINGS.toString());
-		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(0)).setText(Strings.TRIGGERMUSIC.toString());
-		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(1)).setText(Strings.LANGUAGEBUTTON.toString());
+		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(0)).setText(Strings.TOGGLE_MUSIC.toString());
+		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(1)).setText(Strings.LANGUAGE_BUTTON.toString());
 	}
 	
 	public void writeSaveFile(String playerName, int heroType, int gold, ArrayList<Items> items) throws IOException{
@@ -1299,15 +1299,12 @@ public class GUI extends JFrame implements GUIInterface {
 	
 
 	public boolean checkSaveFileExists(String playerName) {
-		ArrayList<String> results = new ArrayList<String>();
+		ArrayList<String> results = new ArrayList<>();
 
 		String currentDir = System.getProperty("user.dir");
 		
 		String saveDir = currentDir + "/HeroQuest_Saves/";
-		
-		//																														name.endsWith(".txt")
-		//File[] files = new File(saveDir).listFiles(new FilenameFilter() { @Override public boolean accept(File dir, String name) { return true; } });
-		
+
 		File[] files = new File(saveDir).listFiles();
 		//If this pathname does not denote a directory, then listFiles() returns null. 
 
@@ -1322,12 +1319,10 @@ public class GUI extends JFrame implements GUIInterface {
 				String res = results.get(i);
 				
 				if (res.endsWith(playerName+".txt")){
-					//JOptionPane.showMessageDialog(null, Strings.FILEFOUND);
 					return true;
 				}
 			}
 		}
-		//JOptionPane.showMessageDialog(null, Strings.FILENOTFOUND);
 		return false;
 	}
 

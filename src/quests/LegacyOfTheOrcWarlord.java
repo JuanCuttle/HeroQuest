@@ -21,7 +21,7 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 
 	public LegacyOfTheOrcWarlord(HeroQuest game){
 		super();
-		description = Strings.LEGACYOFTHEORCWARLORD.toString();
+		description = Strings.LEGACY_OF_THE_ORC_WARLORD_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTraps();
 		stairsPosition[0] = 20;

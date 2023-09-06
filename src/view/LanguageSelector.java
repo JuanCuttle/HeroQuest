@@ -26,7 +26,7 @@ public class LanguageSelector extends JFrame {
 	 * Create the frame.
 	 */
 	public LanguageSelector(GUI gui) {
-		setTitle(Strings.LANGSELECT.toString());
+		setTitle(Strings.SELECT_A_LANGUAGE.toString());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 100);
 		contentPane = new JPanel();

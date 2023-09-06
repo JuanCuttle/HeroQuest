@@ -13,7 +13,7 @@ public class TheMaze extends BasicMap {
 		
 		public TheMaze(HeroQuest game){
 			super();
-			description = Strings.THEMAZE.toString();
+			description = Strings.THE_MAZE_DESCRIPTION.toString();
 			generateDoors(game);
 			stairsPosition[0] = 13;
 			stairsPosition[1] = 18;

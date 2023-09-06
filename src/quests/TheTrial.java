@@ -24,7 +24,7 @@ public class TheTrial extends BasicMap {
 	
 	public TheTrial(HeroQuest game){
 		super();
-		description = Strings.THETRIAL.toString();
+		description = Strings.THE_TRIAL_DESCRIPTION.toString();
 		generateDoors(game);
 		generateTreasures();
 		stairsPosition[0] = 21;
