@@ -156,6 +156,10 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 	public boolean foundEquipment(){
 		return foundEquipment;
 	}
+
+	public void setFoundEquipment(boolean foundEquipment) {
+		this.foundEquipment = foundEquipment;
+	}
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
 		Position equipment = game.getPosition((byte)5, (byte)5);
