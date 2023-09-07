@@ -394,10 +394,8 @@ public class HeroQuest implements LogicInterface {
 								}
 							}
 						}
-					
 						this.processAction(movement);
 						this.sendAction(movement);
-
 					} catch (PositionNotEmptyException e) {
 						this.GUI.reportError(Strings.PHYSICS_LAWS.toString());
 					}
@@ -1402,7 +1400,7 @@ public class HeroQuest implements LogicInterface {
 					try {
 						int heroType;
 						PlayableCharacter localPlayableCharacter = this.localAdventurer.getPlayableCharacter();
-						if (StatusEnum.DEAD.equals(localPlayableCharacter.getStatus())) {
+						if (!StatusEnum.DEAD.equals(localPlayableCharacter.getStatus())) {
 							heroType = CharacterEnum.getIdByName(localPlayableCharacter.getClass().getSimpleName());
 							this.GUI.writeSaveFile(localPlayerName, heroType, localPlayableCharacter.getGold(), localPlayableCharacter.getItems(this.map));
 						}
@@ -1424,7 +1422,7 @@ public class HeroQuest implements LogicInterface {
 		for (int i = 0; i < creatureQueueSize; i++) {
 			Creature creature = this.creatureQueue.get(i);
 			if (creature instanceof PlayableCharacter) {
-				if (StatusEnum.DEAD.equals(creature.getStatus()))
+				if (!StatusEnum.DEAD.equals(creature.getStatus()))
 					return true;
 			}
 		}

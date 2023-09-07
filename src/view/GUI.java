@@ -590,75 +590,74 @@ public class GUI extends JFrame implements GUIInterface {
 					
 					byte[] furnitureStartingPosition = map.getTable1Position();
 					if (furnitureStartingPosition != null){
-						path = tablePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateTablePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					furnitureStartingPosition = map.getTable2Position();
 					if (furnitureStartingPosition != null){
-						path = tablePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateTablePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getRackPosition();
 					if (furnitureStartingPosition != null){
-						path = generateRackPath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateRackPath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getBookOnTablePosition();
 					if (furnitureStartingPosition != null){
-						path = generateBookOnTablePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateBookOnTablePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getTombPosition();
 					if (furnitureStartingPosition != null){
-						path = generateTombPath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateTombPath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getThronePosition();
 					if (furnitureStartingPosition != null){
-						path = generateThronePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateThronePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getWepRackPosition();
 					if (furnitureStartingPosition != null){
-						path = generateWeaponRackPath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateWeaponRackPath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getDeskPosition();
 					if (furnitureStartingPosition != null){
-						path = generateDeskPath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateDeskPath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getFireplacePosition();
 					if (furnitureStartingPosition != null){
-						path = generateFireplacePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateFireplacePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getBookcase1Position();
 					if (furnitureStartingPosition != null){
-						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getBookcase2Position();
 					if (furnitureStartingPosition != null){
-						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 					
 					furnitureStartingPosition = map.getBookcase3Position();
 					if (furnitureStartingPosition != null){
-						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition);
+						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition, path);
 					}
 				}
 				
 			}
 		}
-		ImageIcon img = new ImageIcon(getClass().getResource(path));
+		ImageIcon img = new ImageIcon(Objects.requireNonNull(getClass().getResource(path)));
 		button.setIcon(img);
 		button.invalidate();
 		button.revalidate();
 		button.repaint();
 	}
 
-	private String tablePath(int row, int column, byte[] tablePosition) {
-		String path = null;
+	private String generateTablePath(int row, int column, byte[] tablePosition, String path) {
 		int tableRow = tablePosition[1];
 		int tableColumn = tablePosition[2];
 		
@@ -694,8 +693,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateRackPath(int row, int column, byte[] rackPosition) {
-		String path = null;
+	private String generateRackPath(int row, int column, byte[] rackPosition, String path) {
 		int rackRow = rackPosition[1];
 		int rackColumn = rackPosition[2];
 		
@@ -731,8 +729,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateBookOnTablePath(int row, int column, byte[] bookOnTablePosition) {
-		String path = null;
+	private String generateBookOnTablePath(int row, int column, byte[] bookOnTablePosition, String path) {
 		int bookOnTableRow = bookOnTablePosition[1];
 		int bookOnTableColumn = bookOnTablePosition[2];
 		
@@ -768,8 +765,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateTombPath(int row, int column, byte[] tombPosition) {
-		String path = null;
+	private String generateTombPath(int row, int column, byte[] tombPosition, String path) {
 		int tombRow = tombPosition[1];
 		int tombColumn = tombPosition[2];
 		
@@ -805,8 +801,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateThronePath(int row, int column, byte[] thronePosition) {
-		String path = null;
+	private String generateThronePath(int row, int column, byte[] thronePosition, String path) {
 		int throneRow = thronePosition[1];
 		int throneColumn = thronePosition[2];
 		
@@ -822,8 +817,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateWeaponRackPath(int row, int column, byte[] weaponRackPosition) {
-		String path = null;
+	private String generateWeaponRackPath(int row, int column, byte[] weaponRackPosition, String path) {
 		int weaponRackRow = weaponRackPosition[1];
 		int weaponRackColumn = weaponRackPosition[2];
 		
@@ -847,8 +841,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateDeskPath(int row, int column, byte[] deskPosition) {
-		String path = null;
+	private String generateDeskPath(int row, int column, byte[] deskPosition, String path) {
 		int deskRow = deskPosition[1];
 		int deskCol = deskPosition[2];
 		
@@ -884,8 +877,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateFireplacePath(int row, int column, byte[] fireplacePosition) {
-		String path = null;
+	private String generateFireplacePath(int row, int column, byte[] fireplacePosition, String path) {
 		int fireplaceRow = fireplacePosition[1];
 		int fireplaceCol = fireplacePosition[2];
 		
@@ -909,8 +901,7 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String generateBookcasePath(int row, int column, byte[] bookcasePosition) {
-		String path = null;
+	private String generateBookcasePath(int row, int column, byte[] bookcasePosition, String path) {
 		int bookcaseRow = bookcasePosition[1];
 		int bookcaseColumn = bookcasePosition[2];
 		
