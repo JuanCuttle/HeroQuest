@@ -34,6 +34,7 @@ public class Door extends Position {
 	public boolean isSecret(){
 		return this.secret;
 	}
+
 	public void setSecret(boolean secret){
 		this.secret = secret;
 	}

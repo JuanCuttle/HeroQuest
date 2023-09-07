@@ -7,10 +7,8 @@ public class FallingRock extends Trap {
 	public FallingRock() {
 		this.deliveredDamage = calculateDamage();
 		this.visible = false;
-		
 		this.triggered = false;
 	}
-	
 
 	public byte calculateDamage() {
 		byte damage = 0;

@@ -7,7 +7,6 @@ public class Adventurer extends Player {
 	private static final long serialVersionUID = 476483639541190443L;
 	protected PlayableCharacter playerCharacter;
 
-
 	public Adventurer() {}
 
 	public PlayableCharacter getPlayableCharacter() {

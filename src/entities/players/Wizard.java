@@ -21,20 +21,20 @@ public class Wizard extends PlayableCharacter {
 	}
 	
 	public void createSpells() {
-		Spell swift_Wind = new Spell(SpellNameEnum.SWIFT_WIND.getId(), StatusEnum.AGILITY_UP, (byte) 0);
+		Spell swiftWind = new Spell(SpellNameEnum.SWIFT_WIND.getId(), StatusEnum.AGILITY_UP, (byte) 0);
 		Spell tempest = new Spell(SpellNameEnum.TEMPEST.getId(), StatusEnum.CURSED, (byte) 0);
-		Spell ball_of_Flame = new Spell(SpellNameEnum.BALL_OF_FLAME.getId(), null, (byte) -2);
+		Spell ballOfFlame = new Spell(SpellNameEnum.BALL_OF_FLAME.getId(), null, (byte) -2);
 		Spell courage = new Spell(SpellNameEnum.COURAGE.getId(), StatusEnum.COURAGE, (byte) 0);
-		Spell fire_of_Wrath = new Spell(SpellNameEnum.FIRE_OF_WRATH.getId(), null, (byte) -1);
+		Spell fireOfWrath = new Spell(SpellNameEnum.FIRE_OF_WRATH.getId(), null, (byte) -1);
 		Spell sleep = new Spell(SpellNameEnum.SLEEP.getId(), StatusEnum.SLEEPING, (byte) 0);
-		Spell water_of_Healing = new Spell(SpellNameEnum.WATER_OF_HEALING.getId(), null, (byte) 4);
-		this.spells.add(swift_Wind);
+		Spell waterOfHealing = new Spell(SpellNameEnum.WATER_OF_HEALING.getId(), null, (byte) 4);
+		this.spells.add(swiftWind);
 		this.spells.add(tempest);
-		this.spells.add(ball_of_Flame);
+		this.spells.add(ballOfFlame);
 		this.spells.add(courage);
-		this.spells.add(fire_of_Wrath);
+		this.spells.add(fireOfWrath);
 		this.spells.add(sleep);
-		this.spells.add(water_of_Healing);
+		this.spells.add(waterOfHealing);
 	}
 	
 	public void removeSpellFromBook(Spell spell) {
