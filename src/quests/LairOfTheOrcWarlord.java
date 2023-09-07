@@ -8,7 +8,7 @@ import entities.enemies.Fimir;
 import entities.tiles.Furniture;
 import entities.enemies.Goblin;
 import entities.HeroQuest;
-import entities.Items;
+import enums.ItemEnum;
 import entities.enemies.Monster;
 import entities.enemies.Orc;
 import entities.Position;
@@ -123,7 +123,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 	public void generateTreasures(){
 		Position t = positions[17][5];
 		Treasure tr = new Treasure(30);
-		tr.setItem(Items.PotionOfHealing);
+		tr.setItem(ItemEnum.PotionOfHealing);
 		t.setTreasure(tr);
 		
 		Treasure tr2 = new Treasure(100);
@@ -131,7 +131,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 		positions[16][11].setTreasure(tr2);
 		
 		Treasure spear = new Treasure(-1);
-		spear.setItem(Items.Spear);
+		spear.setItem(ItemEnum.Spear);
 		positions[6][6].setTreasure(spear);
 	}
 	

@@ -6,7 +6,7 @@ import entities.tiles.FallingRock;
 import entities.tiles.Furniture;
 import entities.enemies.Gargoyle;
 import entities.HeroQuest;
-import entities.Items;
+import enums.ItemEnum;
 import entities.enemies.Monster;
 import entities.enemies.Mummy;
 import entities.tiles.Pit;
@@ -169,7 +169,7 @@ public class MelarsMaze extends BasicMap {
 	
 	public void generateTreasures(){
 		Treasure talismanOfLore = new Treasure(-1);
-		talismanOfLore.setItem(Items.TalismanOfLore);
+		talismanOfLore.setItem(ItemEnum.TalismanOfLore);
 		positions[14][17].setTreasure(talismanOfLore);
 	}
 	

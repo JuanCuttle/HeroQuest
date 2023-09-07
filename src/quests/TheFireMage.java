@@ -8,7 +8,7 @@ import entities.enemies.ChaosSorcerer;
 import entities.Creature;
 import entities.tiles.Furniture;
 import entities.HeroQuest;
-import entities.Items;
+import enums.ItemEnum;
 import entities.enemies.Monster;
 import entities.enemies.Mummy;
 import entities.enemies.Orc;
@@ -136,7 +136,7 @@ public class TheFireMage extends BasicMap {
 	
 	public void generateTreasures(){
 		Treasure questTreasure = new Treasure(150);
-		questTreasure.setItem(Items.WandOfRecall);
+		questTreasure.setItem(ItemEnum.WandOfRecall);
 		positions[17][30].setTreasure(questTreasure);
 	}
 	

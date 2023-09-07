@@ -50,7 +50,7 @@ public class KeyboardListener implements KeyListener {
 			case KeyEvent.VK_O: this.user.openDoorWithKeyboard();
 				break;
 			case KeyEvent.VK_P: try {
-				this.user.chooseCharacter();
+				this.user.selectCharacter();
 			} catch (ClassNotFoundException e1) {
 				e1.printStackTrace();
 			}

@@ -1,38 +1,5 @@
 package view;
 
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.TextArea;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
 import entities.*;
 import entities.enemies.Monster;
 import entities.players.PlayableCharacter;
@@ -43,6 +10,16 @@ import entities.utils.Strings;
 import enums.*;
 import interfaces.GUIInterface;
 import quests.BasicMap;
+
+import javax.sound.sampled.*;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class GUI extends JFrame implements GUIInterface {
 
@@ -71,22 +48,13 @@ public class GUI extends JFrame implements GUIInterface {
 	public static Boolean autoConnectToServer = true;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new QuestSelector();
-/*					AtorJogador frame = new AtorJogador();
-					frame.setVisible(true);
-					BasicMap map = frame.heroQuest.getMap();
-					if (map instanceof TheTrial){
-						frame.textArea.setText(Strings.THETRIAL.toString());
-						//JOptionPane.showMessageDialog(null, Strings.THETRIAL);
-					}*/
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            try {
+                new QuestSelector();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 	}
 
 	public GUI(HeroQuest game) {
@@ -102,10 +70,10 @@ public class GUI extends JFrame implements GUIInterface {
 		
 		// GUI attributes
 		game.setGUI(this);
-		this.heroQuest = game;//new HeroQuest(this);
+		this.heroQuest = game;
 		BasicMap map = this.heroQuest.getMap();
 		this.boardButtons = new JButton[map.getTotalNumberOfRows()][map.getTotalNumberOfColumns()];
-		this.creatureButtons = new ArrayList<JButton>();
+		this.creatureButtons = new ArrayList<>();
 		addKeyListener(listener);
 
 		// Configure the window
@@ -122,30 +90,25 @@ public class GUI extends JFrame implements GUIInterface {
 		menuBar.add(mnHelp);
 
 		JButton btnInstructions = new JButton(Strings.INSTRUCTIONS.toString());
-		btnInstructions.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Instructions instr = null;
-				try {
-					instr = new Instructions();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				instr.setVisible(true);
-			}
-		});
+		btnInstructions.addActionListener(arg0 -> {
+            Instructions instr = null;
+            try {
+                instr = new Instructions();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            instr.setVisible(true);
+        });
 		mnHelp.add(btnInstructions);
 
 		JButton btnCharSelect = new JButton(Strings.SELECT_CHARACTER.toString());
-		btnCharSelect.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					chooseCharacter();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+		btnCharSelect.addActionListener(arg0 -> {
+            try {
+                selectCharacter();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
 
 		mnHelp.add(btnCharSelect);
 
@@ -156,24 +119,18 @@ public class GUI extends JFrame implements GUIInterface {
 		mnSettings.add(btnMusic);
 		
 		JButton btnLanguage = new JButton(Strings.LANGUAGE_BUTTON.toString());
-		btnLanguage.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				LanguageSelector ls = new LanguageSelector(getThis());
-				ls.setVisible(true);
-			}
-		});
+		btnLanguage.addActionListener(arg0 -> {
+            LanguageSelector ls = new LanguageSelector(getThis());
+            ls.setVisible(true);
+        });
 		mnSettings.add(btnLanguage);
-		btnMusic.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				toggleMusic();
-			}
-		});
+		btnMusic.addActionListener(arg0 -> toggleMusic());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		contentPane.setBackground(Color.BLACK);
 		setContentPane(contentPane);
-		Border invisivel = BorderFactory.createEmptyBorder();
+		Border emptyBorder = BorderFactory.createEmptyBorder();
 		setFocusable(true);
 		requestFocusInWindow();
 
@@ -182,7 +139,7 @@ public class GUI extends JFrame implements GUIInterface {
 			JButton botao = new JButton();
 			botao.setText(""+j);
 			botao.setBounds(173 + (j * 23), 112 + (-1 * 23), 23, 23);
-			botao.setBorder(invisivel);
+			botao.setBorder(emptyBorder);
 			botao.setVisible(true);
 			contentPane.add(botao);
 		}
@@ -190,7 +147,7 @@ public class GUI extends JFrame implements GUIInterface {
 			JButton botao = new JButton();
 			botao.setText(""+i);
 			botao.setBounds(173 + (-1 * 23), 112 + (i * 23), 23, 23);
-			botao.setBorder(invisivel);
+			botao.setBorder(emptyBorder);
 			botao.setVisible(true);
 			contentPane.add(botao);
 		}
@@ -201,7 +158,7 @@ public class GUI extends JFrame implements GUIInterface {
 				JButton botao = new JButton();
 				botao.setName("" + i + j);
 				botao.setBounds(173 + (j * 23), 112 + (i * 23), 23, 23);
-				botao.setBorder(invisivel);
+				botao.setBorder(emptyBorder);
 				botao.setVisible(true);
 				botao.addKeyListener(listener);
 				botao.addActionListener(e -> openDoor(Integer.parseInt(botao.getName())));
@@ -236,138 +193,100 @@ public class GUI extends JFrame implements GUIInterface {
 	
 	@SuppressWarnings("unused")
 	private void generateActionButtons(){
-		Border invisivel = BorderFactory.createEmptyBorder();
+		Border emptyBorder = BorderFactory.createEmptyBorder();
 		
-		ImageIcon iconeConectar = new ImageIcon(getClass().getResource(
-				"/images/buttons/BotaoConectar.png"));
-		this.connectButton = new JButton(iconeConectar);
+		ImageIcon iconConnectButton = new ImageIcon(Objects.requireNonNull(getClass().getResource(
+				"/images/buttons/ConnectButton.png")));
+		this.connectButton = new JButton(iconConnectButton);
 		connectButton.setEnabled(false);
 		this.connectButton.setBounds(22 * 1 + 120 * 0, 0, 120, 89);
-		this.connectButton.setBorder(invisivel);
-		this.connectButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				connectToServer();
-			}
-		});
+		this.connectButton.setBorder(emptyBorder);
+		this.connectButton.addActionListener(e -> connectToServer());
 		this.connectButton.addKeyListener(listener);
 		this.contentPane.add(this.connectButton);
 
-		ImageIcon iconeDesconectar = new ImageIcon(getClass().getResource(
-				"/images/buttons/BotaoDesconectar.png"));
-		this.disconnectButton = new JButton(iconeDesconectar);
+		ImageIcon iconDisconnectButton = new ImageIcon(Objects.requireNonNull(getClass().getResource(
+				"/images/buttons/DisconnectButton.png")));
+		this.disconnectButton = new JButton(iconDisconnectButton);
 		disconnectButton.setEnabled(false);
 		this.disconnectButton.setBounds(22 * 2 + 120 * 1, 0, 120, 89);
-		this.disconnectButton.setBorder(invisivel);
-		this.disconnectButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				disconnectFromServer();
-			}
-		});
+		this.disconnectButton.setBorder(emptyBorder);
+		this.disconnectButton.addActionListener(e -> disconnectFromServer());
 		this.disconnectButton.addKeyListener(listener);
 		this.contentPane.add(this.disconnectButton);
 
-		ImageIcon iconeIniciarPartida = new ImageIcon(getClass().getResource(
-				"/images/buttons/BotaoIniciarPartida.png"));
-		this.startGameButton = new JButton(iconeIniciarPartida);
+		ImageIcon iconStartGameButton = new ImageIcon(Objects.requireNonNull(getClass().getResource(
+				"/images/buttons/StartGameButton.png")));
+		this.startGameButton = new JButton(iconStartGameButton);
 		startGameButton.setEnabled(false);
 		this.startGameButton.setBounds(22 * 3 + 120 * 2, 0, 120, 89);
-		this.startGameButton.setBorder(invisivel);
-		this.startGameButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				startGame();
-			}
-		});
+		this.startGameButton.setBorder(emptyBorder);
+		this.startGameButton.addActionListener(e -> startGame());
 		this.startGameButton.addKeyListener(listener);
 		this.contentPane.add(this.startGameButton);
 
-		ImageIcon iconeFinalizarJogada = new ImageIcon(getClass().getResource(
-				"/images/buttons/BotaoFinalizarJogada.png"));
-		this.endTurnButton = new JButton(iconeFinalizarJogada);
+		ImageIcon iconEndTurnButton = new ImageIcon(getClass().getResource(
+				"/images/buttons/EndTurnButton.png"));
+		this.endTurnButton = new JButton(iconEndTurnButton);
 		endTurnButton.setEnabled(false);
 		this.endTurnButton.setBounds(22 * 4 + 120 * 3, 0, 120, 89);
-		this.endTurnButton.setBorder(invisivel);
-		this.endTurnButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				endTurn();
-			}
-		});
+		this.endTurnButton.setBorder(emptyBorder);
+		this.endTurnButton.addActionListener(e -> endTurn());
 		this.endTurnButton.addKeyListener(listener);
 		this.contentPane.add(this.endTurnButton);
 
-		ImageIcon iconeBotaoMostrarInventario = new ImageIcon(getClass()
-				.getResource("/images/buttons/BotaoMostrarInventario.png"));
-		this.showInventoryButton = new JButton(iconeBotaoMostrarInventario);
+		ImageIcon iconShowInventoryButton = new ImageIcon(Objects.requireNonNull(getClass()
+				.getResource("/images/buttons/ShowInventoryButton.png")));
+		this.showInventoryButton = new JButton(iconShowInventoryButton);
 		showInventoryButton.setEnabled(false);
 		this.showInventoryButton.setBounds(22 * 5 + 120 * 4, 0, 120, 89);
-		this.showInventoryButton.setBorder(invisivel);
-		this.showInventoryButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showInventory();
-			}
-		});
+		this.showInventoryButton.setBorder(emptyBorder);
+		this.showInventoryButton.addActionListener(e -> showInventory());
 		this.showInventoryButton.addKeyListener(listener);
 		this.contentPane.add(this.showInventoryButton);
 
-		ImageIcon iconeBotaoAtacar = new ImageIcon(getClass().getResource(
-				"/images/buttons/BotaoAtacar.png"));
-		this.attackButton = new JButton(iconeBotaoAtacar);
+		ImageIcon iconAttackButton = new ImageIcon(Objects.requireNonNull(getClass().getResource(
+				"/images/buttons/AttackButton.png")));
+		this.attackButton = new JButton(iconAttackButton);
 		attackButton.setEnabled(false);
 		this.attackButton.setBounds(22 * 6 + 120 * 5, 0, 120, 89);
-		this.attackButton.setBorder(invisivel);
-		this.attackButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				attack();
-			}
-		});
+		this.attackButton.setBorder(emptyBorder);
+		this.attackButton.addActionListener(e -> attack());
 		this.attackButton.addKeyListener(listener);
 		this.contentPane.add(this.attackButton);
 
-		ImageIcon iconeBotaoUsarMagia = new ImageIcon(getClass().getResource(
-				"/images/buttons/BotaoUsarMagia.png"));
-		this.useSpellButton = new JButton(iconeBotaoUsarMagia);
+		ImageIcon iconCastSpellButton = new ImageIcon(Objects.requireNonNull(getClass().getResource(
+				"/images/buttons/CastSpellButton.png")));
+		this.useSpellButton = new JButton(iconCastSpellButton);
 		useSpellButton.setEnabled(false);
 		this.useSpellButton.setBounds(22 * 7 + 120 * 6, 0, 120, 89);
-		this.useSpellButton.setBorder(invisivel);
-		this.useSpellButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				castSpell();
-			}
-		});
+		this.useSpellButton.setBorder(emptyBorder);
+		this.useSpellButton.addActionListener(e -> castSpell());
 		this.useSpellButton.addKeyListener(listener);
 		this.contentPane.add(this.useSpellButton);
 
-		ImageIcon iconeBotaoProcurarArmadilha = new ImageIcon(getClass()
-				.getResource("/images/buttons/BotaoProcurarArmadilha.png"));
-		this.searchForTrapsButton = new JButton(iconeBotaoProcurarArmadilha);
+		ImageIcon iconSearchforTrapsAndHiddenDoorsButton = new ImageIcon(Objects.requireNonNull(getClass()
+				.getResource("/images/buttons/SearchForTrapsAndHiddenDoorsButton.png")));
+		this.searchForTrapsButton = new JButton(iconSearchforTrapsAndHiddenDoorsButton);
 		searchForTrapsButton.setEnabled(false);
 		this.searchForTrapsButton.setBounds(22 * 8 + 120 * 7, 0, 120, 89);
-		this.searchForTrapsButton.setBorder(invisivel);
-		this.searchForTrapsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				searchForTrapsAndHiddenDoors();
-			}
-		});
+		this.searchForTrapsButton.setBorder(emptyBorder);
+		this.searchForTrapsButton.addActionListener(e -> searchForTrapsAndHiddenDoors());
 		this.searchForTrapsButton.addKeyListener(listener);
 		this.contentPane.add(searchForTrapsButton);
 
-		ImageIcon iconeBotaoProcurarTesouro = new ImageIcon(getClass()
-				.getResource("/images/buttons/BotaoProcurarTesouro.png"));
-		this.searchForTreasureButton = new JButton(iconeBotaoProcurarTesouro);
+		ImageIcon iconSearchForTreasureButton = new ImageIcon(Objects.requireNonNull(getClass()
+				.getResource("/images/buttons/SearchForTreasureButton.png")));
+		this.searchForTreasureButton = new JButton(iconSearchForTreasureButton);
 		searchForTreasureButton.setEnabled(false);
 		this.searchForTreasureButton.setBounds(22 * 9 + 120 * 8, 0, 120, 89);
-		this.searchForTreasureButton.setBorder(invisivel);
-		this.searchForTreasureButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				searchForTreasure();
-			}
-		});
+		this.searchForTreasureButton.setBorder(emptyBorder);
+		this.searchForTreasureButton.addActionListener(e -> searchForTreasure());
 		this.searchForTreasureButton.addKeyListener(listener);
 		this.contentPane.add(this.searchForTreasureButton);
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	public void chooseCharacter() throws ClassNotFoundException {
+	public void selectCharacter() throws ClassNotFoundException {
 		this.heroQuest.selectCharacter();
 	}
 
@@ -468,19 +387,18 @@ public class GUI extends JFrame implements GUIInterface {
 		if (!isConnected) {
 			String serverAddress = this.obtainServerAddress();
 			String playerName = obtainPlayerName();
-			boolean success = this.heroQuest.getAtorClienteServidor().conectar(
-					serverAddress, playerName);
+			boolean success = this.heroQuest.getClientServerProxy().connect(serverAddress, playerName);
 			if (success) {
 				this.heroQuest.setConnected(true);
 				this.heroQuest.setLocalPlayerName(playerName);
 				this.heroQuest.setServerAddress(serverAddress);
-				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFULCONNECT.getId());
+				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFUL_CONNECTION.getId());
 				showQuestDescription();
 			} else {
-				showConnectionResultMessage(ConnectionResultEnum.FAILEDCONNECT.getId());
+				showConnectionResultMessage(ConnectionResultEnum.FAILED_TO_CONNECT.getId());
 			}
 		} else {
-			showConnectionResultMessage(ConnectionResultEnum.ALREADYCONNECTED.getId());
+			showConnectionResultMessage(ConnectionResultEnum.ALREADY_CONNECTED.getId());
 		}
 	}
 
@@ -528,15 +446,15 @@ public class GUI extends JFrame implements GUIInterface {
 	public void disconnectFromServer() {
 		boolean isConnected = this.heroQuest.isConnected();
 		if (isConnected) {
-			boolean success = this.heroQuest.getAtorClienteServidor().desconectar();
+			boolean success = this.heroQuest.getClientServerProxy().disconnect();
 			if (success) {
 				this.heroQuest.setConnected(false);
-				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFULDISCONNECT.getId());
+				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFUL_DISCONNECTION.getId());
 			} else {
-				showConnectionResultMessage(ConnectionResultEnum.FAILEDDISCONNECT.getId());
+				showConnectionResultMessage(ConnectionResultEnum.FAILED_DISCONNECTION.getId());
 			}
 		} else {
-			showConnectionResultMessage(ConnectionResultEnum.DISCBEFORECONNECT.getId());
+			showConnectionResultMessage(ConnectionResultEnum.DISCONNECTION_ATTEMPT_BEFORE_BEING_CONNECTED.getId());
 		}
 	}
 
@@ -551,13 +469,13 @@ public class GUI extends JFrame implements GUIInterface {
 		}
 		if (isInterrupted || ((!inSession) && isConnected)) {
 			int numberOfPlayersInGame = this.setTotalNumberOfPlayersInTheGame();
-			this.heroQuest.getAtorClienteServidor().iniciarPartida(numberOfPlayersInGame);
-			showConnectionResultMessage(ConnectionResultEnum.SUCCESSFULSTART.getId());
+			this.heroQuest.getClientServerProxy().startGame(numberOfPlayersInGame);
+			showConnectionResultMessage(ConnectionResultEnum.SUCCESSFUL_START.getId());
 		}
 		if (!isConnected) {
-			showConnectionResultMessage(ConnectionResultEnum.STARTBEFORECONNECT.getId());
+			showConnectionResultMessage(ConnectionResultEnum.START_ATTEMPT_BEFORE_CONNECTING.getId());
 		}
-		showConnectionResultMessage(ConnectionResultEnum.UNINTERRUPTEDGAME.getId());
+		showConnectionResultMessage(ConnectionResultEnum.GAME_NOT_INTERRUPTED.getId());
 	}
 
 	public void announceHeroesWon() {
@@ -568,19 +486,13 @@ public class GUI extends JFrame implements GUIInterface {
 		this.textArea.setText(Strings.ZARGON_WON.toString());
 	}
 
-	public String informarNomeJogador() {
-		String nomeJogador = JOptionPane
-				.showInputDialog(Strings.INPUT_NAME.toString());
-		return nomeJogador;
-	}
-
 	public void showInventory() {
 		this.heroQuest.showInventory();
 	}
 
-	public void showInventory(int gold, ArrayList<Items> items) {
+	public void showInventory(int gold, ArrayList<ItemEnum> items) {
 		String itemList = Strings.ITEMS_OWNED.toString();
-		for (Items item : items){
+		for (ItemEnum item : items){
 			itemList += item + "\n";
 		}
 		this.textArea.setText(Strings.YOU_HAVE.toString() + gold
@@ -597,10 +509,8 @@ public class GUI extends JFrame implements GUIInterface {
 				+ Strings.CURRENT_MP + mind + Strings.REMAINING_MOVEMENT
 				+ movement + Strings.CURRENT_STATUS + statusEnum + Strings.ROW + row
 				+ Strings.COLUMN + column;
-		if (roundsToSleep != null){
-			if (roundsToSleep != 0){
-				output += Strings.TURNS_LEFT_TO_WAKE_UP.toString() + roundsToSleep;
-			}
+		if (roundsToSleep != null && roundsToSleep != 0){
+			output += Strings.TURNS_LEFT_TO_WAKE_UP.toString() + roundsToSleep;
 		}
 		this.textArea.setText(output);
 	}
@@ -616,10 +526,9 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void refreshTile(JButton button, Position position) {
-		ImageIcon img;
 		String path = "";
-		int linha = position.getRow();
-		int coluna = position.getColumn();
+		int positionRow = position.getRow();
+		int positionColumn = position.getColumn();
 		if (!position.isVisible()) {
 			path = "images/tiles/Wall.png";
 
@@ -635,7 +544,7 @@ public class GUI extends JFrame implements GUIInterface {
 						+ ".png";
 			} else if (position.getTrap() != null) {
 					if (position.getTrap().getVisible()) {
-						if (position.getTrap() instanceof FallingRock && position.getTrap().getTriggered()){
+						if (position.getTrap() instanceof FallingRock && position.getTrap().getTriggered()) {
 							path = "/images/tiles/traps/Rubble.png";
 						} else {
 							path = "/images/tiles/traps/"
@@ -662,347 +571,346 @@ public class GUI extends JFrame implements GUIInterface {
 					path = "/images/tiles/" + position.getClass().getSimpleName()
 							+ ".png";
 				}
-				//Map map = this.heroQuest.getMap();
 				BasicMap map = this.heroQuest.getMap();
 				int stairRow = map.getStairsPosition()[0];
 				int stairColumn = map.getStairsPosition()[1];
-				if (stairRow != 0){
-					if (linha == stairRow && coluna == stairColumn) {
+				if (stairRow != 0) {
+					if (positionRow == stairRow && positionColumn == stairColumn) {
 						path = "/images/stairs/Stairs00.png";
-					} else if (linha == stairRow && coluna == stairColumn+1) {
+					} else if (positionRow == stairRow && positionColumn == stairColumn+1) {
 						path = "/images/stairs/Stairs01.png";
-					} else if (linha == stairRow+1 && coluna == stairColumn) {
+					} else if (positionRow == stairRow+1 && positionColumn == stairColumn) {
 						path = "/images/stairs/Stairs10.png";
-					} else if (linha == stairRow+1 && coluna == stairColumn+1) {
+					} else if (positionRow == stairRow+1 && positionColumn == stairColumn+1) {
 						path = "/images/stairs/Stairs11.png";
 					}
 				}
 				
-				if (map.getPosition((byte)linha, (byte)coluna) instanceof Furniture){
+				if (map.getPosition((byte)positionRow, (byte)positionColumn) instanceof Furniture) {
 					
-					byte[] pos = map.getTable1Position();
-					if (pos != null){
-						path = tablePath(map, linha, coluna, pos, path);
+					byte[] furnitureStartingPosition = map.getTable1Position();
+					if (furnitureStartingPosition != null){
+						path = tablePath(positionRow, positionColumn, furnitureStartingPosition);
 					}
-					pos = map.getTable2Position();
-					if (pos != null){
-						path = tablePath(map, linha, coluna, pos, path);
-					}
-					
-					pos = map.getRackPosition();
-					if (pos != null){
-						path = rackPath(map, linha, coluna, pos, path);
+					furnitureStartingPosition = map.getTable2Position();
+					if (furnitureStartingPosition != null){
+						path = tablePath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getBookOnTablePosition();
-					if (pos != null){
-						path = botPath(map, linha, coluna, pos, path);
+					furnitureStartingPosition = map.getRackPosition();
+					if (furnitureStartingPosition != null){
+						path = generateRackPath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getTombPosition();
-					if (pos != null){
-						path = tombPath(map, linha, coluna, pos, path);
+					furnitureStartingPosition = map.getBookOnTablePosition();
+					if (furnitureStartingPosition != null){
+						path = generateBookOnTablePath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getThronePosition();
-					if (pos != null){
-						path = thronePath(map, linha, coluna, pos, path);
+					furnitureStartingPosition = map.getTombPosition();
+					if (furnitureStartingPosition != null){
+						path = generateTombPath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getWepRackPosition();
-					if (pos != null){
-						path = wepRackPath(map, linha, coluna, pos, path);
+					furnitureStartingPosition = map.getThronePosition();
+					if (furnitureStartingPosition != null){
+						path = generateThronePath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getDeskPosition();
-					if (pos != null){
-						path = deskPath(map, linha, coluna, pos, path);
+					furnitureStartingPosition = map.getWepRackPosition();
+					if (furnitureStartingPosition != null){
+						path = generateWeaponRackPath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getFireplacePosition();
-					if (pos != null){
-						path = fireplacePath(map, linha, coluna, pos, path);
+					furnitureStartingPosition = map.getDeskPosition();
+					if (furnitureStartingPosition != null){
+						path = generateDeskPath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getBookcase1Position();
-					if (pos != null){
-						path = bcPath(linha, coluna, pos, path);
+					furnitureStartingPosition = map.getFireplacePosition();
+					if (furnitureStartingPosition != null){
+						path = generateFireplacePath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getBookcase2Position();
-					if (pos != null){
-						path = bcPath(linha, coluna, pos, path);
+					furnitureStartingPosition = map.getBookcase1Position();
+					if (furnitureStartingPosition != null){
+						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 					
-					pos = map.getBookcase3Position();
-					if (pos != null){
-						path = bcPath(linha, coluna, pos, path);
+					furnitureStartingPosition = map.getBookcase2Position();
+					if (furnitureStartingPosition != null){
+						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition);
+					}
+					
+					furnitureStartingPosition = map.getBookcase3Position();
+					if (furnitureStartingPosition != null){
+						path = generateBookcasePath(positionRow, positionColumn, furnitureStartingPosition);
 					}
 				}
 				
 			}
 		}
-		img = new ImageIcon(getClass().getResource(path));
+		ImageIcon img = new ImageIcon(getClass().getResource(path));
 		button.setIcon(img);
 		button.invalidate();
 		button.revalidate();
 		button.repaint();
 	}
 
-	private String tablePath(BasicMap map, int linha, int coluna, byte[] tblpos, String path) {
-
-		int tableRow = tblpos[1];
-		int tableCol = tblpos[2];
+	private String tablePath(int row, int column, byte[] tablePosition) {
+		String path = null;
+		int tableRow = tablePosition[1];
+		int tableColumn = tablePosition[2];
 		
-		if (tblpos[0] == 0){
-			if (linha == tableRow && coluna == tableCol) {
+		if (tablePosition[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+			if (row == tableRow && column == tableColumn) {
 				path = "/images/tables/TableH00.png";
-			} else if (linha == tableRow && coluna == tableCol+1) {
+			} else if (row == tableRow && column == tableColumn+1) {
 				path = "/images/tables/TableH01.png";
-			} else if (linha == tableRow && coluna == tableCol+2) {
+			} else if (row == tableRow && column == tableColumn+2) {
 				path = "/images/tables/TableH02.png";
-			} else if (linha == tableRow+1 && coluna == tableCol) {
+			} else if (row == tableRow+1 && column == tableColumn) {
 				path = "/images/tables/TableH10.png";
-			} else if (linha == tableRow+1 && coluna == tableCol+1) {
+			} else if (row == tableRow+1 && column == tableColumn+1) {
 				path = "/images/tables/TableH11.png";
-			} else if (linha == tableRow+1 && coluna == tableCol+2) {
+			} else if (row == tableRow+1 && column == tableColumn+2) {
 				path = "/images/tables/TableH12.png";
 			}
 		} else {
-			if (linha == tableRow && coluna == tableCol) {
+			if (row == tableRow && column == tableColumn) {
 				path = "/images/tables/TableV00.png";
-			} else if (linha == tableRow && coluna == tableCol+1) {
+			} else if (row == tableRow && column == tableColumn+1) {
 				path = "/images/tables/TableV01.png";
-			} else if (linha == tableRow+1 && coluna == tableCol) {
+			} else if (row == tableRow+1 && column == tableColumn) {
 				path = "/images/tables/TableV10.png";
-			} else if (linha == tableRow+1 && coluna == tableCol+1) {
+			} else if (row == tableRow+1 && column == tableColumn+1) {
 				path = "/images/tables/TableV11.png";
-			} else if (linha == tableRow+2 && coluna == tableCol) {
+			} else if (row == tableRow+2 && column == tableColumn) {
 				path = "/images/tables/TableV20.png";
-			} else if (linha == tableRow+2 && coluna == tableCol+1) {
+			} else if (row == tableRow+2 && column == tableColumn+1) {
 				path = "/images/tables/TableV21.png";
 			}
 		}
 		return path;
 	}
 	
-	private String rackPath(BasicMap map, int linha, int coluna, byte[] rackpos, String path) {
-
-		int rackRow = rackpos[1];
-		int rackCol = rackpos[2];
+	private String generateRackPath(int row, int column, byte[] rackPosition) {
+		String path = null;
+		int rackRow = rackPosition[1];
+		int rackColumn = rackPosition[2];
 		
-		if (rackpos[0] == 0){
-			if (linha == rackRow && coluna == rackCol) {
+		if (rackPosition[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+			if (row == rackRow && column == rackColumn) {
 				path = "/images/racks/RackH00.png";
-			} else if (linha == rackRow && coluna == rackCol+1) {
+			} else if (row == rackRow && column == rackColumn+1) {
 				path = "/images/racks/RackH01.png";
-			} else if (linha == rackRow && coluna == rackCol+2) {
+			} else if (row == rackRow && column == rackColumn+2) {
 				path = "/images/racks/RackH02.png";
-			} else if (linha == rackRow+1 && coluna == rackCol) {
+			} else if (row == rackRow+1 && column == rackColumn) {
 				path = "/images/racks/RackH10.png";
-			} else if (linha == rackRow+1 && coluna == rackCol+1) {
+			} else if (row == rackRow+1 && column == rackColumn+1) {
 				path = "/images/racks/RackH11.png";
-			} else if (linha == rackRow+1 && coluna == rackCol+2) {
+			} else if (row == rackRow+1 && column == rackColumn+2) {
 				path = "/images/racks/RackH12.png";
 			}
 		} else {
-			if (linha == rackRow && coluna == rackCol) {
+			if (row == rackRow && column == rackColumn) {
 				path = "/images/racks/RackV00.png";
-			} else if (linha == rackRow && coluna == rackCol+1) {
+			} else if (row == rackRow && column == rackColumn+1) {
 				path = "/images/racks/RackV01.png";
-			} else if (linha == rackRow+1 && coluna == rackCol) {
+			} else if (row == rackRow+1 && column == rackColumn) {
 				path = "/images/racks/RackV10.png";
-			} else if (linha == rackRow+1 && coluna == rackCol+1) {
+			} else if (row == rackRow+1 && column == rackColumn+1) {
 				path = "/images/racks/RackV11.png";
-			} else if (linha == rackRow+2 && coluna == rackCol) {
+			} else if (row == rackRow+2 && column == rackColumn) {
 				path = "/images/racks/RackV20.png";
-			} else if (linha == rackRow+2 && coluna == rackCol+1) {
+			} else if (row == rackRow+2 && column == rackColumn+1) {
 				path = "/images/racks/RackV21.png";
 			}
 		}
 		return path;
 	}
 	
-	private String botPath(BasicMap map, int linha, int coluna, byte[] botpos, String path) {
-
-		int botRow = botpos[1];
-		int botCol = botpos[2];
+	private String generateBookOnTablePath(int row, int column, byte[] bookOnTablePosition) {
+		String path = null;
+		int bookOnTableRow = bookOnTablePosition[1];
+		int bookOnTableColumn = bookOnTablePosition[2];
 		
-		if (botpos[0] == 0){
-			if (linha == botRow && coluna == botCol) { // Change if and when there is this piece horizontally
-				path = "/images/bookOnTable/RackH00.png";
-			} else if (linha == botRow && coluna == botCol+1) {
-				path = "/images/bookOnTable/RackH01.png";
-			} else if (linha == botRow && coluna == botCol+2) {
-				path = "/images/bookOnTable/RackH02.png";
-			} else if (linha == botRow+1 && coluna == botCol) {
-				path = "/images/bookOnTable/RackH10.png";
-			} else if (linha == botRow+1 && coluna == botCol+1) {
-				path = "/images/bookOnTable/RackH11.png";
-			} else if (linha == botRow+1 && coluna == botCol+2) {
-				path = "/images/bookOnTable/RackH12.png";
+		if (bookOnTablePosition[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+			if (row == bookOnTableRow && column == bookOnTableColumn) {
+				path = "/images/bookOnTable/BookOnTable01.png";
+			} else if (row == bookOnTableRow && column == bookOnTableColumn+1) {
+				path = "/images/bookOnTable/BookOnTable11.png";
+			} else if (row == bookOnTableRow && column == bookOnTableColumn+2) {
+				path = "/images/bookOnTable/BookOnTable21.png";
+			} else if (row == bookOnTableRow+1 && column == bookOnTableColumn) {
+				path = "/images/bookOnTable/BookOnTable00.png";
+			} else if (row == bookOnTableRow+1 && column == bookOnTableColumn+1) {
+				path = "/images/bookOnTable/BookOnTable10.png";
+			} else if (row == bookOnTableRow+1 && column == bookOnTableColumn+2) {
+				path = "/images/bookOnTable/BookOnTable20.png";
 			}
 		} else {
-			if (linha == botRow && coluna == botCol) {
+			if (row == bookOnTableRow && column == bookOnTableColumn) {
 				path = "/images/bookOnTable/BookOnTable00.png";
-			} else if (linha == botRow && coluna == botCol+1) {
+			} else if (row == bookOnTableRow && column == bookOnTableColumn+1) {
 				path = "/images/bookOnTable/BookOnTable01.png";
-			} else if (linha == botRow+1 && coluna == botCol) {
+			} else if (row == bookOnTableRow+1 && column == bookOnTableColumn) {
 				path = "/images/bookOnTable/BookOnTable10.png";
-			} else if (linha == botRow+1 && coluna == botCol+1) {
+			} else if (row == bookOnTableRow+1 && column == bookOnTableColumn+1) {
 				path = "/images/bookOnTable/BookOnTable11.png";
-			} else if (linha == botRow+2 && coluna == botCol) {
+			} else if (row == bookOnTableRow+2 && column == bookOnTableColumn) {
 				path = "/images/bookOnTable/BookOnTable20.png";
-			} else if (linha == botRow+2 && coluna == botCol+1) {
+			} else if (row == bookOnTableRow+2 && column == bookOnTableColumn+1) {
 				path = "/images/bookOnTable/BookOnTable21.png";
 			}
 		}
 		return path;
 	}
 	
-	private String tombPath(BasicMap map, int linha, int coluna, byte[] tombpos, String path) {
-
-		int tombRow = tombpos[1];
-		int tombCol = tombpos[2];
+	private String generateTombPath(int row, int column, byte[] tombPosition) {
+		String path = null;
+		int tombRow = tombPosition[1];
+		int tombColumn = tombPosition[2];
 		
-		if (tombpos[0] == 0){
-			if (linha == tombRow && coluna == tombCol) { // Change if and when there is this piece horizontally
-				path = "/images/tomb/RackH00.png";
-			} else if (linha == tombRow && coluna == tombCol+1) {
-				path = "/images/tomb/RackH01.png";
-			} else if (linha == tombRow && coluna == tombCol+2) {
-				path = "/images/tomb/RackH02.png";
-			} else if (linha == tombRow+1 && coluna == tombCol) {
-				path = "/images/tomb/RackH10.png";
-			} else if (linha == tombRow+1 && coluna == tombCol+1) {
-				path = "/images/tomb/RackH11.png";
-			} else if (linha == tombRow+1 && coluna == tombCol+2) {
-				path = "/images/tomb/RackH12.png";
+		if (tombPosition[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+			if (row == tombRow && column == tombColumn) {
+				path = "/images/tomb/Tomb01.png";
+			} else if (row == tombRow && column == tombColumn+1) {
+				path = "/images/tomb/Tomb11.png";
+			} else if (row == tombRow && column == tombColumn+2) {
+				path = "/images/tomb/Tomb21.png";
+			} else if (row == tombRow+1 && column == tombColumn) {
+				path = "/images/tomb/Tomb00.png";
+			} else if (row == tombRow+1 && column == tombColumn+1) {
+				path = "/images/tomb/Tomb10.png";
+			} else if (row == tombRow+1 && column == tombColumn+2) {
+				path = "/images/tomb/Tomb20.png";
 			}
 		} else {
-			if (linha == tombRow && coluna == tombCol) {
+			if (row == tombRow && column == tombColumn) {
 				path = "/images/tomb/Tomb00.png";
-			} else if (linha == tombRow && coluna == tombCol+1) {
+			} else if (row == tombRow && column == tombColumn+1) {
 				path = "/images/tomb/Tomb01.png";
-			} else if (linha == tombRow+1 && coluna == tombCol) {
+			} else if (row == tombRow+1 && column == tombColumn) {
 				path = "/images/tomb/Tomb10.png";
-			} else if (linha == tombRow+1 && coluna == tombCol+1) {
+			} else if (row == tombRow+1 && column == tombColumn+1) {
 				path = "/images/tomb/Tomb11.png";
-			} else if (linha == tombRow+2 && coluna == tombCol) {
+			} else if (row == tombRow+2 && column == tombColumn) {
 				path = "/images/tomb/Tomb20.png";
-			} else if (linha == tombRow+2 && coluna == tombCol+1) {
+			} else if (row == tombRow+2 && column == tombColumn+1) {
 				path = "/images/tomb/Tomb21.png";
 			}
 		}
 		return path;
 	}
 	
-	private String thronePath(BasicMap map, int linha, int coluna, byte[] thronepos, String path) {
-
-		int throneRow = thronepos[1];
-		int throneCol = thronepos[2];
+	private String generateThronePath(int row, int column, byte[] thronePosition) {
+		String path = null;
+		int throneRow = thronePosition[1];
+		int throneColumn = thronePosition[2];
 		
-		if (thronepos[0] == 0){
-			if (linha == throneRow && coluna == throneCol) {
+		if (thronePosition[0] == FurnitureDirectionEnum.RIGHT.getId()) {
+			if (row == throneRow && column == throneColumn) {
 				path = "/images/throne/ThroneR.png";
 			}
 		} else {
-			if (linha == throneRow && coluna == throneCol) {
+			if (row == throneRow && column == throneColumn) {
 				path = "/images/throne/ThroneL.png";
 			}
 		}
 		return path;
 	}
 	
-	private String wepRackPath(BasicMap map, int linha, int coluna, byte[] wepRackpos, String path) {
-
-		int wepRackRow = wepRackpos[1];
-		int wepRackCol = wepRackpos[2];
+	private String generateWeaponRackPath(int row, int column, byte[] weaponRackPosition) {
+		String path = null;
+		int weaponRackRow = weaponRackPosition[1];
+		int weaponRackColumn = weaponRackPosition[2];
 		
-		if (wepRackpos[0] == 0){
-			if (linha == wepRackRow && coluna == wepRackCol) {
+		if (weaponRackPosition[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+			if (row == weaponRackRow && column == weaponRackColumn) {
 				path = "/images/wepRack/WepRackR0.png";
-			} else if(linha == wepRackRow+1 && coluna == wepRackCol){
+			} else if (row == weaponRackRow+1 && column == weaponRackColumn) {
 				path = "/images/wepRack/WepRackR1.png";
-			} else if(linha == wepRackRow+2 && coluna == wepRackCol){
+			} else if (row == weaponRackRow+2 && column == weaponRackColumn) {
 				path = "/images/wepRack/WepRackR2.png";
 			}
 		} else {
-			if (linha == wepRackRow && coluna == wepRackCol) {
+			if (row == weaponRackRow && column == weaponRackColumn) {
 				path = "/images/wepRack/WepRackL0.png";
-			} else if(linha == wepRackRow+1 && coluna == wepRackCol){
+			} else if (row == weaponRackRow+1 && column == weaponRackColumn) {
 				path = "/images/wepRack/WepRackL1.png";
-			} else if(linha == wepRackRow+2 && coluna == wepRackCol){
+			} else if (row == weaponRackRow+2 && column == weaponRackColumn) {
 				path = "/images/wepRack/WepRackL2.png";
 			}
 		}
 		return path;
 	}
 	
-	private String deskPath(BasicMap map, int linha, int coluna, byte[] deskpos, String path) {
-
-		int deskRow = deskpos[1];
-		int deskCol = deskpos[2];
+	private String generateDeskPath(int row, int column, byte[] deskPosition) {
+		String path = null;
+		int deskRow = deskPosition[1];
+		int deskCol = deskPosition[2];
 		
-		if (deskpos[0] == 0){ // facing right
-			if (linha == deskRow && coluna == deskCol) {
+		if (deskPosition[0] == FurnitureDirectionEnum.RIGHT.getId()) {
+			if (row == deskRow && column == deskCol) {
 				path = "/images/desk/DeskR00.png";
-			} else if (linha == deskRow && coluna == deskCol+1) {
+			} else if (row == deskRow && column == deskCol+1) {
 				path = "/images/desk/DeskR01.png";
-			} else if (linha == deskRow+1 && coluna == deskCol) {
+			} else if (row == deskRow+1 && column == deskCol) {
 				path = "/images/desk/DeskR10.png";
-			} else if (linha == deskRow+1 && coluna == deskCol+1) {
+			} else if (row == deskRow+1 && column == deskCol+1) {
 				path = "/images/desk/DeskR11.png";
-			} else if (linha == deskRow+2 && coluna == deskCol) {
+			} else if (row == deskRow+2 && column == deskCol) {
 				path = "/images/desk/DeskR20.png";
-			} else if (linha == deskRow+2 && coluna == deskCol+1) {
+			} else if (row == deskRow+2 && column == deskCol+1) {
 				path = "/images/desk/DeskR21.png";
 			}
 		} else {
-			if (linha == deskRow && coluna == deskCol) {
+			if (row == deskRow && column == deskCol) {
 				path = "/images/desk/DeskL00.png";
-			} else if (linha == deskRow && coluna == deskCol+1) {
+			} else if (row == deskRow && column == deskCol+1) {
 				path = "/images/desk/DeskL01.png";
-			} else if (linha == deskRow+1 && coluna == deskCol) {
+			} else if (row == deskRow+1 && column == deskCol) {
 				path = "/images/desk/DeskL10.png";
-			} else if (linha == deskRow+1 && coluna == deskCol+1) {
+			} else if (row == deskRow+1 && column == deskCol+1) {
 				path = "/images/desk/DeskL11.png";
-			} else if (linha == deskRow+2 && coluna == deskCol) {
+			} else if (row == deskRow+2 && column == deskCol) {
 				path = "/images/desk/DeskL20.png";
-			} else if (linha == deskRow+2 && coluna == deskCol+1) {
+			} else if (row == deskRow+2 && column == deskCol+1) {
 				path = "/images/desk/DeskL21.png";
 			}
 		}
 		return path;
 	}
 	
-	private String fireplacePath(BasicMap map, int linha, int coluna, byte[] fireplacepos, String path) {
-
-		int fireplaceRow = fireplacepos[1];
-		int fireplaceCol = fireplacepos[2];
+	private String generateFireplacePath(int row, int column, byte[] fireplacePosition) {
+		String path = null;
+		int fireplaceRow = fireplacePosition[1];
+		int fireplaceCol = fireplacePosition[2];
 		
-		if (fireplacepos[0] == 0){ // facing down
-			if (linha == fireplaceRow && coluna == fireplaceCol) {
+		if (fireplacePosition[0] == FurnitureDirectionEnum.DOWN.getId()) {
+			if (row == fireplaceRow && column == fireplaceCol) {
 				path = "/images/fireplace/FireplaceD0.png";
-			} else if(linha == fireplaceRow && coluna == fireplaceCol+1){
+			} else if (row == fireplaceRow && column == fireplaceCol+1) {
 				path = "/images/fireplace/FireplaceD1.png";
-			} else if(linha == fireplaceRow && coluna == fireplaceCol+2){
+			} else if (row == fireplaceRow && column == fireplaceCol+2) {
 				path = "/images/fireplace/FireplaceD2.png";
 			}
 		} else {
-			if (linha == fireplaceRow && coluna == fireplaceCol) {
+			if (row == fireplaceRow && column == fireplaceCol) {
 				path = "/images/fireplace/FireplaceU0.png";
-			} else if(linha == fireplaceRow && coluna == fireplaceCol+1){
+			} else if (row == fireplaceRow && column == fireplaceCol+1) {
 				path = "/images/fireplace/FireplaceU1.png";
-			} else if(linha == fireplaceRow && coluna == fireplaceCol+2){
+			} else if (row == fireplaceRow && column == fireplaceCol+2) {
 				path = "/images/fireplace/FireplaceU2.png";
 			}
 		}
 		return path;
 	}
 	
-	private String bcPath(int row, int column, byte[] bookcasePosition, String path) {
-
+	private String generateBookcasePath(int row, int column, byte[] bookcasePosition) {
+		String path = null;
 		int bookcaseRow = bookcasePosition[1];
 		int bookcaseColumn = bookcasePosition[2];
 		
@@ -1199,7 +1107,7 @@ public class GUI extends JFrame implements GUIInterface {
 		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(1)).setText(Strings.LANGUAGE_BUTTON.toString());
 	}
 	
-	public void writeSaveFile(String playerName, int heroType, int gold, ArrayList<Items> items) throws IOException {
+	public void writeSaveFile(String playerName, int heroType, int gold, ArrayList<ItemEnum> items) throws IOException {
 		// Retrieve current working directory
 		String currentDir = System.getProperty("user.dir");
 

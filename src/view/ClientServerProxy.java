@@ -15,58 +15,49 @@ import br.ufsc.inf.leobr.cliente.exception.NaoJogandoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
 import interfaces.NetgamesProxyInterface;
 
-public class AtorClientServer implements OuvidorProxy, NetgamesProxyInterface {
+public class ClientServerProxy implements OuvidorProxy, NetgamesProxyInterface {
 
 	private static final long serialVersionUID = 1L;
 	protected Proxy proxy;
 	protected HeroQuest heroQuest;
 
-	public AtorClientServer(HeroQuest heroQuest) {
+	public ClientServerProxy(HeroQuest heroQuest) {
 		proxy = Proxy.getInstance();
 		proxy.addOuvinte(this);
 		this.heroQuest = heroQuest;
 	}
 
-	public boolean conectar(String servidor, String nome) {
+	public boolean connect(String serverAddress, String playerName) {
 		try {
-			proxy.conectar(servidor, nome);
-		} catch (JahConectadoException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-			e.printStackTrace();
-			return false;
-		} catch (NaoPossivelConectarException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-			e.printStackTrace();
-			return false;
-		} catch (ArquivoMultiplayerException e) {
+			proxy.conectar(serverAddress, playerName);
+		} catch (JahConectadoException | NaoPossivelConectarException | ArquivoMultiplayerException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+        return true;
 	}
 
-	public boolean desconectar() {
+	public boolean disconnect() {
 		try {
 			proxy.desconectar();
 		} catch (NaoConectadoException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			e.printStackTrace();
-			//return false;
 		}
 		return true;
 	}
 
-	public void iniciarPartida(int numJog) {
+	public void startGame(int numberOfPlayers) {
 		try {
-			proxy.iniciarPartida(numJog);
+			proxy.iniciarPartida(numberOfPlayers);
 		} catch (NaoConectadoException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	public void enviarJogada(Action action) {
+	public void sendAction(Action action) {
 		try {
 			proxy.enviaJogada(action);
 		} catch (NaoJogandoException e) {

@@ -6,7 +6,7 @@ import entities.Creature;
 import entities.Position;
 import entities.actions.Action;
 import enums.DirectionEnum;
-import view.AtorClientServer;
+import view.ClientServerProxy;
 
 public interface LogicInterface {
 	
@@ -58,5 +58,5 @@ public interface LogicInterface {
 
 	void setServerAddress(String serverAddress);
 	
-	AtorClientServer getAtorClienteServidor();
+	ClientServerProxy getClientServerProxy();
 }

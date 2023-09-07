@@ -3,16 +3,16 @@ package view;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import entities.Items;
+import enums.ItemEnum;
 
 public class SaveFile implements Serializable {
 
 	private static final long serialVersionUID = -1215397092889062634L;
 	private int characterClass;
 	private int gold;
-	private ArrayList<Items> items;
+	private ArrayList<ItemEnum> items;
 	
-	public SaveFile(int heroType, int gold, ArrayList<Items> items){
+	public SaveFile(int heroType, int gold, ArrayList<ItemEnum> items){
 		this.characterClass = heroType;
 		this.gold = gold;
 		this.items = items;
@@ -31,11 +31,11 @@ public class SaveFile implements Serializable {
 		this.gold = gold;
 	}
 
-	public ArrayList<Items> getItems() {
+	public ArrayList<ItemEnum> getItems() {
 		return items;
 	}
 	
-	public void setItems(ArrayList<Items> items) {
+	public void setItems(ArrayList<ItemEnum> items) {
 		this.items = items;
 	}
 	

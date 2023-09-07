@@ -19,7 +19,7 @@ import enums.*;
 import interfaces.LogicInterface;
 import quests.BasicMap;
 import quests.MelarsMaze;
-import view.AtorClientServer;
+import view.ClientServerProxy;
 import view.GUI;
 import exceptions.PositionNotEmptyException;
 
@@ -29,7 +29,7 @@ public class HeroQuest implements LogicInterface {
 	protected ArrayList<Player> players;
 
 	protected GUI GUI;
-	private AtorClientServer atorClienteServidor;
+	private ClientServerProxy clientServerProxy;
 	protected Player localPlayer;
 	protected ArrayList<Creature> creatureQueue;
 	public ArrayList<Door> doors;
@@ -47,7 +47,7 @@ public class HeroQuest implements LogicInterface {
 
 	public HeroQuest(){
 		this.players = new ArrayList<>();
-		this.atorClienteServidor = new AtorClientServer(this);
+		this.clientServerProxy = new ClientServerProxy(this);
 		this.creatureQueue = new ArrayList<>();
 		this.doors = new ArrayList<>();
 		zargonAvailable = true;
@@ -481,7 +481,7 @@ public class HeroQuest implements LogicInterface {
 
 	private boolean checkIfAttackerIsAHeroAndHasSpear(Creature attacker) {
 		return attacker instanceof PlayableCharacter &&
-				((PlayableCharacter) attacker).getItems(this.map).contains(Items.Spear);
+				((PlayableCharacter) attacker).getItems(this.map).contains(ItemEnum.Spear);
 	}
 
 	private ArrayList<Creature> getAvailableTargets(int area, Position sourcePosition) {
@@ -689,7 +689,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void sendAction(Action action) {
-		this.getAtorClienteServidor().enviarJogada(action);
+		this.getClientServerProxy().sendAction(action);
 	}
 
 	public void processAction(Action action) {
@@ -837,7 +837,7 @@ public class HeroQuest implements LogicInterface {
 					Treasure treasureInPosition = position.getTreasure();
 					if (treasureInPosition != null) {
 						int gold = treasureInPosition.getGoldAmount();
-						Items item = treasureInPosition.getItem();
+						ItemEnum item = treasureInPosition.getItem();
 						
 						if (treasureInPosition.isTrap()) {
 							character.decreaseBody((byte) 1);
@@ -1439,7 +1439,7 @@ public class HeroQuest implements LogicInterface {
 		if (this.localAdventurer != null) {
 			PlayableCharacter character = localAdventurer.getPlayableCharacter();
 			int localPlayerGold = character.getGold();
-			ArrayList<Items> localPlayerItems = character.getItems(this.map);
+			ArrayList<ItemEnum> localPlayerItems = character.getItems(this.map);
 			this.GUI.showInventory(localPlayerGold, localPlayerItems);
 		} else {
 			this.GUI.reportError(Strings.ZARGON_DOES_NOT_CARRY_GOLD.toString());
@@ -1506,8 +1506,8 @@ public class HeroQuest implements LogicInterface {
 		this.GUI.setTitle(this.GUI.getTitle()+ Strings.SERVER + serverAddress + Strings.COMMA_PLAYER + this.localPlayerName);
 	}
 
-	public AtorClientServer getAtorClienteServidor() {
-		return atorClienteServidor;
+	public ClientServerProxy getClientServerProxy() {
+		return clientServerProxy;
 	}
 	
 	public BasicMap getMap() {

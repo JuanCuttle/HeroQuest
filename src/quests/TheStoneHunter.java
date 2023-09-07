@@ -9,7 +9,7 @@ import entities.Creature;
 import entities.tiles.Furniture;
 import entities.enemies.Gargoyle;
 import entities.HeroQuest;
-import entities.Items;
+import enums.ItemEnum;
 import entities.enemies.Monster;
 import entities.enemies.Mummy;
 import entities.tiles.Pit;
@@ -134,7 +134,7 @@ public class TheStoneHunter extends BasicMap {
 	
 	public void generateTreasures(){
 		Treasure borinsArmour = new Treasure(-1);
-		borinsArmour.setItem(Items.BorinsArmour);
+		borinsArmour.setItem(ItemEnum.BorinsArmour);
 		positions[21][31].setTreasure(borinsArmour);
 		
 		positions[24][21].setTreasure(new Treasure(200)); // Karlen's treasure

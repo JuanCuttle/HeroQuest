@@ -8,7 +8,7 @@ import entities.enemies.Fimir;
 import entities.tiles.Furniture;
 import entities.enemies.Goblin;
 import entities.HeroQuest;
-import entities.Items;
+import enums.ItemEnum;
 import entities.enemies.Monster;
 import entities.enemies.Orc;
 import entities.Position;
@@ -119,7 +119,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	public void generateTreasures() {
 		Treasure t = new Treasure(-1);
 		t.setAsTrap(true);
-		t.setItem(Items.PotionOfHealing);
+		t.setItem(ItemEnum.PotionOfHealing);
 		positions[19][5].setTreasure(t);
 		positions[12][27].setTreasure(new Treasure(50)); // And potion of healing (4 bp)
 	}

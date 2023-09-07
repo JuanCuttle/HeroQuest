@@ -5,23 +5,23 @@ import entities.actions.Action;
 
 public interface NetgamesProxyInterface {
 
-	 boolean conectar(String servidor, String nome); // requerida por AtorJogador
+	 boolean connect(String serverAddress, String playerName);
 	
-	 boolean desconectar(); // requerida por AtorJogador
+	 boolean disconnect();
 	 
-	 void iniciarPartida(int numJog); // requerida por AtorJogador e HeroQuest (nao usado neste)
+	 void startGame(int numberOfPlayers);
 	 
-	 void enviarJogada(Action action); // requerida por HeroQuest
+	 void sendAction(Action action);
 	 
-	 void finalizarPartidaComErro(String message); // requerida por NetgamesServer
+	 void finalizarPartidaComErro(String message); // required by NetgamesServer
 	 
-	 void iniciarNovaPartida(Integer posicao); // requerida por NetgamesServer
+	 void iniciarNovaPartida(Integer posicao); // required by NetgamesServer
 	 
-	 void receberJogada(Jogada jogada); // requerida por NetgamesServer
+	 void receberJogada(Jogada jogada); // required by NetgamesServer
 	 
-	 void receberMensagem(String msg); // requerida por NetgamesServer
+	 void receberMensagem(String msg); // required by NetgamesServer
 	 
-	 void tratarConexaoPerdida(); // requerida por NetgamesServer
+	 void tratarConexaoPerdida(); // required by NetgamesServer
 	 
-	 void tratarPartidaNaoIniciada(String message); // requerida por NetgamesServer
+	 void tratarPartidaNaoIniciada(String message); // required by NetgamesServer
 }

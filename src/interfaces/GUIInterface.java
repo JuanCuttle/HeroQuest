@@ -6,12 +6,13 @@ import javax.swing.JButton;
 
 import entities.*;
 import enums.DirectionEnum;
+import enums.ItemEnum;
 import enums.TrapEvasionMovementEnum;
 import enums.StatusEnum;
 
 public interface GUIInterface {
 	
-	void chooseCharacter() throws ClassNotFoundException;
+	void selectCharacter() throws ClassNotFoundException;
 	
 	void openDoor(int doorId);
 	
@@ -57,7 +58,7 @@ public interface GUIInterface {
 	
 	void showInventory();
 	
-	void showInventory(int gold, ArrayList<Items> items);
+	void showInventory(int gold, ArrayList<ItemEnum> items);
 	
 	void showCreatureInformation(int characterID);
 	

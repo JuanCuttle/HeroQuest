@@ -1,12 +1,12 @@
 package entities.tiles;
 
-import entities.Items;
+import enums.ItemEnum;
 
 public class Treasure {
 
 	protected int goldAmount;
 	protected boolean isTrap;
-	private Items item;
+	private ItemEnum item;
 
 	public Treasure(int goldAmount) {
 		this.goldAmount = goldAmount;
@@ -30,12 +30,12 @@ public class Treasure {
 		return this.isTrap;
 	}
 	
-	public void setItem(Items item){
+	public void setItem(ItemEnum item){
 		this.item = item;
 	}
 
 
-	public Items getItem() {
+	public ItemEnum getItem() {
 		return item;
 	}
 
