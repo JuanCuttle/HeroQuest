@@ -36,14 +36,12 @@ public class BasicMap {
 	protected byte[] bookcase3Position;
 
 	protected byte[] stairsPosition;
-	protected byte[] table1Position; // first index is orientation: 0 horizontal, 1 vertical
+	protected byte[] table1Position;
 	protected byte[] table2Position;
-	protected byte[] rackPosition; // Only vertical
-	protected byte[] bookOnTablePosition; // Only vertical
+	protected byte[] rackPosition;
+	protected byte[] bookOnTablePosition;
 	protected byte[] tombPosition;
 	protected byte[] deskPosition;
-	
-
 	protected int numberOfCreatures;
 	
 	public BasicMap() {
@@ -52,7 +50,6 @@ public class BasicMap {
 		positions = new Position[totalNumberOfRows][totalNumberOfColumns];
 		generateCleanMap();
 		generateCorridors();
-		//generateRooms();
 		generateWalls();
         barbInitialPosition = new byte[2];
 		wizInitialPosition = new byte[2];
@@ -78,7 +75,6 @@ public class BasicMap {
 	}
 
 	protected void mapBorders() {
-		// Map borders
 		int lastColumn = this.totalNumberOfColumns -1;
 		int lastRow = this.totalNumberOfRows -1;
 		for (byte i = 0; i < totalNumberOfColumns; i++) {
@@ -334,6 +330,7 @@ public class BasicMap {
 	public Position getPosition(byte row, byte column) {
 		return positions[row][column];
 	}
+
 	public void generateCleanMap() {
 		System.out.println("Debug: initializing map");
 		for(byte i = 0; i < totalNumberOfRows; i++)
@@ -402,7 +399,7 @@ public class BasicMap {
 		positions[12][19] = new Door(12,19,1219);
 		positions[19][18] = new Door(19,18,1918);
 		positions[3][30] = new Door(3,30,330);
-		positions[6][46] = new Door(6,46,646); // porta secreta
+		positions[6][46] = new Door(6,46,646); // hidden door
 		positions[12][31] = new Door(12,31,1231);
 		positions[12][42] = new Door(12,42,1242);
 		positions[17][37] = new Door(17,37,1737);
@@ -480,12 +477,15 @@ public class BasicMap {
 	public byte[] getBarbarianInitialPosition() {
 		return barbInitialPosition;
 	}
+
 	public byte[] getWizInitialPosition() {
 		return wizInitialPosition;
 	}
+
 	public byte[] getElfInitialPosition() {
 		return elfInitialPosition;
 	}
+
 	public byte[] getDwarfInitialPosition() {
 		return dwarfInitialPosition;
 	}
