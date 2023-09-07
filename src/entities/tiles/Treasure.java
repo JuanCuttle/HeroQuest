@@ -12,8 +12,7 @@ public class Treasure {
 		this.goldAmount = goldAmount;
 		this.isTrap = false;
 	}
-	
-	
+
 	public int getGoldAmount() {
 		return this.goldAmount;
 	}
@@ -33,7 +32,6 @@ public class Treasure {
 	public void setItem(ItemEnum item){
 		this.item = item;
 	}
-
 
 	public ItemEnum getItem() {
 		return item;

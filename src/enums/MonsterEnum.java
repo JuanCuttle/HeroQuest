@@ -1,7 +1,5 @@
 package enums;
 
-import entities.enemies.Monster;
-
 public enum MonsterEnum {
     GOBLIN("Goblin"),
     ORC("Orc"),
@@ -14,7 +12,7 @@ public enum MonsterEnum {
     POLAR_WARBEAR("PolarWarbear"),
     CHAOS_SORCERER("ChaosSorcerer");
 
-    private String name;
+    private final String name;
 
     MonsterEnum(String name) {
         this.name = name;

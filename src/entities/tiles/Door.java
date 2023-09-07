@@ -6,7 +6,7 @@ public class Door extends Position {
 
 	private static final long serialVersionUID = -4132807911449425844L;
 	protected boolean open;
-	private int id;
+	private final int id;
 	
 	private boolean secret = false;
 	

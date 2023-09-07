@@ -8,7 +8,7 @@ public enum FurnitureDirectionEnum {
     RIGHT((byte) 0),
     LEFT((byte) 1);
 
-    private byte id;
+    private final byte id;
 
     FurnitureDirectionEnum(byte id) {
         this.id = id;

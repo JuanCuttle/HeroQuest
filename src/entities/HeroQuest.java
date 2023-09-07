@@ -1198,7 +1198,7 @@ public class HeroQuest implements LogicInterface {
 		if (StatusEnum.COURAGE.equals(newCurrentCreature.getStatus()) && areThereNoEnemiesOnSight(newCurrentCreature)) {
 			newCurrentCreature.setStatus(StatusEnum.NEUTRAL);
 		}
-		this.map.specialOcurrence(this);
+		this.map.specialOccurrence(this);
 		this.endTheGame();
 	}
 

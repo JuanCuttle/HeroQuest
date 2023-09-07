@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public class GUI extends JFrame implements GUIInterface {
 
-	protected static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	protected JPanel contentPane;
 	protected HeroQuest heroQuest;
 	protected JButton[][] boardButtons;
@@ -96,8 +96,9 @@ public class GUI extends JFrame implements GUIInterface {
                 instr = new Instructions();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            instr.setVisible(true);
+            } finally {
+				Objects.requireNonNull(instr).setVisible(true);
+			}
         });
 		mnHelp.add(btnInstructions);
 
@@ -134,51 +135,48 @@ public class GUI extends JFrame implements GUIInterface {
 		setFocusable(true);
 		requestFocusInWindow();
 
-		// Create Column and Row index buttons, to orient the player
 		for (int j = 0; j < map.getTotalNumberOfColumns(); j++) {
-			JButton botao = new JButton();
-			botao.setText(""+j);
-			botao.setBounds(173 + (j * 23), 112 + (-1 * 23), 23, 23);
-			botao.setBorder(emptyBorder);
-			botao.setVisible(true);
-			contentPane.add(botao);
+			JButton columnNumberButtons = new JButton();
+			columnNumberButtons.setText(""+j);
+			columnNumberButtons.setBounds(173 + (j * 23), 112 + (-1 * 23), 23, 23);
+			columnNumberButtons.setBorder(emptyBorder);
+			columnNumberButtons.setVisible(true);
+			contentPane.add(columnNumberButtons);
 		}
 		for (int i = 0; i < map.getTotalNumberOfRows(); i++) {
-			JButton botao = new JButton();
-			botao.setText(""+i);
-			botao.setBounds(173 + (-1 * 23), 112 + (i * 23), 23, 23);
-			botao.setBorder(emptyBorder);
-			botao.setVisible(true);
-			contentPane.add(botao);
+			JButton rowNumberButtons = new JButton();
+			rowNumberButtons.setText(""+i);
+			rowNumberButtons.setBounds(173 + (-1 * 23), 112 + (i * 23), 23, 23);
+			rowNumberButtons.setBorder(emptyBorder);
+			rowNumberButtons.setVisible(true);
+			contentPane.add(rowNumberButtons);
 		}
 		
-		// Create game board buttons
 		for (int i = 0; i < map.getTotalNumberOfRows(); i++) {
 			for (int j = 0; j < map.getTotalNumberOfColumns(); j++) {
-				JButton botao = new JButton();
-				botao.setName("" + i + j);
-				botao.setBounds(173 + (j * 23), 112 + (i * 23), 23, 23);
-				botao.setBorder(emptyBorder);
-				botao.setVisible(true);
-				botao.addKeyListener(listener);
-				botao.addActionListener(e -> openDoor(Integer.parseInt(botao.getName())));
-				contentPane.add(botao);
-				this.boardButtons[i][j] = botao;
+				JButton gameBoardButtons = new JButton();
+				gameBoardButtons.setName("" + i + j);
+				gameBoardButtons.setBounds(173 + (j * 23), 112 + (i * 23), 23, 23);
+				gameBoardButtons.setBorder(emptyBorder);
+				gameBoardButtons.setVisible(true);
+				gameBoardButtons.addKeyListener(listener);
+				gameBoardButtons.addActionListener(e -> openDoor(Integer.parseInt(gameBoardButtons.getName())));
+				contentPane.add(gameBoardButtons);
+				this.boardButtons[i][j] = gameBoardButtons;
 			}
 		}
 
-		// Create creature queue buttons
 		JButton creatureQueueButton = new JButton("");
 		creatureQueueButton.setVisible(false);
 		this.creatureButtons.add(creatureQueueButton);
 		for (int i = 1; i <= map.getCreatureQueueSize(); i++) {
-			JButton button = new JButton();
-			button.setName("" + i);
-			button.setBounds(0, 27 * (i - 1) + 89, 150, 27);
-			button.addActionListener(e -> showCreatureInformation(Integer.parseInt(button.getName())));
-			button.addKeyListener(listener);
-			this.creatureButtons.add(i, button);
-			this.contentPane.add(button);
+			JButton remainingCreatureQueueButtons = new JButton();
+			remainingCreatureQueueButtons.setName("" + i);
+			remainingCreatureQueueButtons.setBounds(0, 27 * (i - 1) + 89, 150, 27);
+			remainingCreatureQueueButtons.addActionListener(e -> showCreatureInformation(Integer.parseInt(remainingCreatureQueueButtons.getName())));
+			remainingCreatureQueueButtons.addKeyListener(listener);
+			this.creatureButtons.add(i, remainingCreatureQueueButtons);
+			this.contentPane.add(remainingCreatureQueueButtons);
 		}
 		
 		this.textArea = new TextArea();
@@ -199,7 +197,7 @@ public class GUI extends JFrame implements GUIInterface {
 				"/images/buttons/ConnectButton.png")));
 		this.connectButton = new JButton(iconConnectButton);
 		connectButton.setEnabled(false);
-		this.connectButton.setBounds(22 * 1 + 120 * 0, 0, 120, 89);
+		this.connectButton.setBounds(22, 0, 120, 89);
 		this.connectButton.setBorder(emptyBorder);
 		this.connectButton.addActionListener(e -> connectToServer());
 		this.connectButton.addKeyListener(listener);
@@ -209,7 +207,7 @@ public class GUI extends JFrame implements GUIInterface {
 				"/images/buttons/DisconnectButton.png")));
 		this.disconnectButton = new JButton(iconDisconnectButton);
 		disconnectButton.setEnabled(false);
-		this.disconnectButton.setBounds(22 * 2 + 120 * 1, 0, 120, 89);
+		this.disconnectButton.setBounds(22 * 2 + 120, 0, 120, 89);
 		this.disconnectButton.setBorder(emptyBorder);
 		this.disconnectButton.addActionListener(e -> disconnectFromServer());
 		this.disconnectButton.addKeyListener(listener);
@@ -225,8 +223,8 @@ public class GUI extends JFrame implements GUIInterface {
 		this.startGameButton.addKeyListener(listener);
 		this.contentPane.add(this.startGameButton);
 
-		ImageIcon iconEndTurnButton = new ImageIcon(getClass().getResource(
-				"/images/buttons/EndTurnButton.png"));
+		ImageIcon iconEndTurnButton = new ImageIcon(Objects.requireNonNull(getClass().getResource(
+				"/images/buttons/EndTurnButton.png")));
 		this.endTurnButton = new JButton(iconEndTurnButton);
 		endTurnButton.setEnabled(false);
 		this.endTurnButton.setBounds(22 * 4 + 120 * 3, 0, 120, 89);
@@ -265,9 +263,9 @@ public class GUI extends JFrame implements GUIInterface {
 		this.useSpellButton.addKeyListener(listener);
 		this.contentPane.add(this.useSpellButton);
 
-		ImageIcon iconSearchforTrapsAndHiddenDoorsButton = new ImageIcon(Objects.requireNonNull(getClass()
+		ImageIcon iconSearchForTrapsAndHiddenDoorsButton = new ImageIcon(Objects.requireNonNull(getClass()
 				.getResource("/images/buttons/SearchForTrapsAndHiddenDoorsButton.png")));
-		this.searchForTrapsButton = new JButton(iconSearchforTrapsAndHiddenDoorsButton);
+		this.searchForTrapsButton = new JButton(iconSearchForTrapsAndHiddenDoorsButton);
 		searchForTrapsButton.setEnabled(false);
 		this.searchForTrapsButton.setBounds(22 * 8 + 120 * 7, 0, 120, 89);
 		this.searchForTrapsButton.setBorder(emptyBorder);
@@ -319,23 +317,21 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public Spell selectSpell(ArrayList<Spell> availableSpells) {
-		String inputDialog = Strings.SELECT_SPELL.toString();
+		StringBuilder inputDialog = new StringBuilder(Strings.SELECT_SPELL.toString());
 		for (int i = 0; i < availableSpells.size(); i++) {
-			inputDialog += "\n" + i + " - "
-					+ SpellNameEnum.getNameById(availableSpells.get(i).getSpellId());
+			inputDialog.append("\n").append(i).append(" - ").append(SpellNameEnum.getNameById(availableSpells.get(i).getSpellId()));
 		}
-		String option = JOptionPane.showInputDialog(inputDialog);
+		String option = JOptionPane.showInputDialog(inputDialog.toString());
 		int index = Integer.parseInt(option);
 		return availableSpells.get(index);
 	}
 
 	public Creature selectTarget(ArrayList<Creature> availableTargets) {
-		String inputDialog = Strings.SELECT_TARGET.toString();
+		StringBuilder inputDialog = new StringBuilder(Strings.SELECT_TARGET.toString());
 		for (int i = 0; i < availableTargets.size(); i++) {
-			inputDialog += "\n" + i + " - "
-					+ availableTargets.get(i).getClass().getSimpleName();
+			inputDialog.append("\n").append(i).append(" - ").append(availableTargets.get(i).getClass().getSimpleName());
 		}
-		String option = JOptionPane.showInputDialog(inputDialog);
+		String option = JOptionPane.showInputDialog(inputDialog.toString());
 		int index = Integer.parseInt(option);
 		return availableTargets.get(index);
 	}
@@ -467,7 +463,7 @@ public class GUI extends JFrame implements GUIInterface {
 		} else {
 			isConnected = this.heroQuest.isConnected();
 		}
-		if (isInterrupted || ((!inSession) && isConnected)) {
+		if (isInterrupted || isConnected) {
 			int numberOfPlayersInGame = this.setTotalNumberOfPlayersInTheGame();
 			this.heroQuest.getClientServerProxy().startGame(numberOfPlayersInGame);
 			showConnectionResultMessage(ConnectionResultEnum.SUCCESSFUL_START.getId());
@@ -491,9 +487,9 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void showInventory(int gold, ArrayList<ItemEnum> items) {
-		String itemList = Strings.ITEMS_OWNED.toString();
+		StringBuilder itemList = new StringBuilder(Strings.ITEMS_OWNED.toString());
 		for (ItemEnum item : items){
-			itemList += item + "\n";
+			itemList.append(item).append("\n");
 		}
 		this.textArea.setText(Strings.YOU_HAVE.toString() + gold
 				+ Strings.COINS_IN_INVENTORY + itemList);
@@ -1016,11 +1012,11 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public int selectDoorToOpenOrClose(ArrayList<String> doorIds) {
-		String availableDoors = Strings.SELECT_DOOR.toString();
+		StringBuilder availableDoors = new StringBuilder(Strings.SELECT_DOOR.toString());
 		for (int i = 0; i < doorIds.size(); i++) {
-			availableDoors += i + " - " + doorIds.get(i) + "\n";
+			availableDoors.append(i).append(" - ").append(doorIds.get(i)).append("\n");
 		}
-		String chosenDoorId = JOptionPane.showInputDialog(availableDoors);
+		String chosenDoorId = JOptionPane.showInputDialog(availableDoors.toString());
 		return Integer.parseInt(chosenDoorId);
 
 	}
@@ -1031,24 +1027,18 @@ public class GUI extends JFrame implements GUIInterface {
 		
 		try {
 			audioIn = AudioSystem.getAudioInputStream(getClass().getResource(f));
-		} catch (MalformedURLException e2) {
-			e2.printStackTrace();
-		} catch (UnsupportedAudioFileException e2) {
-			e2.printStackTrace();
-		} catch (IOException e2) {
+		} catch (IOException | UnsupportedAudioFileException e2) {
 			e2.printStackTrace();
 		}
-		final Clip clip = AudioSystem.getClip();
+        final Clip clip = AudioSystem.getClip();
 
 		try {
 			clip.open(audioIn);
-		} catch (LineUnavailableException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (LineUnavailableException | IOException e) {
 			e.printStackTrace();
 		}
 
-		this.musicThread = new MusicThread(clip) {
+        this.musicThread = new MusicThread(clip) {
 		};
 		SwingUtilities.invokeLater(musicThread);
 	}
@@ -1132,25 +1122,23 @@ public class GUI extends JFrame implements GUIInterface {
 			        results.add(file.getName());
 			    }
 			}
-			
-			for (int i = 0; i < results.size(); i++) {
-				String res = results.get(i);
-				
-				if (res.endsWith(playerName+".txt")) {
-					
-					 FileInputStream fis = new FileInputStream(saveDir+res);
-			         ObjectInputStream ois = new ObjectInputStream(fis);
-			         SaveFile sf = (SaveFile) ois.readObject();
-			         ois.close();
-			         fis.close();
-			         
-			         returnValues.add(sf.getCharacterClass()+"");
-			         returnValues.add(sf.getGold()+"");
-			         returnValues.add(sf.getItems()+"");
-					
-					break;
-				}
-			}
+
+            for (String res : results) {
+                if (res.endsWith(playerName + ".txt")) {
+
+                    FileInputStream fis = new FileInputStream(saveDir + res);
+                    ObjectInputStream ois = new ObjectInputStream(fis);
+                    SaveFile sf = (SaveFile) ois.readObject();
+                    ois.close();
+                    fis.close();
+
+                    returnValues.add(sf.getCharacterClass() + "");
+                    returnValues.add(sf.getGold() + "");
+                    returnValues.add(sf.getItems() + "");
+
+                    break;
+                }
+            }
 		}
 		return returnValues;
 	}
@@ -1172,14 +1160,12 @@ public class GUI extends JFrame implements GUIInterface {
 			        results.add(file.getName());
 			    }
 			}
-			
-			for (int i = 0; i < results.size(); i++) {
-				String res = results.get(i);
-				
-				if (res.endsWith(playerName+".txt")) {
-					return true;
-				}
-			}
+
+            for (String res : results) {
+                if (res.endsWith(playerName + ".txt")) {
+                    return true;
+                }
+            }
 		}
 		return false;
 	}

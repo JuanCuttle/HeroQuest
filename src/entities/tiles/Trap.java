@@ -30,8 +30,8 @@ public class Trap implements Jogada {
 		return this.triggered;
 	}
 	
-	public void setTriggered(boolean trig){
-		this.triggered = trig;
+	public void setTriggered(boolean triggered){
+		this.triggered = triggered;
 	}
 
 }

@@ -13,7 +13,7 @@ public class Elf extends PlayableCharacter {
 
 	public Elf() {
 		super(6, 4, 2, 2);
-		this.spells = new ArrayList<Spell>();
+		this.spells = new ArrayList<>();
 	}
 
 	public ArrayList<Spell> getSpells() {

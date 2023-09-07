@@ -15,17 +15,10 @@ import enums.ImageEnum;
 
 public class Instructions extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ImagePanel contentPane;
 	
 
-	/**
-	 * Create the frame.
-	 * @throws IOException 
-	 */
 	public Instructions() throws IOException {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Instructions.class.getResource("/images/players/Wizard.png")));
 		
@@ -40,15 +33,15 @@ public class Instructions extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
-		JTextPane txtpnYouAreIn = new JTextPane();
-		txtpnYouAreIn.setForeground(new Color(178, 34, 34));
-		txtpnYouAreIn.setEditable(false);
-		txtpnYouAreIn.setFont(new Font("Viner Hand ITC", Font.PLAIN, 20));
-		txtpnYouAreIn
+		JTextPane dungeonSettingDescription = new JTextPane();
+		dungeonSettingDescription.setForeground(new Color(178, 34, 34));
+		dungeonSettingDescription.setEditable(false);
+		dungeonSettingDescription.setFont(new Font("Viner Hand ITC", Font.PLAIN, 20));
+		dungeonSettingDescription
 				.setText(Strings.INSTRUCTIONS_TEXT.toString());
-		contentPane.add(txtpnYouAreIn, BorderLayout.CENTER);
+		contentPane.add(dungeonSettingDescription, BorderLayout.CENTER);
 		
-		txtpnYouAreIn.setOpaque(false);
+		dungeonSettingDescription.setOpaque(false);
 		
 	}
 

@@ -156,16 +156,13 @@ public class TheRescueOfSirRagnar extends BasicMap {
 		int currentSirRagnarColumn = sirRagnarCurrentPosition.getColumn();
 		
 		// If Sir Ragnar is on stairs
-		if ((currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1])
-				| (currentSirRagnarRow == stairsPosition[0]+1 && currentSirRagnarColumn == stairsPosition[1])
-				| (currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1]+1)
-				| (currentSirRagnarRow == stairsPosition[0]+1 && currentSirRagnarColumn == stairsPosition[1]+1)){
-			return true;
-		}
-		return false;
-	}
+        return (currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1])
+                | (currentSirRagnarRow == stairsPosition[0] + 1 && currentSirRagnarColumn == stairsPosition[1])
+                | (currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1] + 1)
+                | (currentSirRagnarRow == stairsPosition[0] + 1 && currentSirRagnarColumn == stairsPosition[1] + 1);
+    }
 	
-	public void specialOcurrence(HeroQuest game) {
+	public void specialOccurrence(HeroQuest game) {
 		if (!foundRagnar) {
 			Creature sirRagnar = game.getCreaturePorID(14);
 			if (sirRagnar.isVisible()) {

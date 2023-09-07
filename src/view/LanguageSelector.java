@@ -15,16 +15,10 @@ import enums.LanguageEnum;
 
 public class LanguageSelector extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
 
-	/**
-	 * Create the frame.
-	 */
 	public LanguageSelector(GUI gui) {
 		setTitle(Strings.SELECT_A_LANGUAGE.toString());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

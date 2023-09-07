@@ -1,4 +1,4 @@
-package quests;
+package enums;
 
 public enum QuestEnum {
 	TheTrial,

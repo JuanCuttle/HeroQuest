@@ -12,27 +12,18 @@ import javax.swing.border.EmptyBorder;
 
 import entities.HeroQuest;
 import entities.utils.Strings;
+import enums.QuestEnum;
 import quests.*;
 
 public class QuestSelector extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6345581665543710575L;
 	private JPanel contentPane;
 	private static QuestEnum[] options;
 	private HeroQuest game;
 
-	/**
-	 * Create the frame.
-	 */
-	public QuestSelector() {
-		
-			/*this.setIconImage(Toolkit.getDefaultToolkit().getImage(
-					QuestSelector.class.getResource("/images/Aegons_crown.png")));*/
 
-		
+	public QuestSelector() {
 		this.setVisible(true);
 		
 		try {
@@ -95,16 +86,14 @@ public class QuestSelector extends JFrame {
 		contentPane.add(btnShow, BorderLayout.WEST);
 	}
 	
-	public void selectMap(BasicMap bm){
-		game.setMap(bm);
+	public void selectMap(BasicMap basicMap) {
+		game.setMap(basicMap);
 		GUI frame = new GUI(game);
 		frame.setVisible(true);
 		
-		if (bm instanceof TheTrial){
-			frame.textArea.setText(frame.textArea.getText()+"\n"+Strings.THE_TRIAL_DESCRIPTION.toString());
-			//JOptionPane.showMessageDialog(null, Strings.THETRIAL);
+		if (basicMap instanceof TheTrial){
+			frame.textArea.setText(frame.textArea.getText()+"\n"+ Strings.THE_TRIAL_DESCRIPTION);
 		}
 	}
-	
 }
 

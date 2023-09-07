@@ -2,10 +2,6 @@ package entities.actions;
 
 public class Attack extends Action {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8489937208477113086L;
 	
 	protected byte targetID;

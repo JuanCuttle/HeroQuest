@@ -12,13 +12,5 @@ public class Player implements Jogada {
 	}
 	
 	public Player() {}
-	
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 }

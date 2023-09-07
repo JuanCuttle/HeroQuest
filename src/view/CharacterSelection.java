@@ -17,19 +17,15 @@ import enums.ImageEnum;
 
 public class CharacterSelection extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7096359184586117742L;
 	private final JPanel contentPanel = new JPanel();
 	
 	private String chosenPlayer;
-	private GUI GUI;
+	private final GUI GUI;
 
 	public CharacterSelection(GUI GUI) {
 		this.GUI = GUI;
-		
-		
+
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setTitle(Strings.SELECT_YOUR_CHARACTER.toString());
 		setBounds(250, 225, 440, 120);

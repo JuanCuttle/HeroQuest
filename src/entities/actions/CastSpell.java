@@ -4,9 +4,6 @@ import entities.Spell;
 
 public class CastSpell extends Action {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5796576882256976829L;
 
 	protected Spell spell;

@@ -12,19 +12,18 @@ public enum SpellNameEnum {
     ROCK_FEET((byte) 9, "Rock Feet", "Halves the target's next movement dice roll"),
     ROCK_SKIN((byte) 10, "Rock Skin", "The target may throw an extra combat die when defending. The spell is broken when the target suffers damage");
 
-    private byte id;
-    private String name;
-    private String rule;
+    private final byte id;
+    private final String name;
 
+    @SuppressWarnings("unused")
     SpellNameEnum(byte id, String name, String rule) {
         this.id = id;
         this.name = name;
-        this.rule = rule;
     }
 
     public static String getNameById(int id) {
         for (SpellNameEnum spellNameEnum : SpellNameEnum.values()) {
-            if (spellNameEnum.equals(id)) {
+            if (spellNameEnum.id == id) {
                 return spellNameEnum.getName();
             }
         }
@@ -33,10 +32,6 @@ public enum SpellNameEnum {
 
     public byte getId() {
         return id;
-    }
-
-    public void setId(byte id) {
-        this.id = id;
     }
 
     public String getName() {

@@ -166,15 +166,14 @@ public class LegacyOfTheOrcWarlord extends BasicMap {
 		
 		boolean areAllHeroesOnStairs = true;
 		ArrayList<Creature> creatureQueue = game.getCreatureQueue();
-		for (int i = 0; i < creatureQueue.size(); i++) {
-				Creature creature = creatureQueue.get(i);
-				if (creature instanceof PlayableCharacter) {
-					if (!onStairs(creature.getCurrentPosition(), stairsRow, stairsColumn)){
-						areAllHeroesOnStairs = false;
-						break;
-					}
-				}
-		}
+        for (Creature creature : creatureQueue) {
+            if (creature instanceof PlayableCharacter) {
+                if (!onStairs(creature.getCurrentPosition(), stairsRow, stairsColumn)) {
+                    areAllHeroesOnStairs = false;
+                    break;
+                }
+            }
+        }
 		
 		return foundEquipment && areAllHeroesOnStairs;
 	}

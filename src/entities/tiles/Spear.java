@@ -5,13 +5,13 @@ public class Spear extends Trap {
 	private static final long serialVersionUID = 8790635054092561498L;
 
 	public Spear() {
-		this.deliveredDamage = calcularDano();
+		this.deliveredDamage = calculateDamage();
 		this.visible = false;
 		
 		this.triggered = false;
 	}
 	
-	public byte calcularDano() {
+	public byte calculateDamage() {
 		if ((int)(Math.random()*2) == 1) {
 			return 1;
 		}

@@ -102,7 +102,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 		int movement;
 		if (!(this instanceof Monster)) {
 			Random rand = new Random();
-			movement = rand.nextInt(12 - 2 + 1) + 2; // 12 max vaue, + 2 because of minimum roll
+			movement = rand.nextInt(12 - 2 + 1) + 2; // 12 max value, + 2 because of minimum roll
 			if (StatusEnum.AGILITY_DOWN.equals(this.status)) {
 				movement /= 2;
 				this.status = StatusEnum.NEUTRAL;
@@ -134,14 +134,8 @@ public class Creature implements Jogada, Comparable<Creature> {
 	}
 
 	@Override
-	public int compareTo(Creature arg0) {
-		if (this.getID() < arg0.getID()) {
-			return 1;
-		}
-		if (this.getID() > arg0.getID()) {
-			return -1;
-		}
-		return 0;
+	public int compareTo(Creature comparedCreature) {
+		return Byte.compare(comparedCreature.getID(), this.getID());
 	}
 
 	public void spendSpell(Spell spell) {

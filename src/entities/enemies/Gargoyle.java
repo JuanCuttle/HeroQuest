@@ -2,9 +2,6 @@ package entities.enemies;
 
 public class Gargoyle extends Monster{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7912634859805110762L;
 
 	public Gargoyle() {

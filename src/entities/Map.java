@@ -18,14 +18,15 @@ package entities;
 
 import entities.tiles.*;
 
+@SuppressWarnings("unused")
 public class Map {
 	
 	protected Position[][] positions; 
 
-	private byte numberOfRows;
-	private byte numberOfColumns;
+	private final byte numberOfRows;
+	private final byte numberOfColumns;
 
-	private byte[] stairsPosition = new byte[2];
+	private final byte[] stairsPosition = new byte[2];
 	protected byte[] barbInitialPosition = new byte[2];
 	protected byte[] wizInitialPosition = new byte[2];
 	protected byte[] elfInitialPosition = new byte[2];

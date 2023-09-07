@@ -2,22 +2,15 @@ package view;
 
 import enums.ImageEnum;
 
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.io.IOException;
+import java.util.Objects;
 
 public class TitleScreen extends JFrame {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
@@ -25,21 +18,16 @@ public class TitleScreen extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TitleScreen frame = new TitleScreen();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            try {
+                TitleScreen frame = new TitleScreen();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public TitleScreen() {
 		setTitle("HeroQuest");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,35 +41,26 @@ public class TitleScreen extends JFrame {
 		JButton btnNewButton = new JButton("Start game");
 		btnNewButton.setFont(new Font("Viner Hand ITC", Font.PLAIN, 20));
 		btnNewButton.setBounds(402, 270, 200, 50);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			/*	AtorJogador frame = new AtorJogador(); // Change for new init
-				frame.setVisible(true);
-*/				
-				new QuestSelector();
-
-				dispose(); // Exits initial window
-			}
-		});
-		contentPane.setLayout(null);
+		btnNewButton.addActionListener(arg0 -> {
+            new QuestSelector();
+            dispose(); // Exits initial window
+        });
 		contentPane.setLayout(null);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("How to play");
 		btnNewButton_1.setFont(new Font("Viner Hand ITC", Font.PLAIN, 20));
 		btnNewButton_1.setBounds(400, 357, 200, 50);
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Instructions instr = null;
-				try {
-					instr = new Instructions();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				instr.setVisible(true);
+		btnNewButton_1.addActionListener(e -> {
+            Instructions instr = null;
+            try {
+                instr = new Instructions();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally {
+				Objects.requireNonNull(instr).setVisible(true);
 			}
-		});
+        });
 		contentPane.add(btnNewButton_1);
 	}
-
 }

@@ -11,7 +11,7 @@ public enum ConnectionResultEnum {
     START_ATTEMPT_BEFORE_CONNECTING(7),
     GAME_NOT_INTERRUPTED(13);
 
-    private int id;
+    private final int id;
 
     ConnectionResultEnum(int id) {
         this.id = id;
