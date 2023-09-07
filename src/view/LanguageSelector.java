@@ -46,7 +46,7 @@ public class LanguageSelector extends JFrame {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				gui.setLanguage((LanguageEnum) comboBox.getSelectedItem());
-				gui.atualizarBotoesLingua();
+				gui.updateLanguageButtons();
 				dispose(); // Remove JFrame
 			}
 		});

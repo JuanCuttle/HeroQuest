@@ -137,3 +137,6 @@ Can be troublesome with Creature objects (change not made through ID)
 54) Make player lose RockSkin status when damage is received (calculateAttackDamage())
 55) Consider extracting method from duplicate code in Pit and FallingRock behaviour in processMovement()
 56) Make language a HeroQuest or GUI field, being one of two classes extending Language: Portuguese and English. Each having only their translations
+57) Test Status and Spells (Courage removal when attacking?)
+58) Remove this.GUI.updatePlayerSurroundings(); and this.creatureQueue.trimToSize(); from processEndTurn() ?
+59) Improve legibility of increaseBody() and decreaseBody() in actions

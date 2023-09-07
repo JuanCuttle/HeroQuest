@@ -726,17 +726,17 @@ public class GUI extends JFrame implements GUIInterface {
 					
 					pos = map.getBookcase1Position();
 					if (pos != null){
-						path = bcPath(map, linha, coluna, pos, path);
+						path = bcPath(linha, coluna, pos, path);
 					}
 					
 					pos = map.getBookcase2Position();
 					if (pos != null){
-						path = bcPath(map, linha, coluna, pos, path);
+						path = bcPath(linha, coluna, pos, path);
 					}
 					
 					pos = map.getBookcase3Position();
 					if (pos != null){
-						path = bcPath(map, linha, coluna, pos, path);
+						path = bcPath(linha, coluna, pos, path);
 					}
 				}
 				
@@ -1001,33 +1001,32 @@ public class GUI extends JFrame implements GUIInterface {
 		return path;
 	}
 	
-	private String bcPath(BasicMap map, int linha, int coluna, byte[] bcpos, String path) {
+	private String bcPath(int row, int column, byte[] bookcasePosition, String path) {
 
-		int bcRow = bcpos[1];
-		int bcCol = bcpos[2];
+		int bookcaseRow = bookcasePosition[1];
+		int bookcaseColumn = bookcasePosition[2];
 		
-		if (bcpos[0] == 0){ // horizontal
-			if (linha == bcRow && coluna == bcCol) {
+		if (bookcasePosition[0] == FurnitureDirectionEnum.HORIZONTAL.getId()) {
+			if (row == bookcaseRow && column == bookcaseColumn) {
 				path = "/images/bookcase/BookcaseH0.png";
-			} else if(linha == bcRow && coluna == bcCol+1){
+			} else if (row == bookcaseRow && column == bookcaseColumn+1) {
 				path = "/images/bookcase/BookcaseH1.png";
-			} else if(linha == bcRow && coluna == bcCol+2){
+			} else if (row == bookcaseRow && column == bookcaseColumn+2) {
 				path = "/images/bookcase/BookcaseH2.png";
 			}
-		} else { // vertical
-			if (linha == bcRow && coluna == bcCol) {
+		} else {
+			if (row == bookcaseRow && column == bookcaseColumn) {
 				path = "/images/bookcase/BookcaseV0.png";
-			} else if(linha == bcRow+1 && coluna == bcCol){
+			} else if (row == bookcaseRow+1 && column == bookcaseColumn) {
 				path = "/images/bookcase/BookcaseV1.png";
-			} else if(linha == bcRow+2 && coluna == bcCol){
+			} else if (row == bookcaseRow+2 && column == bookcaseColumn) {
 				path = "/images/bookcase/BookcaseV2.png";
 			}
 		}
 		return path;
 	}
 
-	private void refreshCreatureInQueue(JButton button, Creature creature,
-										int buttonPositionInQueue) {
+	private void refreshCreatureInQueue(JButton button, Creature creature, int buttonPositionInQueue) {
 		if (creature.isVisible()) {
 			String creatureName = creature.getClass().getSimpleName();
 			button.setText(creatureName);
@@ -1079,7 +1078,7 @@ public class GUI extends JFrame implements GUIInterface {
 		if (statusEnum != null) {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMURED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
+					+ Strings.WHISPERED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
 					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
 					+ Strings.MODIFIED_IN + damage
 					+ Strings.BP_MODIFIED_STATUS + statusEnum
@@ -1087,7 +1086,7 @@ public class GUI extends JFrame implements GUIInterface {
 		} else {
 			this.textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
-					+ Strings.MURMURED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
+					+ Strings.WHISPERED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
 					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
 					+ Strings.MODIFIED_IN + damage + Strings.BP_MODIFIED_NOT_STATUS);
 		}
@@ -1190,7 +1189,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 	
 	// Bad, look for alternatives
-	public void atualizarBotoesLingua(){
+	public void updateLanguageButtons() {
 		JMenuBar mBar = this.menuBar;
 		mBar.getMenu(0).setText(Strings.MENU.toString());
 		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(0)).setText(Strings.INSTRUCTIONS.toString());
@@ -1200,58 +1199,45 @@ public class GUI extends JFrame implements GUIInterface {
 		((JButton) mBar.getMenu(1).getAccessibleContext().getAccessibleChild(1)).setText(Strings.LANGUAGE_BUTTON.toString());
 	}
 	
-	public void writeSaveFile(String playerName, int heroType, int gold, ArrayList<Items> items) throws IOException{
+	public void writeSaveFile(String playerName, int heroType, int gold, ArrayList<Items> items) throws IOException {
 		// Retrieve current working directory
 		String currentDir = System.getProperty("user.dir");
-		System.out.println(currentDir);
-				
+
 		// Create new directory for the save files, if not yet created
 		String saveDir = currentDir + "/HeroQuest_Saves/";
-		boolean dir = new File(saveDir).mkdir();
-		System.out.println(dir);
-				
+		new File(saveDir).mkdir();
+
 		FileOutputStream fos = new FileOutputStream(saveDir + playerName + ".txt");
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(new SaveFile(heroType, gold, items));
 		oos.close();
 		fos.close();
-		
-/*		// Write data into file
-		FileWriter fw = new FileWriter(saveDir + playerName + ".txt");
-		fw.write(heroType+"\t");
-		fw.write(gold+"\t");
-		fw.write(Status.AGILITY_DOWN+"\t");
-		fw.write(Status.AGILITY_UP+"\t");
-		fw.close();*/
 	}
 	
-	public ArrayList<String> readSaveFile(String playerName) throws IOException, ClassNotFoundException{
+	public ArrayList<String> readSaveFile(String playerName) throws IOException, ClassNotFoundException {
 		
-		ArrayList<String> returnValues = new ArrayList<String>();
+		ArrayList<String> returnValues = new ArrayList<>();
 		
-		ArrayList<String> results = new ArrayList<String>();
+		ArrayList<String> results = new ArrayList<>();
 
 		String currentDir = System.getProperty("user.dir");
 		
 		String saveDir = currentDir + "/HeroQuest_Saves/";
-		
-		//																														name.endsWith(".txt")
-		//File[] files = new File(saveDir).listFiles(new FilenameFilter() { @Override public boolean accept(File dir, String name) { return true; } });
-		
+
 		File[] files = new File(saveDir).listFiles();
 		//If this pathname does not denote a directory, then listFiles() returns null. 
 
-		if (files != null){
+		if (files != null) {
 			for (File file : files) {
 			    if (file.isFile()) {
 			        results.add(file.getName());
 			    }
 			}
 			
-			for (int i = 0; i < results.size(); i++){
+			for (int i = 0; i < results.size(); i++) {
 				String res = results.get(i);
 				
-				if (res.endsWith(playerName+".txt")){
+				if (res.endsWith(playerName+".txt")) {
 					
 					 FileInputStream fis = new FileInputStream(saveDir+res);
 			         ObjectInputStream ois = new ObjectInputStream(fis);
@@ -1262,37 +1248,10 @@ public class GUI extends JFrame implements GUIInterface {
 			         returnValues.add(sf.getCharacterClass()+"");
 			         returnValues.add(sf.getGold()+"");
 			         returnValues.add(sf.getItems()+"");
-			            
-					/*// Open the file at /Saves/
-					FileReader fr = new FileReader(saveDir+res);
-					
-					// Instantiate reading buffer and reads into it
-					char[] cbuf = new char[(int) files[i].length()];
-					fr.read(cbuf);
-					
-					// Close the file
-					fr.close();
-					
-					// Convert buffer to string for splitting
-					String content = "";
-					for (char c : cbuf){
-						content += c;
-					}
-					
-					// Separate values using tab symbol
-					String[] values = content.split("\t");
-					
-					// Retrieve information from file data
-					//gold = Integer.parseInt(values[0]);
-					
-					for (String value : values){
-						returnValues.add(value);
-					}*/
 					
 					break;
 				}
 			}
-			//System.out.println("Save files found: "+results);
 		}
 		return returnValues;
 	}
@@ -1308,17 +1267,17 @@ public class GUI extends JFrame implements GUIInterface {
 		File[] files = new File(saveDir).listFiles();
 		//If this pathname does not denote a directory, then listFiles() returns null. 
 
-		if (files != null){
+		if (files != null) {
 			for (File file : files) {
 			    if (file.isFile()) {
 			        results.add(file.getName());
 			    }
 			}
 			
-			for (int i = 0; i < results.size(); i++){
+			for (int i = 0; i < results.size(); i++) {
 				String res = results.get(i);
 				
-				if (res.endsWith(playerName+".txt")){
+				if (res.endsWith(playerName+".txt")) {
 					return true;
 				}
 			}

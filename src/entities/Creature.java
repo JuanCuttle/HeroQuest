@@ -3,6 +3,8 @@ package entities;
 import java.util.Random;
 
 import br.ufsc.inf.leobr.cliente.Jogada;
+import entities.enemies.Monster;
+import enums.MonsterEnum;
 import enums.StatusEnum;
 
 public class Creature implements Jogada, Comparable<Creature> {
@@ -12,7 +14,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 	protected byte body;
 	protected byte mind;
 	protected byte movement;
-	protected StatusEnum statusEnum;
+	protected StatusEnum status;
 	protected byte attackDiceAmount;
 	protected byte defenceDiceAmount;
 	protected Position currentPosition;
@@ -35,7 +37,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 		this.turn = false;
 		this.body = (byte) body;
 		this.mind = (byte) mind;
-		this.statusEnum = StatusEnum.NEUTRAL;
+		this.status = StatusEnum.NEUTRAL;
 		this.attackDiceAmount = (byte) atk;
 		this.defenceDiceAmount = (byte) def;
 		
@@ -61,11 +63,11 @@ public class Creature implements Jogada, Comparable<Creature> {
 	}
 
 	public StatusEnum getStatus() {
-		return this.statusEnum;
+		return this.status;
 	}
 
-	public void setStatus(StatusEnum statusEnum) {
-		this.statusEnum = statusEnum;
+	public void setStatus(StatusEnum status) {
+		this.status = status;
 	}
 
 	public byte getMind() {
@@ -97,16 +99,16 @@ public class Creature implements Jogada, Comparable<Creature> {
 	}
 	
 	public void setMovement() {
-		int movement = 0;
-		if (!(this.getClass().getSuperclass().getSimpleName().equals("Monster"))){
+		int movement;
+		if (!(this instanceof Monster)) {
 			Random rand = new Random();
 			movement = rand.nextInt(12 - 2 + 1) + 2; // 12 max vaue, + 2 because of minimum roll
-			if (this.statusEnum == StatusEnum.AGILITY_DOWN){
+			if (StatusEnum.AGILITY_DOWN.equals(this.status)) {
 				movement /= 2;
-				this.statusEnum = StatusEnum.NEUTRAL;
-			} else if (this.statusEnum == StatusEnum.AGILITY_UP){
+				this.status = StatusEnum.NEUTRAL;
+			} else if (StatusEnum.AGILITY_UP.equals(this.status)) {
 				movement *= 2;
-				this.statusEnum = StatusEnum.NEUTRAL;
+				this.status = StatusEnum.NEUTRAL;
 			}
 		} else {
 			if (this instanceof SirRagnar) {
@@ -119,8 +121,8 @@ public class Creature implements Jogada, Comparable<Creature> {
 		this.movement = (byte) movement;
 	}
 
-	public void setCurrentPosition(Position novaPosicao) {
-		this.currentPosition = novaPosicao;
+	public void setCurrentPosition(Position newPosition) {
+		this.currentPosition = newPosition;
 	}
 	
 	public void setID(byte id) {
@@ -142,12 +144,12 @@ public class Creature implements Jogada, Comparable<Creature> {
 		return 0;
 	}
 
-	public void usarMagia(Spell magia) {
+	public void spendSpell(Spell spell) {
 		this.mind--;
-		this.removeSpellFromBook(magia);
+		this.removeSpellFromBook(spell);
 	}
 
-	public void removeSpellFromBook(Spell magia) {
+	public void removeSpellFromBook(Spell spell) {
 	}
 	
 	public byte getRoundsToSleep() {
@@ -157,37 +159,33 @@ public class Creature implements Jogada, Comparable<Creature> {
 	public void setRoundsToSleep(byte roundsToSleep) {
 		this.roundsToSleep = roundsToSleep;
 	}
-	
-	public byte getMovementModifier() {
-		return movementModifier;
-	}
 
 	public void setMovementModifier(byte movementModifier) {
 		this.movementModifier = movementModifier;
 	}
 	
 	public int getMonsterMovement(){
-		int movement = 0;
-		switch(this.getClass().getSimpleName()){
-			case "Goblin": movement = 10;
+		int movement;
+		switch(MonsterEnum.getByName(this.getClass().getSimpleName())){
+			case GOBLIN: movement = 10;
 				break;
-			case "Orc": movement = 8;
+			case ORC: movement = 8;
 				break;
-			case "Fimir": movement = 6;
+			case FIMIR: movement = 6;
 				break;
-			case "Skeleton": movement = 6;
-				break;			
-			case "Zombie": movement = 4;
+			case SKELETON: movement = 6;
 				break;
-			case "Mummy": movement = 4;
+			case ZOMBIE: movement = 4;
 				break;
-			case "ChaosWarrior": movement = 6;
+			case MUMMY: movement = 4;
 				break;
-			case "Gargoyle": movement = 6;
+			case CHAOS_WARRIOR: movement = 6;
 				break;
-			case "PolarWarbear": movement = 6;
+			case GARGOYLE: movement = 6;
 				break;
-			case "ChaosSorcerer": movement = 8;
+			case POLAR_WARBEAR: movement = 6;
+				break;
+			case CHAOS_SORCERER: movement = 8;
 				break;
 			default: movement = 5;
 		}

@@ -524,7 +524,7 @@ public class BasicMap {
 	
 	protected void generateMonster(HeroQuest game, ArrayList<Monster> monsters, Monster m, int id, int row, int column){
 		m.setID((byte) id);
-		game.creatureInPosition(m, row, column);
+		game.setCreatureInPosition(m, row, column);
 		monsters.add(m);
 	}
 	
@@ -540,7 +540,7 @@ public class BasicMap {
 		return stairsPosition;
 	}
 	
-	public byte[] getBarbInitialPosition() {
+	public byte[] getBarbarianInitialPosition() {
 		return barbInitialPosition;
 	}
 	public byte[] getWizInitialPosition() {

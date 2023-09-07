@@ -93,12 +93,48 @@ public class HeroQuest implements LogicInterface {
 		return dwarfAvailable;
 	}
 
+	private void setDwarfAvailable(boolean available) {
+		dwarfAvailable = available;
+	}
+
+	private void setElfAvailable(boolean available) {
+		elfAvailable = available;
+	}
+
+	private void setWizardAvailable(boolean available) {
+		wizardAvailable = available;
+	}
+
+	private void setBarbarianAvailable(boolean available) {
+		barbarianAvailable = available;
+	}
+
+	private void setZargonAvailable(boolean available) {
+		zargonAvailable = available;
+	}
+
 	public Creature getCurrentCreature() {
 		return this.creatureQueue.get(0);
 	}
 
 	public ArrayList<Creature> getCreatureQueue() {
 		return this.creatureQueue;
+	}
+
+	private void sortCreatureQueueByID() {
+		Collections.sort(this.creatureQueue);
+	}
+
+
+	private Creature removeCreatureFromQueue() {
+		Creature creature = this.creatureQueue.remove(0);
+		this.creatureQueue.trimToSize();
+		return creature;
+	}
+
+	private void insertCreatureIntoQueue(Creature creature) {
+		int index = this.creatureQueue.size();
+		this.creatureQueue.add(index, creature);
 	}
 	
 	public void openDoor(int doorId) {
@@ -667,18 +703,18 @@ public class HeroQuest implements LogicInterface {
 				break;
 			case ATTACK:
 				this.processAttack((Attack) action);
-				this.processEndTurn(action);
+				this.processEndTurn();
 				break;
 			case SEND_PLAYER:
 				this.processSendPlayer((SendPlayer) action);
 				break;
 			case END_TURN:
-				this.processEndTurn(action);
+				this.processEndTurn();
 				this.GUI.showVisibleCreaturesInQueue();
 				break;
 			case CAST_SPELL:
 				this.processCastSpell((CastSpell) action);
-				this.processEndTurn(action);
+				this.processEndTurn();
 				break;
 			case SEARCH_FOR_TRAPS_AND_HIDDEN_DOORS:
 				this.processSearchForTrapsAndHiddenDoors((SearchForTrapsAndHiddenDoors) action);
@@ -694,18 +730,17 @@ public class HeroQuest implements LogicInterface {
 		this.GUI.updatePlayerSurroundings();
 	}
 	
-	// Inserir aqui a area visivel inicial por personagem
-	private void processSelectCharacter(SelectCharacter lance) {
+	private void processSelectCharacter(SelectCharacter action) {
 		PlayableCharacter character;
 		Adventurer playerA;
-		byte personagem = lance.getSelectedCharacterId();
-		byte[] position = new byte[2];
+		byte[] position;
+		byte selectedCharacterId = action.getSelectedCharacterId();
 
-		switch (personagem) {
-			case 0:
+		switch (CharacterEnum.getEnumById(selectedCharacterId)) {
+			case ZARGON:
 				this.setZargonAvailable(false);
 				
-				Zargon playerZ = lance.getZargon();
+				Zargon playerZ = action.getZargon();
 				for (int i = 0; i < playerZ.getMonsters().size(); i++) {
 					this.insertCreatureIntoQueue(playerZ.getMonster(i));
 				}
@@ -713,71 +748,66 @@ public class HeroQuest implements LogicInterface {
 				this.insertPlayerIntoQueue(playerZ);
 				
 				break;
-			case 1:
+			case BARBARIAN:
 				this.setBarbarianAvailable(false);
 				
-				playerA = lance.getAdventurer();
+				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
 				this.insertPlayerIntoQueue(playerA);
 				character = playerA.getPlayableCharacter();
 				this.insertCreatureIntoQueue(character);
-				
-				
-				position = map.getBarbInitialPosition();
-				this.creatureInPosition(character, position[0], position[1]);
-				//this.creatureInPosition(character, 25, 25);
-				
+
+				position = map.getBarbarianInitialPosition();
+				this.setCreatureInPosition(character, position[0], position[1]);
+
 				character.setMovement();
 				this.setAreaVisible(position[0], position[1]);
 	
 				break;
-			case 2:			
+			case WIZARD:
 				this.setWizardAvailable(false);
 				
-				playerA = lance.getAdventurer();
+				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
 				this.insertPlayerIntoQueue(playerA);
 				character = playerA.getPlayableCharacter();
 				((Wizard) character).createSpells();
 				this.insertCreatureIntoQueue(character);
 				position = map.getWizInitialPosition();
-				this.creatureInPosition(character, position[0], position[1]);
-				//this.creatureInPosition(character, 25, 25);
-				
+				this.setCreatureInPosition(character, position[0], position[1]);
+
 				character.setMovement();
 				this.setAreaVisible(position[0], position[1]);
 	
 				break;
-			case 3:
+			case ELF:
 				this.setElfAvailable(false);
 				
-				playerA = lance.getAdventurer();
+				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
 				this.insertPlayerIntoQueue(playerA);
 				character = playerA.getPlayableCharacter();
 				((Elf) character).createSpells();
 				this.insertCreatureIntoQueue(character);
 				position = map.getElfInitialPosition();
-				this.creatureInPosition(character, position[0], position[1]);
-				//this.creatureInPosition(character, 25, 25);
-				
+				this.setCreatureInPosition(character, position[0], position[1]);
+
 				character.setMovement();
 				this.setAreaVisible(position[0], position[1]);
 				
 				break;
-			case 4:
+			case DWARF:
 				this.setDwarfAvailable(false);
 				
-				playerA = lance.getAdventurer();
+				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
 				this.insertPlayerIntoQueue(playerA);
 				character = playerA.getPlayableCharacter();
 				this.insertCreatureIntoQueue(character);
 				
 				position = map.getDwarfInitialPosition();
-				this.creatureInPosition(character, position[0], position[1]);
-				//this.creatureInPosition(character, 20, 25);
-				
+				this.setCreatureInPosition(character, position[0], position[1]);
+
 				character.setMovement();
 				this.setAreaVisible(position[0], position[1]);
 				
@@ -790,102 +820,90 @@ public class HeroQuest implements LogicInterface {
 		this.GUI.showVisibleCreaturesInQueue();
 	}
 
-	private void processSearchForTreasure(SearchForTreasure lance) {
+	private void processSearchForTreasure(SearchForTreasure action) {
 		boolean foundGold = false;
 		boolean foundItem = false;
 		String itemName = "";
-		
-		PlayableCharacter character;
-		byte linha = lance.getSourceRow();
-		byte coluna = lance.getSourceColumn();
-		
-		Position posicaoAtual = this.map.getPosition(linha, coluna);
 
-		character = (PlayableCharacter) posicaoAtual.getCreature();
-		for (int i = linha - 2; i <= linha + 2; i++) {
-			for (int j = coluna - 2; j <= coluna + 2; j++) {
-				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()){
-					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
-					Treasure tesouro = posicaoAtual.getTreasure();
-					if (tesouro != null) {
-						int gold = tesouro.getGoldAmount();
-						Items item = tesouro.getItem();
+		byte sourceRow = action.getSourceRow();
+		byte sourceColumn = action.getSourceColumn();
+		
+		Position position = this.map.getPosition(sourceRow, sourceColumn);
+		PlayableCharacter character = (PlayableCharacter) position.getCreature();
+		for (int i = sourceRow - 2; i <= sourceRow + 2; i++) {
+			for (int j = sourceColumn - 2; j <= sourceColumn + 2; j++) {
+				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()) {
+					position = this.map.getPosition((byte)i, (byte)j);
+					Treasure treasureInPosition = position.getTreasure();
+					if (treasureInPosition != null) {
+						int gold = treasureInPosition.getGoldAmount();
+						Items item = treasureInPosition.getItem();
 						
-						// Has a trap
-						if (tesouro.isTrap()){
+						if (treasureInPosition.isTrap()) {
 							character.decreaseBody((byte) 1);
-							tesouro.setAsTrap(false);
+							treasureInPosition.setAsTrap(false);
 							this.GUI.showTrapActivationMessage((byte) 1, character);
 						} else {
-							if (gold >= 0){
-								tesouro.setGoldAmount(-1);
+							if (gold >= 0) {
+								treasureInPosition.setGoldAmount(-1);
 								character.increaseGold(gold);
 								foundGold = true;
 							}
-							if (item != null){
-								character.addItemToBag(item); // add item
-								tesouro.setItem(null); // remove item
+							if (item != null) {
+								character.addItemToBag(item);
+								treasureInPosition.setItem(null);
 								foundItem = true;
 								itemName = item.name();
 							}
 						}
-						
-
 					}
 				}
 			}
 		}
-		if (foundGold){
-			this.GUI.showMessagePopup(Strings.THE_PLAYER.toString()
+		if (foundGold) {
+			this.GUI.showMessagePopup(Strings.THE_PLAYER
 					+ character.getClass().getSimpleName()
-					+ Strings.FOUND_GOLD.toString());
+					+ Strings.FOUND_GOLD);
 		}
-		if (foundItem){
-			this.GUI.showMessagePopup(Strings.THE_PLAYER.toString()
+		if (foundItem) {
+			this.GUI.showMessagePopup(Strings.THE_PLAYER
 					+ character.getClass().getSimpleName()
-					+ Strings.FOUND_ITEM.toString()+itemName);
+					+ Strings.FOUND_ITEM +itemName);
 		}
 	}
 
-	private void processSearchForTrapsAndHiddenDoors(SearchForTrapsAndHiddenDoors lance) {
-		int linha = lance.getSourceRow();
-		int coluna = lance.getSourceColumn();
-		Position posicaoAtual;
+	private void processSearchForTrapsAndHiddenDoors(SearchForTrapsAndHiddenDoors action) {
+		int sourceRow = action.getSourceRow();
+		int sourceColumn = action.getSourceColumn();
+		boolean isActionSourceADwarf = this.getPosition((byte)sourceRow, (byte)sourceColumn).getCreature() instanceof Dwarf;
+		Position position;
 		
-		boolean removeuArmadilhas = false;
-		for (int i = linha - 2; i <= linha + 2; i++) {
-			for (int j = coluna - 2; j <= coluna + 2; j++) {
+		boolean removedTraps = false;
+		for (int i = sourceRow - 2; i <= sourceRow + 2; i++) {
+			for (int j = sourceColumn - 2; j <= sourceColumn + 2; j++) {
 				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()) {
-					posicaoAtual = this.map.getPosition((byte)i, (byte)j);
-					if (posicaoAtual.getTrap() != null) {
-						posicaoAtual.makeTrapVisible();
+					position = this.map.getPosition((byte)i, (byte)j);
+					if (position.getTrap() != null) {
+						position.makeTrapVisible();
 						
-						// If Pit and visible, disarm it
-						if (posicaoAtual.getTrap() instanceof Pit){
-							posicaoAtual.getTrap().setTriggered(true);
+						if (position.getTrap() instanceof Pit) {
+							position.getTrap().setTriggered(true);
 						}
 						
-						// If dwarf, disarm the traps
-						if (this.getPosition((byte)linha, (byte)coluna).getCreature() instanceof Dwarf){
-							//posicaoAtual.makeTrapTriggered();
-							posicaoAtual.removeTrap();
-							removeuArmadilhas = true;
+						if (isActionSourceADwarf) {
+							position.removeTrap();
+							removedTraps = true;
 						}
 						
 					}
-					// If found a trap in a treasure chest
-					if (posicaoAtual.getTreasure() != null){
-						if (posicaoAtual.getTreasure().isTrap()){
-							posicaoAtual.getTreasure().setAsTrap(false);
-							this.GUI.showMessagePopup(Strings.DISARMED_TREASURE_TRAP.toString());
-						}
+					if (position.getTreasure() != null && position.getTreasure().isTrap()) {
+						position.getTreasure().setAsTrap(false);
+						this.GUI.showMessagePopup(Strings.DISARMED_TREASURE_TRAP.toString());
 					}
-					if (posicaoAtual instanceof Door){
-						if (((Door) posicaoAtual).isSecret()){
-							((Door) posicaoAtual).setSecret(false);
-						}
-						if (this.map instanceof MelarsMaze){
-							if (((Door) posicaoAtual).getID() == 118){ // Throne room door
+					if (position instanceof Door && ((Door) position).isSecret()) {
+						((Door) position).setSecret(false);
+						if (this.map instanceof MelarsMaze) {
+							if (((Door) position).getID() == 118) { // Throne room door
 								((MelarsMaze) map).moveThrone(this);	
 							}
 						}
@@ -894,79 +912,73 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 		
-		if (removeuArmadilhas){
+		if (removedTraps){
 			this.GUI.showTrapRemovalMessage();
 		}
 	}
 
-	private void processCastSpell(CastSpell lance) {
-		byte alvo;
-		byte dano;
-		byte body;
-		Byte roundsToSleep = lance.getRoundsToSleep();
-		Spell magia = lance.getSpell();
-		alvo = lance.getTargetID();
-		//int id = alvo.getID();
-		Creature criatura = this.getCriaturaPorID(alvo);
-		dano = magia.getDamage();
-		StatusEnum statusEnum = magia.getStatus();
-		if (statusEnum != null) {
-			criatura.setStatus(statusEnum);
+	private void processCastSpell(CastSpell action) {
+		Byte roundsToSleep = action.getRoundsToSleep();
+		Spell castSpell = action.getSpell();
+		byte targetId = action.getTargetID();
+		Creature target = this.getCreatureById(targetId);
+		byte damageDealt = castSpell.getDamage();
+		StatusEnum spellStatusEffect = castSpell.getStatus();
+		if (spellStatusEffect != null) {
+			target.setStatus(spellStatusEffect);
 		}
-		if (roundsToSleep != null){
-			criatura.setRoundsToSleep(roundsToSleep);
+		if (roundsToSleep != null) {
+			target.setRoundsToSleep(roundsToSleep);
 		}
-		this.getCurrentCreature().usarMagia(magia);
-		this.GUI.showEffectOfCastSpell(this.getCurrentCreature(), magia,
-				criatura, dano, statusEnum); /////////////// alvo -> criatura
-		criatura.increaseBody(dano);
-		body = criatura.getBody();
-		if (body <= 0) {
-			this.GUI.announceCreatureDeath(criatura);
-			this.killCreature(alvo);
+		this.getCurrentCreature().spendSpell(castSpell);
+		this.GUI.showEffectOfCastSpell(this.getCurrentCreature(), castSpell,
+				target, damageDealt, spellStatusEffect);
+		target.increaseBody(damageDealt);
+		byte targetBP = target.getBody();
+		if (targetBP <= 0) {
+			this.GUI.announceCreatureDeath(target);
+			this.killCreature(targetId);
 		}
 	}
 
-	private void processSendPlayer(SendPlayer lance) {
-		Player player;
-		player = lance.getPlayer();
+	private void processSendPlayer(SendPlayer action) {
+		Player player = action.getPlayer();
 		this.insertPlayerIntoQueue(player);
 	}
 
-	private void processAttack(Attack lance) {
-		byte idAtacante = this.getCurrentCreature().getID();
-		byte idAlvo;
-		byte dano;
-		byte body;
-		idAlvo = lance.getTargetID();
-		dano = lance.getValue();
-		Creature criatura = this.getCriaturaPorID(idAlvo);
-		criatura.decreaseBody(dano);
-		body = criatura.getBody();
-		
-		if (dano > 0){
-			if (criatura.getStatus() == StatusEnum.ROCK_SKIN){
-				criatura.setStatus(StatusEnum.NEUTRAL);
+	private void processAttack(Attack action) {
+		byte attackerId = this.getCurrentCreature().getID();
+		int targetID = action.getTargetID();
+		Creature target = this.getCreatureById(targetID);
+
+		byte damage = action.getValue();
+		target.decreaseBody(damage);
+
+		if (damage > 0) {
+			if (StatusEnum.ROCK_SKIN.equals(target.getStatus())){
+				target.setStatus(StatusEnum.NEUTRAL);
 			}
 		}
-		// Courage status removal
-		Creature attacker = this.getCreaturePorID(idAtacante);
-		if (attacker.getStatus() == StatusEnum.COURAGE){
+
+		Creature attacker = this.getCreaturePorID(attackerId);
+		if (StatusEnum.COURAGE.equals(attacker.getStatus())) {
 			attacker.setStatus(StatusEnum.NEUTRAL);
 		}
 		
-		boolean seAtacou = idAtacante == idAlvo;
-		this.GUI.showAttackDamageMessage(this.getCreaturePorID(idAlvo), dano, seAtacou);
-		if (body <= 0) {
-			this.GUI.announceCreatureDeath(criatura);
-			this.killCreature(idAlvo);
+		boolean isSeppuku = attackerId == targetID;
+		this.GUI.showAttackDamageMessage(this.getCreaturePorID(targetID), damage, isSeppuku);
+
+		int targetRemainingBp = target.getBody();
+		if (targetRemainingBp <= 0) {
+			this.GUI.announceCreatureDeath(target);
+			this.killCreature(targetID);
 		}
 	}
 
-	private Creature getCriaturaPorID(int idAlvo) {
+	private Creature getCreatureById(int creatureId) {
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			int idLocal = this.creatureQueue.get(i).getID();
-			if (idLocal == idAlvo) {
+			int id = this.creatureQueue.get(i).getID();
+			if (id == creatureId) {
 				return this.creatureQueue.get(i);
 			}
 		}
@@ -1107,7 +1119,7 @@ public class HeroQuest implements LogicInterface {
 				this.GUI.announceUnfortunateDeath(creature);
 				this.killCreature(creature.getID());
 
-				this.processEndTurn(action);
+				this.processEndTurn();
 			}
 		}
 	}
@@ -1128,113 +1140,72 @@ public class HeroQuest implements LogicInterface {
 	private void processOpenDoor(OpenDoor lance) {
 		int doorId = lance.getDoorId();
 		Door door = this.getDoorById(doorId);
-		if (!door.isOpen()){
-			door.openDoor();
-		} else {
+		if (door.isOpen()){
 			door.closeDoor();
+		} else {
+			door.openDoor();
 		}
 	}
 	
-	private void processEndTurn(Action action) {
+	private void processEndTurn() {
 		this.GUI.updatePlayerSurroundings(); // added for GUI refresh
-		
-		Creature daVez;
-		Creature finalizada = this.removeCreatureFromQueue();
+
+		Creature endingCreature = this.removeCreatureFromQueue();
 		this.creatureQueue.trimToSize();
-		this.insertCreatureIntoQueue(finalizada);
+		this.insertCreatureIntoQueue(endingCreature);
 		
-		if (!(finalizada instanceof Wizard) && !(finalizada instanceof Elf)){
-			StatusEnum finalizadaStatusEnum = finalizada.getStatus();
-			if (finalizadaStatusEnum == StatusEnum.AGILITY_UP
-				|| finalizadaStatusEnum == StatusEnum.AGILITY_DOWN){
-					
-				finalizada.setStatus(StatusEnum.NEUTRAL);
+		if (!(endingCreature instanceof Wizard) && !(endingCreature instanceof Elf)) {
+			StatusEnum creatureWhoEndedTurnStatus = endingCreature.getStatus();
+			if (StatusEnum.AGILITY_UP.equals(creatureWhoEndedTurnStatus)
+				|| StatusEnum.AGILITY_DOWN.equals(creatureWhoEndedTurnStatus)) {
+
+				endingCreature.setStatus(StatusEnum.NEUTRAL);
 			}
 		}
+
+		Creature newCurrentCreature = this.getCurrentCreature();
+		StatusEnum newCurrentCreatureStatus = newCurrentCreature.getStatus();
 		
-		
-		daVez = this.getCurrentCreature();
-		// int body = criatura.getBody();
-		StatusEnum statusEnum = daVez.getStatus();
-		
-		byte verificados = 0;
-		while ((statusEnum == StatusEnum.DEAD || daVez.isVisible() == false || statusEnum == StatusEnum.CURSED
-			|| statusEnum == StatusEnum.SLEEPING)
-			&& verificados <= this.getCreatureQueue().size()) {
+		byte verifiedCreatures = 0;
+		while ((StatusEnum.DEAD.equals(newCurrentCreatureStatus)
+				|| !newCurrentCreature.isVisible()
+				|| StatusEnum.CURSED.equals(newCurrentCreatureStatus)
+				|| StatusEnum.SLEEPING.equals(newCurrentCreatureStatus)) && verifiedCreatures <= this.getCreatureQueue().size()) {
 			
-			if (statusEnum == StatusEnum.CURSED ||
-				statusEnum == StatusEnum.AGILITY_UP ||
-				statusEnum == StatusEnum.AGILITY_DOWN){
+			if (StatusEnum.CURSED.equals(newCurrentCreatureStatus)
+					|| StatusEnum.AGILITY_UP.equals(newCurrentCreatureStatus)
+					|| StatusEnum.AGILITY_DOWN.equals(newCurrentCreatureStatus)) {
 				
-				daVez.setStatus(StatusEnum.NEUTRAL);
+				newCurrentCreature.setStatus(StatusEnum.NEUTRAL);
 			}
 			
-			if (statusEnum == StatusEnum.SLEEPING){
-				byte roundsToSleep = (byte)(daVez.getRoundsToSleep()-1);
-				daVez.setRoundsToSleep(roundsToSleep);
+			if (StatusEnum.SLEEPING.equals(newCurrentCreatureStatus)) {
+				byte roundsToSleep = (byte)(newCurrentCreature.getRoundsToSleep()-1);
+				newCurrentCreature.setRoundsToSleep(roundsToSleep);
 				if (roundsToSleep == 0){
-					daVez.setStatus(StatusEnum.NEUTRAL);
-					this.GUI.showMessagePopup(Strings.THE_CREATURE.toString()+daVez.getClass().getSimpleName()+Strings.WOKE_UP.toString());
+					newCurrentCreature.setStatus(StatusEnum.NEUTRAL);
+					this.GUI.showMessagePopup(Strings.THE_CREATURE + newCurrentCreature.getClass().getSimpleName()+ Strings.WOKE_UP);
 				}
 			}
-			finalizada = this.removeCreatureFromQueue();
+			endingCreature = this.removeCreatureFromQueue();
 			this.creatureQueue.trimToSize();
-			this.insertCreatureIntoQueue(finalizada);
-			daVez = this.getCurrentCreature();
-			statusEnum = daVez.getStatus();
+			this.insertCreatureIntoQueue(endingCreature);
+			newCurrentCreature = this.getCurrentCreature();
+			newCurrentCreatureStatus = newCurrentCreature.getStatus();
 			
-			verificados++;
-			
-			// body = criatura.getBody();
+			verifiedCreatures++;
 		}
-		daVez.setMovement();
-		
-		// Courage status removal
-		ArrayList<Creature> possiveisAlvos = this.getAvailableTargets(1, daVez.getCurrentPosition());
-		if (possiveisAlvos.size() == 1){ // Cannot any enemies
-			if (daVez.getStatus() == StatusEnum.COURAGE){
-				daVez.setStatus(StatusEnum.NEUTRAL);
-			}
+		newCurrentCreature.setMovement();
+
+		if (StatusEnum.COURAGE.equals(newCurrentCreature.getStatus()) && areThereNoEnemiesOnSight(newCurrentCreature)) {
+			newCurrentCreature.setStatus(StatusEnum.NEUTRAL);
 		}
-		
-		this.map.specialOcurrence(this); // For TheRescueOfSirRagnar and TheStoneHunter
-		
+		this.map.specialOcurrence(this);
 		this.endTheGame();
 	}
 
-	private void sortCreatureQueueByID() {
-		Collections.sort(this.creatureQueue);
-	}
-
-	private void setDwarfAvailable(boolean b) {
-		dwarfAvailable = b;
-	}
-
-	private void setElfAvailable(boolean b) {
-		elfAvailable = b;
-	}
-
-	private void setWizardAvailable(boolean b) {
-		wizardAvailable = b;
-	}
-
-	private void setBarbarianAvailable(boolean b) {
-		barbarianAvailable = b;
-	}
-
-	private void setZargonAvailable(boolean b) {
-		zargonAvailable = b;
-	}
-
-	private Creature removeCreatureFromQueue() {
-		Creature criatura = this.creatureQueue.remove(0);
-		this.creatureQueue.trimToSize();
-		return criatura;
-	}
-
-	private void insertCreatureIntoQueue(Creature creature) {
-		int index = this.creatureQueue.size();
-		this.creatureQueue.add(index, creature);
+	private boolean areThereNoEnemiesOnSight(Creature sourceCreature) {
+		return this.getAvailableTargets(1, sourceCreature.getCurrentPosition()).size() == 1;
 	}
 
 	public void searchForTreasure() {
@@ -1512,7 +1483,7 @@ public class HeroQuest implements LogicInterface {
 		return this.map.getPosition(i, j);
 	}
 
-	public void creatureInPosition(Creature creature, int row, int column) {
+	public void setCreatureInPosition(Creature creature, int row, int column) {
 		this.map.positions[row][column].setCreature(creature);
 		creature.setCurrentPosition(this.map.positions[row][column]);
 	}

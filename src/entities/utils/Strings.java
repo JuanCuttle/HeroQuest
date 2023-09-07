@@ -581,11 +581,11 @@ public enum Strings {
 	      }
 	  },
 	  
-	  MURMURED_SPELL {
+	  WHISPERED_SPELL {
 	      public String toString() {
 	    	  switch(GUI.language) {
-	    	  	case Portugues: return " murmurou algumas palavras m�gicas (";
-	    	  	default: return " murmured a few magical words (";
+	    	  	case Portugues: return " susurrou algumas palavras m�gicas (";
+	    	  	default: return " whispered a few magical words (";
 	    	  }
 	      }
 	  },
