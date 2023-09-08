@@ -3,14 +3,12 @@ package quests;
 import entities.Creature;
 import entities.HeroQuest;
 import entities.Position;
-import entities.Zargon;
 import entities.enemies.PolarWarbear;
 import entities.players.Barbarian;
 import entities.players.Wizard;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
@@ -18,23 +16,23 @@ import static org.junit.Assert.assertTrue;
 
 public class BasicMapTest {
 
+    private BasicMap basicMap;
     private HeroQuest game;
 
     @Before
     public void before() {
         game = new HeroQuest();
+        basicMap = new BasicMap();
     }
 
     @Test
     public void shouldReturnFalseWhenNoCreaturesAreOnMap() {
-        BasicMap basicMap = new BasicMap();
         assertFalse(basicMap.verifyWinningConditions(game));
     }
 
     @Test
     public void shouldReturnFalseWhenHeroesAreOutsideStairs() {
-        BasicMap map = new BasicMap();
-        game.setMap(map);
+        game.setMap(basicMap);
         List<Creature> creatureQueue = game.getCreatureQueue();
         creatureQueue.add(new PolarWarbear());
         creatureQueue.get(0).setID((byte)1);
@@ -46,13 +44,12 @@ public class BasicMapTest {
         wizard.setID((byte)21);
         wizard.setCurrentPosition(new Position(19, 20));
         creatureQueue.add(wizard);
-        assertFalse(map.verifyWinningConditions(game));
+        assertFalse(basicMap.verifyWinningConditions(game));
     }
 
     @Test
     public void shouldReturnTrueWhenOneHeroIsOnStairs() {
-        BasicMap map = new BasicMap();
-        game.setMap(map);
+        game.setMap(basicMap);
         List<Creature> creatureQueue = game.getCreatureQueue();
         creatureQueue.add(new PolarWarbear());
         creatureQueue.get(0).setID((byte)1);
@@ -64,13 +61,12 @@ public class BasicMapTest {
         wizard.setID((byte)21);
         wizard.setCurrentPosition(new Position(25, 25));
         creatureQueue.add(wizard);
-        assertTrue(map.verifyWinningConditions(game));
+        assertTrue(basicMap.verifyWinningConditions(game));
     }
 
     @Test
     public void shouldReturnTrueWhenAllHeroesAreOnStairs() {
-        BasicMap map = new BasicMap();
-        game.setMap(map);
+        game.setMap(basicMap);
         List<Creature> creatureQueue = game.getCreatureQueue();
         creatureQueue.add(new PolarWarbear());
         creatureQueue.get(0).setID((byte)1);
@@ -82,6 +78,30 @@ public class BasicMapTest {
         wizard.setID((byte)21);
         wizard.setCurrentPosition(new Position(25, 25));
         creatureQueue.add(wizard);
-        assertTrue(map.verifyWinningConditions(game));
+        assertTrue(basicMap.verifyWinningConditions(game));
+    }
+
+    @Test
+    public void shouldReturnFalseWhenHeroIsOutsideStairs() {
+        Barbarian barbarian = new Barbarian();
+        barbarian.setCurrentPosition(new Position(20, 20));
+
+        assertFalse(basicMap.onStairs(barbarian.getCurrentPosition(), 24, 24));
+    }
+
+    @Test
+    public void shouldReturnTrueWhenHeroIsOnStairsTile1() {
+        Barbarian barbarian = new Barbarian();
+        barbarian.setCurrentPosition(new Position(24, 24));
+
+        assertTrue(basicMap.onStairs(barbarian.getCurrentPosition(), 24, 24));
+    }
+
+    @Test
+    public void shouldReturnTrueWhenHeroIsOnStairsTile2() {
+        Barbarian barbarian = new Barbarian();
+        barbarian.setCurrentPosition(new Position(24, 25));
+
+        assertTrue(basicMap.onStairs(barbarian.getCurrentPosition(), 24, 24));
     }
 }

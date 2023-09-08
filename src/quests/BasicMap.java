@@ -564,11 +564,11 @@ public class BasicMap {
 		
 	}
 	
-	protected boolean onStairs(Position p, int stairsRow, int stairsColumn) {
-		int row = p.getRow();
-		int column = p.getColumn();
-        return row == stairsRow && column == stairsColumn || row == stairsRow && column == stairsColumn + 1
-                || row == stairsRow + 1 && column == stairsColumn || row == stairsRow + 1
-                && column == stairsColumn + 1;
+	protected boolean onStairs(Position heroPosition, int stairsRow, int stairsColumn) {
+		int heroRow = heroPosition.getRow();
+		int heroColumn = heroPosition.getColumn();
+        return heroRow == stairsRow && heroColumn == stairsColumn || heroRow == stairsRow && heroColumn == stairsColumn + 1
+                || heroRow == stairsRow + 1 && heroColumn == stairsColumn || heroRow == stairsRow + 1
+                && heroColumn == stairsColumn + 1;
     }
 }
