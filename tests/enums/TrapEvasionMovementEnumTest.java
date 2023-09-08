@@ -9,19 +9,19 @@ public class TrapEvasionMovementEnumTest {
     @Test
     public void shouldReturnForwardEnum() {
         TrapEvasionMovementEnum expectedEnum = TrapEvasionMovementEnum.FORWARD;
-        assertEquals(expectedEnum, TrapEvasionMovementEnum.getEnumById(0));
+        assertEquals(expectedEnum, TrapEvasionMovementEnum.getEnumById((byte) 0));
     }
 
     @Test
     public void shouldReturnBackwardEnum() {
         TrapEvasionMovementEnum expectedEnum = TrapEvasionMovementEnum.BACKWARD;
-        assertEquals(expectedEnum, TrapEvasionMovementEnum.getEnumById(1));
+        assertEquals(expectedEnum, TrapEvasionMovementEnum.getEnumById((byte) 1));
     }
 
     @Test
     public void shouldReturnFallenIntoPitEnum() {
         TrapEvasionMovementEnum expectedEnum = TrapEvasionMovementEnum.FALLEN_INTO_PIT;
-        assertEquals(expectedEnum, TrapEvasionMovementEnum.getEnumById(2));
+        assertEquals(expectedEnum, TrapEvasionMovementEnum.getEnumById((byte) 2));
     }
 
     @Test

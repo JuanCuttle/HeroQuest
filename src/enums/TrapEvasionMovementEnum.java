@@ -5,7 +5,7 @@ public enum TrapEvasionMovementEnum {
     BACKWARD,
     FALLEN_INTO_PIT;
 
-    public static TrapEvasionMovementEnum getEnumById(int id) {
+    public static TrapEvasionMovementEnum getEnumById(byte id) {
         if (id == 0) {
             return FORWARD;
         }

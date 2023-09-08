@@ -23,13 +23,15 @@ import view.ClientServerProxy;
 import view.GUI;
 import exceptions.PositionNotEmptyException;
 
+import static enums.TrapEvasionMovementEnum.FALLEN_INTO_PIT;
+
 public class HeroQuest implements LogicInterface {
 
 	protected BasicMap map;
 	protected ArrayList<Player> players;
 
 	protected GUI GUI;
-	private ClientServerProxy clientServerProxy;
+	private final ClientServerProxy clientServerProxy;
 	protected Player localPlayer;
 	protected ArrayList<Creature> creatureQueue;
 	public ArrayList<Door> doors;
@@ -390,7 +392,7 @@ public class HeroQuest implements LogicInterface {
 
 								} else {
 									movement.setDirection(direction);
-									movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(TrapEvasionMovementEnum.FALLEN_INTO_PIT));
+									movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(FALLEN_INTO_PIT));
 								}
 							}
 						}
@@ -1014,7 +1016,7 @@ public class HeroQuest implements LogicInterface {
 			}
 
 			if (trap instanceof Pit) {
-				if (!TrapEvasionMovementEnum.FALLEN_INTO_PIT.equals(action.getTrapEvasionMovementId())) {
+				if (!FALLEN_INTO_PIT.equals(TrapEvasionMovementEnum.getEnumById(action.getTrapEvasionMovementId()))) {
 					newPosition.removeCreature();
 
 					TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(action.getTrapEvasionMovementId());

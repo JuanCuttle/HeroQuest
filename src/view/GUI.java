@@ -1056,7 +1056,7 @@ public class GUI extends JFrame implements GUIInterface {
 		input += "0 - " + Strings.FORWARD;
 		input += "1 - " + Strings.BACKWARD;
 		String option = JOptionPane.showInputDialog(input);
-		int selectedMovement = Integer.parseInt(option);
+		byte selectedMovement = Byte.parseByte(option);
 		return TrapEvasionMovementEnum.getEnumById(selectedMovement);
 	}
 	
@@ -1065,7 +1065,7 @@ public class GUI extends JFrame implements GUIInterface {
 		input += "0 - " + Strings.YES;
 		input += "1 - " + Strings.NO;
 		String option = JOptionPane.showInputDialog(input);
-		int selectedMovement = Integer.parseInt(option);
+		byte selectedMovement = Byte.parseByte(option);
 		return TrapEvasionMovementEnum.getEnumById(selectedMovement);
 	}
 	
