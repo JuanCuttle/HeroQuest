@@ -142,3 +142,4 @@ Can be troublesome with Creature objects (change not made through ID)
 59) Improve legibility of increaseBody() and decreaseBody() in actions
 60) Verify Pit damage calculation
 61) Verify Trap implementing Jogada
+62) Fix TheFireMage map

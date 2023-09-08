@@ -174,13 +174,17 @@ public class TheStoneHunter extends BasicMap {
         return StatusEnum.DEAD.equals(karlen.getStatus());
     }
 	
-	public void specialOccurrence(HeroQuest game){
-		if (!foundKarlen){
+	public void specialOccurrence(HeroQuest game) {
+		if (!foundKarlen) {
 			Creature karlen = game.getCreatureByID(6);
-			if (karlen.isVisible()){
+			if (karlen.isVisible()) {
 				foundKarlen = true;
-				game.getGUI().showMessagePopup(Strings.FOUND_KARLEN.toString());
+				game.getGui().showMessagePopup(Strings.FOUND_KARLEN.toString());
 			}
 		}
+	}
+
+	public boolean getFoundKarlen() {
+		return this.foundKarlen;
 	}
 }

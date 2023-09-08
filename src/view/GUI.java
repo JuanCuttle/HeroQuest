@@ -17,7 +17,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -57,6 +56,29 @@ public class GUI extends JFrame implements GUIInterface {
         });
 	}
 
+	public GUI() {
+	}
+
+	public void setHeroQuest(HeroQuest game) {
+		this.heroQuest = game;
+	}
+
+	public void generateBoardButtons() {
+		this.boardButtons = new JButton[29][38];
+		for (int i = 0; i < 29; i++) {
+			for (int j = 0; j < 38; j++) {
+				this.boardButtons[i][j] = new JButton();
+			}
+		}
+	}
+
+	public void generateCreatureButtons() {
+		this.creatureButtons = new ArrayList<>();
+		for (int i = 0; i < 25; i++) {
+			this.creatureButtons.add(new JButton());
+		}
+	}
+
 	public GUI(HeroQuest game) {
 		try {
 			createMusic();
@@ -69,7 +91,7 @@ public class GUI extends JFrame implements GUIInterface {
 		setTitle(Strings.HEROQUEST.toString());
 		
 		// GUI attributes
-		game.setGUI(this);
+		game.setGui(this);
 		this.heroQuest = game;
 		BasicMap map = this.heroQuest.getMap();
 		this.boardButtons = new JButton[map.getTotalNumberOfRows()][map.getTotalNumberOfColumns()];
@@ -526,13 +548,15 @@ public class GUI extends JFrame implements GUIInterface {
 		int positionRow = position.getRow();
 		int positionColumn = position.getColumn();
 		if (!position.isVisible()) {
-			path = "images/tiles/Wall.png";
+			path = "/images/tiles/Wall.png";
 
 		} else {
 			Creature creatureInPosition = position.getCreature();
 			if (creatureInPosition != null) {
 				if (creatureInPosition instanceof PlayableCharacter) {
 					path = "/images/players/";
+				} else if (creatureInPosition instanceof SirRagnar) {
+					path = "/images/allies/";
 				} else if (creatureInPosition instanceof Monster) {
 					path = "/images/enemies/";
 				}
@@ -1169,5 +1193,4 @@ public class GUI extends JFrame implements GUIInterface {
 		}
 		return false;
 	}
-
 }

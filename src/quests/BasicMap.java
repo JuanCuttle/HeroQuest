@@ -331,6 +331,10 @@ public class BasicMap {
 		return positions[row][column];
 	}
 
+	public Position[][] getPositions() {
+		return this.positions;
+	}
+
 	public void generateCleanMap() {
 		System.out.println("Debug: initializing map");
 		for(byte i = 0; i < totalNumberOfRows; i++)
@@ -440,13 +444,13 @@ public class BasicMap {
 	
 	protected void generateNormalDoor(HeroQuest game, int row, int column) {
 		positions[row][column] = new Door(row,column,Integer.parseInt(row+""+column));
-		game.doors.add((Door)positions[row][column]);
+		game.getDoors().add((Door)positions[row][column]);
 	}
 	
 	protected void generateHiddenDoor(HeroQuest game, int row, int column) {
 		positions[row][column] = new Door(row,column,Integer.parseInt(row+""+column));
-		game.doors.add((Door)positions[row][column]);
-		game.doors.get(game.doors.size()-1).setSecret(true);
+		game.getDoors().add((Door)positions[row][column]);
+		game.getDoors().get(game.getDoors().size()-1).setSecret(true);
 	}
 	
 	protected void generateBlockade(int row, int column) {

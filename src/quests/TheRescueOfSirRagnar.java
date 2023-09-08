@@ -149,17 +149,8 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	}
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
-		
 		Position sirRagnarCurrentPosition = game.getCreatureByID(14).getCurrentPosition(); // Sir Ragnar
-		
-		int currentSirRagnarRow = sirRagnarCurrentPosition.getRow();
-		int currentSirRagnarColumn = sirRagnarCurrentPosition.getColumn();
-		
-		// If Sir Ragnar is on stairs
-        return (currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1])
-                | (currentSirRagnarRow == stairsPosition[0] + 1 && currentSirRagnarColumn == stairsPosition[1])
-                | (currentSirRagnarRow == stairsPosition[0] && currentSirRagnarColumn == stairsPosition[1] + 1)
-                | (currentSirRagnarRow == stairsPosition[0] + 1 && currentSirRagnarColumn == stairsPosition[1] + 1);
+		return onStairs(sirRagnarCurrentPosition, stairsPosition[0], stairsPosition[1]);
     }
 	
 	public void specialOccurrence(HeroQuest game) {
@@ -167,7 +158,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 			Creature sirRagnar = game.getCreatureByID(14);
 			if (sirRagnar.isVisible()) {
 				foundRagnar = true;
-				ArrayList<Door> doors = game.doors;
+				ArrayList<Door> doors = game.getDoors();
 				for (Door d : doors) {
 					d.openDoor();
 				}
@@ -182,7 +173,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 					c.setVisible(true);
 				}
 				
-				game.getGUI().refreshGUI();
+				game.getGui().refreshGUI();
 			}
 		}
 	}

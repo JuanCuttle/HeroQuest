@@ -34,8 +34,9 @@ public class BasicMapTest {
     public void shouldReturnFalseWhenHeroesAreOutsideStairs() {
         game.setMap(basicMap);
         List<Creature> creatureQueue = game.getCreatureQueue();
-        creatureQueue.add(new PolarWarbear());
-        creatureQueue.get(0).setID((byte)1);
+        PolarWarbear polarWarbear = new PolarWarbear();
+        polarWarbear.setID((byte)1);
+        creatureQueue.add(polarWarbear);
         Barbarian barbarian = new Barbarian();
         barbarian.setID((byte)20);
         barbarian.setCurrentPosition(new Position(20, 20));
@@ -51,8 +52,9 @@ public class BasicMapTest {
     public void shouldReturnTrueWhenOneHeroIsOnStairs() {
         game.setMap(basicMap);
         List<Creature> creatureQueue = game.getCreatureQueue();
-        creatureQueue.add(new PolarWarbear());
-        creatureQueue.get(0).setID((byte)1);
+        PolarWarbear polarWarbear = new PolarWarbear();
+        polarWarbear.setID((byte)1);
+        creatureQueue.add(polarWarbear);
         Barbarian barbarian = new Barbarian();
         barbarian.setID((byte)20);
         barbarian.setCurrentPosition(new Position(20, 20));
@@ -68,8 +70,9 @@ public class BasicMapTest {
     public void shouldReturnTrueWhenAllHeroesAreOnStairs() {
         game.setMap(basicMap);
         List<Creature> creatureQueue = game.getCreatureQueue();
-        creatureQueue.add(new PolarWarbear());
-        creatureQueue.get(0).setID((byte)1);
+        PolarWarbear polarWarbear = new PolarWarbear();
+        polarWarbear.setID((byte)1);
+        creatureQueue.add(polarWarbear);
         Barbarian barbarian = new Barbarian();
         barbarian.setID((byte)20);
         barbarian.setCurrentPosition(new Position(24, 25));
