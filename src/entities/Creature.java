@@ -160,7 +160,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 	
 	public int getMonsterMovement(){
 		int movement;
-		switch(MonsterEnum.getByName(this.getClass().getSimpleName())){
+		switch(MonsterEnum.getEnumByName(this.getClass().getSimpleName())){
 			case GOBLIN: movement = 10;
 				break;
 			case ORC: movement = 8;

@@ -18,7 +18,7 @@ public enum MonsterEnum {
         this.name = name;
     }
 
-    public static MonsterEnum getByName(String monsterName) {
+    public static MonsterEnum getEnumByName(String monsterName) {
         for (MonsterEnum monsterEnum : MonsterEnum.values()) {
             if (monsterEnum.name.equalsIgnoreCase(monsterName))
                 return monsterEnum;

@@ -123,7 +123,7 @@ Can be troublesome with Creature objects (change not made through ID)
 40) Refactor verifyIfItIsPlayersTurn() (if currentCreature instanceof PlayableCharacter ... else ...
 41) Verify need to update creatureQueue in updatePlayerSurroundings()
 42) Fix creatureQueue blackened buttons
-43) Create unit tests
+43) Create unit tests (HeroQuest class)
 44) Revise Class hierarchy
 45) Remove unused Classes
 46) Recreate PolarWarbear quest (reuse basicMap + defaultCreatureQueue in Zargon)

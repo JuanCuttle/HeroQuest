@@ -21,7 +21,7 @@ public enum SpellNameEnum {
         this.name = name;
     }
 
-    public static String getNameById(int id) {
+    public static String getNameById(byte id) {
         for (SpellNameEnum spellNameEnum : SpellNameEnum.values()) {
             if (spellNameEnum.id == id) {
                 return spellNameEnum.getName();
