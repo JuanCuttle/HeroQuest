@@ -438,28 +438,28 @@ public class BasicMap {
 		return new ArrayList<>();
 	}
 	
-	protected void generateNormalDoor(HeroQuest game, int row, int column){
+	protected void generateNormalDoor(HeroQuest game, int row, int column) {
 		positions[row][column] = new Door(row,column,Integer.parseInt(row+""+column));
 		game.doors.add((Door)positions[row][column]);
 	}
 	
-	protected void generateHiddenDoor(HeroQuest game, int row, int column){
+	protected void generateHiddenDoor(HeroQuest game, int row, int column) {
 		positions[row][column] = new Door(row,column,Integer.parseInt(row+""+column));
 		game.doors.add((Door)positions[row][column]);
 		game.doors.get(game.doors.size()-1).setSecret(true);
 	}
 	
-	protected void generateBlockade(int row, int column){
+	protected void generateBlockade(int row, int column) {
 		positions[row][column] = new Position(row,column);
 		positions[row][column].setTrap(new FallingRock());
 		positions[row][column].makeTrapVisible();
 		positions[row][column].makeTrapTriggered();
 	}
 	
-	protected void generateMonster(HeroQuest game, ArrayList<Monster> monsters, Monster m, int id, int row, int column){
-		m.setID((byte) id);
-		game.setCreatureInPosition(m, row, column);
-		monsters.add(m);
+	protected void generateMonster(HeroQuest game, ArrayList<Monster> monsters, Monster monster, int id, int row, int column) {
+		monster.setID((byte) id);
+		game.setCreatureInPosition(monster, row, column);
+		monsters.add(monster);
 	}
 	
 	public byte getTotalNumberOfRows() {

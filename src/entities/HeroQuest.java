@@ -1,8 +1,24 @@
+/*
+           .--.              .--.
+          : (\ ". _......_ ." /) :
+           '.    `        `    .'
+            /'   _        _   `\
+           /     0}      {0     \
+          |       /      \       |
+          |     /'        `\     |
+           \   | .  .==.  . |   /
+            '._ \.' \__/ './ _.'
+            /  ``'._-''-_.'``  \
+                    `--`
+
+ 	Essa classe est� sendo observada pelo Polar Warbear
+ */
 package entities;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
@@ -95,24 +111,24 @@ public class HeroQuest implements LogicInterface {
 		return dwarfAvailable;
 	}
 
-	private void setDwarfAvailable(boolean available) {
-		dwarfAvailable = available;
+	private void setDwarfUnavailable() {
+		dwarfAvailable = false;
 	}
 
-	private void setElfAvailable(boolean available) {
-		elfAvailable = available;
+	private void setElfUnavailable() {
+		elfAvailable = false;
 	}
 
-	private void setWizardAvailable(boolean available) {
-		wizardAvailable = available;
+	private void setWizardUnavailable() {
+		wizardAvailable = false;
 	}
 
-	private void setBarbarianAvailable(boolean available) {
-		barbarianAvailable = available;
+	private void setBarbarianUnavailable() {
+		barbarianAvailable = false;
 	}
 
-	private void setZargonAvailable(boolean available) {
-		zargonAvailable = available;
+	private void setZargonUnavailable() {
+		zargonAvailable = false;
 	}
 
 	public Creature getCurrentCreature() {
@@ -141,13 +157,11 @@ public class HeroQuest implements LogicInterface {
 	
 	public void openDoor(int doorId) {
 		Creature creature = this.getCurrentCreature();
-		if (creature instanceof PlayableCharacter){
+		if (creature instanceof PlayableCharacter) {
 			boolean isItTheCurrentPlayersTurn = this.verifyIfItIsCurrentPlayersTurn();
 			if (isItTheCurrentPlayersTurn) {
 				Door door = this.getDoorById(doorId);
-				boolean isDoorReachable = this.verifyIfPlayerIsNearDoor(
-						(PlayableCharacter) creature, door);
-				
+				boolean isDoorReachable = this.verifyIfPlayerIsNearDoor((PlayableCharacter) creature, Objects.requireNonNull(door));
 				boolean isDoorHidden = door.isSecret();
 				if (!isDoorHidden) {
 					if (isDoorReachable) {
@@ -250,10 +264,10 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	private Door getDoorById(int doorId) {
-		for (int i = 0; i < this.doors.size(); i++) {
-			if (this.doors.get(i).getID() == doorId)
-				return this.doors.get(i);
-		}
+        for (Door door : this.doors) {
+            if (door.getID() == doorId)
+                return door;
+        }
 		return null;
 	}
 
@@ -453,11 +467,8 @@ public class HeroQuest implements LogicInterface {
 				this.GUI.reportError(Strings.SLEEP_NO_ATTACK.toString());
 			} else {
 				Position attackerPosition = attacker.getCurrentPosition();
-				boolean hasSpear = false;
-				if (checkIfAttackerIsAHeroAndHasSpear(attacker)) {
-					hasSpear = true;
-				}
-				ArrayList<Creature> availableTargets = this.getAvailableTargets(1,
+				boolean hasSpear = checkIfAttackerIsAHeroAndHasSpear(attacker);
+                ArrayList<Creature> availableTargets = this.getAvailableTargets(1,
 						attackerPosition);
 				Creature selectedTarget = this.GUI.selectTarget(availableTargets);
 				Position selectedTargetPosition = selectedTarget.getCurrentPosition();
@@ -738,7 +749,7 @@ public class HeroQuest implements LogicInterface {
 
 		switch (CharacterEnum.getEnumById(selectedCharacterId)) {
 			case ZARGON:
-				this.setZargonAvailable(false);
+				this.setZargonUnavailable();
 				
 				Zargon playerZ = action.getZargon();
 				for (int i = 0; i < playerZ.getMonsters().size(); i++) {
@@ -749,7 +760,7 @@ public class HeroQuest implements LogicInterface {
 				
 				break;
 			case BARBARIAN:
-				this.setBarbarianAvailable(false);
+				this.setBarbarianUnavailable();
 				
 				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
@@ -765,7 +776,7 @@ public class HeroQuest implements LogicInterface {
 	
 				break;
 			case WIZARD:
-				this.setWizardAvailable(false);
+				this.setWizardUnavailable();
 				
 				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
@@ -781,7 +792,7 @@ public class HeroQuest implements LogicInterface {
 	
 				break;
 			case ELF:
-				this.setElfAvailable(false);
+				this.setElfUnavailable();
 				
 				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
@@ -797,7 +808,7 @@ public class HeroQuest implements LogicInterface {
 				
 				break;
 			case DWARF:
-				this.setDwarfAvailable(false);
+				this.setDwarfUnavailable();
 				
 				playerA = action.getAdventurer();
 				this.removePlayerFromQueue();
@@ -918,7 +929,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	private void processCastSpell(CastSpell action) {
-		Byte roundsToSleep = action.getRoundsToSleep();
+		byte roundsToSleep = action.getRoundsToSleep();
 		Spell castSpell = action.getSpell();
 		byte targetId = action.getTargetID();
 		Creature target = this.getCreatureById(targetId);
@@ -927,7 +938,7 @@ public class HeroQuest implements LogicInterface {
 		if (spellStatusEffect != null) {
 			target.setStatus(spellStatusEffect);
 		}
-		if (roundsToSleep != null) {
+		if (roundsToSleep > 0) {
 			target.setRoundsToSleep(roundsToSleep);
 		}
 		this.getCurrentCreature().spendSpell(castSpell);
@@ -960,13 +971,13 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 
-		Creature attacker = this.getCreaturePorID(attackerId);
+		Creature attacker = this.getCreatureByID(attackerId);
 		if (StatusEnum.COURAGE.equals(attacker.getStatus())) {
 			attacker.setStatus(StatusEnum.NEUTRAL);
 		}
 		
 		boolean isSeppuku = attackerId == targetID;
-		this.GUI.showAttackDamageMessage(this.getCreaturePorID(targetID), damage, isSeppuku);
+		this.GUI.showAttackDamageMessage(this.getCreatureByID(targetID), damage, isSeppuku);
 
 		int targetRemainingBp = target.getBody();
 		if (targetRemainingBp <= 0) {
@@ -976,12 +987,12 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	private Creature getCreatureById(int creatureId) {
-		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			int id = this.creatureQueue.get(i).getID();
-			if (id == creatureId) {
-				return this.creatureQueue.get(i);
-			}
-		}
+        for (Creature creature : this.creatureQueue) {
+            int id = creature.getID();
+            if (id == creatureId) {
+                return creature;
+            }
+        }
 		return null;
 	}
 
@@ -1131,7 +1142,7 @@ public class HeroQuest implements LogicInterface {
 					Position position = this.map.getPosition((byte)i, (byte)j);
 					position.setVisible(true);
 					if (position.getCreature() != null)
-						this.getCreaturePorID(position.getCreature().getID()).setVisible(true);
+						this.getCreatureByID(position.getCreature().getID()).setVisible(true);
 				}
 			}
 		}
@@ -1140,7 +1151,7 @@ public class HeroQuest implements LogicInterface {
 	private void processOpenDoor(OpenDoor lance) {
 		int doorId = lance.getDoorId();
 		Door door = this.getDoorById(doorId);
-		if (door.isOpen()){
+		if (door.isOpen()) {
 			door.closeDoor();
 		} else {
 			door.openDoor();
@@ -1237,7 +1248,7 @@ public class HeroQuest implements LogicInterface {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				this.processCharacterSelection(Integer.parseInt(fileInformation.get(0)));
+				this.processCharacterSelection(Integer.parseInt(Objects.requireNonNull(fileInformation).get(0)));
 				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(fileInformation.get(1)));
 			} else {
 				this.GUI.showCharacterSelectionScreen();
@@ -1335,16 +1346,15 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	private void killCreature(int creatureID) {
-		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			Creature creature = this.creatureQueue.get(i);
-			if (creature.getID() == creatureID) {
-				creature.setStatus(StatusEnum.DEAD);
-				Position pos = creature.getCurrentPosition();
-				pos.removeCreature();
-				this.map.updatePosition(pos);
-				pos.setVisible(true);
-			}
-		}
+        for (Creature creature : this.creatureQueue) {
+            if (creature.getID() == creatureID) {
+                creature.setStatus(StatusEnum.DEAD);
+                Position pos = creature.getCurrentPosition();
+                pos.removeCreature();
+                this.map.updatePosition(pos);
+                pos.setVisible(true);
+            }
+        }
 	}
 
 	public void searchForTrapsAndHiddenDoors() {
@@ -1420,14 +1430,12 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	private boolean areHeroesAlive() {
-		int creatureQueueSize = this.creatureQueue.size();
-		for (int i = 0; i < creatureQueueSize; i++) {
-			Creature creature = this.creatureQueue.get(i);
-			if (creature instanceof PlayableCharacter) {
-				if (!StatusEnum.DEAD.equals(creature.getStatus()))
-					return true;
-			}
-		}
+		for (Creature creature : this.creatureQueue) {
+            if (creature instanceof PlayableCharacter) {
+                if (!StatusEnum.DEAD.equals(creature.getStatus()))
+                    return true;
+            }
+        }
 		return false;
 	}
 
@@ -1467,11 +1475,11 @@ public class HeroQuest implements LogicInterface {
 
 	private Creature getCreatureFromQueue(int creatureID) {
 		Creature criatura = null;
-		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			if (this.creatureQueue.get(i).getID() == creatureID) {
-				criatura = this.creatureQueue.get(i);
-			}
-		}
+        for (Creature creature : this.creatureQueue) {
+            if (creature.getID() == creatureID) {
+                criatura = creature;
+            }
+        }
 		return criatura;
 	}
 
@@ -1488,11 +1496,11 @@ public class HeroQuest implements LogicInterface {
 		creature.setCurrentPosition(this.map.positions[row][column]);
 	}
 	
-	public Creature getCreaturePorID(int creatureID) {
+	public Creature getCreatureByID(int creatureID) {
 		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			Creature criatura = this.creatureQueue.get(i);
-			if (criatura.getID() == creatureID) {
-				return criatura;
+			Creature creature = this.creatureQueue.get(i);
+			if (creature.getID() == creatureID) {
+				return creature;
 			}
 		}
 		return null;

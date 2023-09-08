@@ -213,7 +213,7 @@ public class TheTrial extends BasicMap {
 	}
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
-		Creature verag = game.getCreaturePorID(24);
+		Creature verag = game.getCreatureByID(24);
         return StatusEnum.DEAD.equals(verag.getStatus());
     }
 }
