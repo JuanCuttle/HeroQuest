@@ -28,7 +28,7 @@ public class TheTrialTest {
     public void shouldReturnFalseIfVeragIsNeutral() {
         List<Creature> creatureQueue = game.getCreatureQueue();
         Orc verag = new Orc();
-        verag.setID((byte)6);
+        verag.setID((byte)24);
         verag.setStatus(StatusEnum.NEUTRAL);
         creatureQueue.add(verag);
         assertFalse(quest.verifyWinningConditions(game));
@@ -38,7 +38,7 @@ public class TheTrialTest {
     public void shouldReturnFalseIfVeragIsAsleep() {
         List<Creature> creatureQueue = game.getCreatureQueue();
         Orc verag = new Orc();
-        verag.setID((byte)6);
+        verag.setID((byte)24);
         verag.setStatus(StatusEnum.SLEEPING);
         creatureQueue.add(verag);
         assertFalse(quest.verifyWinningConditions(game));
@@ -48,7 +48,7 @@ public class TheTrialTest {
     public void shouldReturnTrueIfVeragIsDead() {
         List<Creature> creatureQueue = game.getCreatureQueue();
         Orc verag = new Orc();
-        verag.setID((byte)6);
+        verag.setID((byte)24);
         verag.setStatus(StatusEnum.DEAD);
         creatureQueue.add(verag);
         assertTrue(quest.verifyWinningConditions(game));
