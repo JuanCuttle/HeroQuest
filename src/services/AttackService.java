@@ -135,4 +135,33 @@ public class AttackService {
         return creature.getCurrentPosition().getTrap() != null
                 && creature.getCurrentPosition().getTrap() instanceof Pit;
     }
+
+    public void processAttack(Attack action) {
+        byte attackerId = heroQuest.getCurrentCreature().getID();
+        int targetID = action.getTargetID();
+        Creature target = heroQuest.getCreatureById(targetID);
+
+        byte damage = action.getValue();
+        target.decreaseBody(damage);
+
+        if (damage > 0) {
+            if (StatusEnum.ROCK_SKIN.equals(target.getStatus())){
+                target.setStatus(StatusEnum.NEUTRAL);
+            }
+        }
+
+        Creature attacker = heroQuest.getCreatureById(attackerId);
+        if (StatusEnum.COURAGE.equals(attacker.getStatus())) {
+            attacker.setStatus(StatusEnum.NEUTRAL);
+        }
+
+        boolean isSeppuku = attackerId == targetID;
+        heroQuest.showAttackDamageMessage(target, damage, isSeppuku);
+
+        int targetRemainingBp = target.getBody();
+        if (targetRemainingBp <= 0) {
+            heroQuest.announceCreatureDeath(target);
+            heroQuest.killCreature(targetID);
+        }
+    }
 }

@@ -61,6 +61,7 @@ public class HeroQuest implements LogicInterface {
 	private OpenDoorService openDoorService;
 	private MovementService movementService;
 	private AttackService attackService;
+	private CastSpellService castSpellService;
 
 
 	public HeroQuest() {
@@ -80,6 +81,7 @@ public class HeroQuest implements LogicInterface {
 		this.openDoorService = new OpenDoorService(this);
 		this.movementService = new MovementService(this);
 		this.attackService = new AttackService(this);
+		this.castSpellService = new CastSpellService(this);
 	}
 
 	public boolean isConnected() {
@@ -191,7 +193,6 @@ public class HeroQuest implements LogicInterface {
 			gui.reportError(error);
 		}
 	}
-	
 
 	public boolean verifyIfItIsCurrentPlayersTurn() {
 		int localCreatureId, currentTurnCreatureId;
@@ -243,137 +244,14 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void castSpell() {
-		if (this.verifyIfItIsCurrentPlayersTurn()) {
-			Creature caster = this.getCurrentCreature();
-			if (caster instanceof Wizard) {
-				ArrayList<Spell> availableSpells = ((Wizard) caster)
-						.getSpells();
-				byte availableMind = caster.getMind();
-				if (availableMind > 0) {
-					Spell selectedSpell = this.gui.selectSpell(availableSpells);
-					Position casterCurrentPosition = caster.getCurrentPosition();
-					ArrayList<Creature> availableTargets = this.getAvailableTargets((byte) 2, casterCurrentPosition);
-					Creature selectedTarget = this.gui.selectTarget(availableTargets);
-					boolean wasSpellSuccessful = this.calculateSpellSuccess(
-							selectedTarget, selectedSpell);
-					if (wasSpellSuccessful) {
-						CastSpell lance = new CastSpell();
-						if (StatusEnum.SLEEPING.equals(selectedSpell.getStatus())) {
-							byte roundsToSleep = 0;
-							byte dieRoll = 0;
-							byte targetMind = selectedTarget.getMind();
-							while(dieRoll != 5) {
-								for (byte i = 0; i < targetMind; i++) {
-									roundsToSleep++;
-									dieRoll = (byte)(Math.random()*6);
-									if (dieRoll == 5) {
-										break;
-									}
-								}
-							}
-							lance.setRoundsToSleep(roundsToSleep);
-						}
-						lance.setSpell(selectedSpell);
-						lance.setTargetID(selectedTarget.getID());
-						this.processAction(lance);
-						this.sendAction(lance);
-					}
-				} else {
-					this.gui.reportError(Strings.NO_MIND_LEFT.toString());
-				}
-			} else if (caster instanceof Elf) {
-				ArrayList<Spell> availableSpells = ((Elf) caster).getSpells();
-				byte mind = caster.getMind();
-				if (mind > 0) {
-					Spell selectedSpell = this.gui.selectSpell(availableSpells);
-					Position casterPosition = caster.getCurrentPosition();
-					ArrayList<Creature> availableTargets = this.getAvailableTargets((byte) 2, casterPosition);
-					Creature selectedTarget = this.gui.selectTarget(availableTargets);
-					boolean wasSpellSuccessful = this.calculateSpellSuccess(selectedTarget, selectedSpell);
-					if (wasSpellSuccessful) {
-						CastSpell action = new CastSpell();
-						action.setSpell(selectedSpell);
-						action.setTargetID(selectedTarget.getID());
-						this.processAction(action);
-						this.sendAction(action);
-					}
-				} else {
-					this.gui.reportError(Strings.NO_MIND_LEFT.toString());
-				}
-			} else {
-				this.gui.reportError(Strings.CANT_USE_SPELLS.toString());
-			}
-		} else {
-			this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
+		String error = castSpellService.castSpell();
+		if (error != null) {
+			gui.reportError(error);
 		}
-	}
-
-	private boolean calculateSpellSuccess(Creature target, Spell spell) {
-		byte spellDamage;
-		boolean success = true;
-		spellDamage = spell.getDamage();
-
-		if (spell.getSpellId() == SpellNameEnum.BALL_OF_FLAME.getId()) {
-			byte valueOnFirstDie = (byte)(Math.random() * 6 + 1);
-			byte valueOnSecondDie = (byte)(Math.random() * 6 + 1);
-			
-			if (valueOnFirstDie > 4) {
-				spellDamage++;
-			}
-
-			if (valueOnSecondDie > 4) {
-				spellDamage++;
-			}
-
-			spell.setDamage(spellDamage);
-			
-			if (spellDamage == 0) {
-				success = false;
-				this.gui.showMessagePopup(Strings.SPELL_FAILED.toString());
-			}
-		}
-		
-		if (spell.getSpellId() == SpellNameEnum.FIRE_OF_WRATH.getId()) {
-			byte valueOnDie = (byte)(Math.random() * 6 + 1);
-			
-			if (valueOnDie > 4) {
-				spellDamage++;
-			}
-
-			spell.setDamage(spellDamage);
-			
-			if (spellDamage == 0) {
-				success = false;
-				this.gui.showMessagePopup(Strings.SPELL_FAILED.toString());
-			}
-		}
-		
-		if (spell.getSpellId() == SpellNameEnum.SLEEP.getId()) {
-
-			if (isTargetUndead(target)) {
-				success = false;
-			} else {
-				byte targetMind = target.getMind();
-				byte valueOnDie;
-				for (byte i = 0; i < targetMind; i++) {
-					valueOnDie = (byte)(Math.random() * 6 + 1);
-					if (valueOnDie == 6) {
-						success = false;
-						this.gui.showMessagePopup(Strings.SPELL_FAILED.toString());
-						break;
-					}
-				}
-			}
-		}
-		return success;
-	}
-
-	private static boolean isTargetUndead(Creature target) {
-		return target instanceof Zombie || target instanceof Mummy || target instanceof Skeleton;
 	}
 
 	public void sendAction(Action action) {
-		this.getClientServerProxy().sendAction(action);
+		clientServerProxy.sendAction(action);
 	}
 
 	public void processAction(Action action) {
@@ -386,7 +264,7 @@ public class HeroQuest implements LogicInterface {
 				openDoorService.processOpenDoor((OpenDoor) action);
 				break;
 			case ATTACK:
-				this.processAttack((Attack) action);
+				attackService.processAttack((Attack) action);
 				this.processEndTurn();
 				break;
 			case SEND_PLAYER:
@@ -397,7 +275,7 @@ public class HeroQuest implements LogicInterface {
 				this.gui.showVisibleCreaturesInQueue();
 				break;
 			case CAST_SPELL:
-				this.processCastSpell((CastSpell) action);
+				castSpellService.processCastSpell((CastSpell) action);
 				this.processEndTurn();
 				break;
 			case SEARCH_FOR_TRAPS_AND_HIDDEN_DOORS:
@@ -511,7 +389,7 @@ public class HeroQuest implements LogicInterface {
 					Position position = getPosition((byte)i, (byte)j);
 					position.setVisible(true);
 					if (position.getCreature() != null)
-						getCreatureByID(position.getCreature().getID()).setVisible(true);
+						getCreatureById(position.getCreature().getID()).setVisible(true);
 				}
 			}
 		}
@@ -614,65 +492,12 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void processCastSpell(CastSpell action) {
-		byte roundsToSleep = action.getRoundsToSleep();
-		Spell castSpell = action.getSpell();
-		byte targetId = action.getTargetID();
-		Creature target = this.getCreatureById(targetId);
-		byte damageDealt = castSpell.getDamage();
-		StatusEnum spellStatusEffect = castSpell.getStatus();
-		if (spellStatusEffect != null) {
-			target.setStatus(spellStatusEffect);
-		}
-		if (roundsToSleep > 0) {
-			target.setRoundsToSleep(roundsToSleep);
-		}
-		this.getCurrentCreature().spendSpell(castSpell);
-		this.gui.showEffectOfCastSpell(this.getCurrentCreature(), castSpell,
-				target, damageDealt, spellStatusEffect);
-		target.increaseBody(damageDealt);
-		byte targetBP = target.getBody();
-		if (targetBP <= 0) {
-			this.gui.announceCreatureDeath(target);
-			this.killCreature(targetId);
-		}
-	}
-
 	private void processSendPlayer(SendPlayer action) {
 		Player player = action.getPlayer();
 		this.insertPlayerIntoQueue(player);
 	}
 
-	private void processAttack(Attack action) {
-		byte attackerId = this.getCurrentCreature().getID();
-		int targetID = action.getTargetID();
-		Creature target = this.getCreatureById(targetID);
-
-		byte damage = action.getValue();
-		target.decreaseBody(damage);
-
-		if (damage > 0) {
-			if (StatusEnum.ROCK_SKIN.equals(target.getStatus())){
-				target.setStatus(StatusEnum.NEUTRAL);
-			}
-		}
-
-		Creature attacker = this.getCreatureByID(attackerId);
-		if (StatusEnum.COURAGE.equals(attacker.getStatus())) {
-			attacker.setStatus(StatusEnum.NEUTRAL);
-		}
-		
-		boolean isSeppuku = attackerId == targetID;
-		this.gui.showAttackDamageMessage(this.getCreatureByID(targetID), damage, isSeppuku);
-
-		int targetRemainingBp = target.getBody();
-		if (targetRemainingBp <= 0) {
-			this.gui.announceCreatureDeath(target);
-			this.killCreature(targetID);
-		}
-	}
-
-	private Creature getCreatureById(int creatureId) {
+	public Creature getCreatureById(int creatureId) {
         for (Creature creature : this.creatureQueue) {
             int id = creature.getID();
             if (id == creatureId) {
@@ -1006,16 +831,6 @@ public class HeroQuest implements LogicInterface {
 		this.map.positions[row][column].setCreature(creature);
 		creature.setCurrentPosition(this.map.positions[row][column]);
 	}
-	
-	public Creature getCreatureByID(int creatureID) {
-		for (int i = 0; i < this.creatureQueue.size(); i++) {
-			Creature creature = this.creatureQueue.get(i);
-			if (creature.getID() == creatureID) {
-				return creature;
-			}
-		}
-		return null;
-	}
 
 	public void setLocalPlayerName(String playerName) {
 		this.localPlayerName = playerName;
@@ -1079,5 +894,25 @@ public class HeroQuest implements LogicInterface {
 
 	public Creature selectTarget(ArrayList<Creature> availableTargets) {
 		return gui.selectTarget(availableTargets);
+	}
+
+	public Spell selectSpell(ArrayList<Spell> availableSpells) {
+		return gui.selectSpell(availableSpells);
+	}
+
+	public void showMessagePopup(String message) {
+		gui.showMessagePopup(message);
+	}
+
+	public void showAttackDamageMessage(Creature target, byte damage, boolean isSeppuku) {
+		gui.showAttackDamageMessage(target, damage, isSeppuku);
+	}
+
+	public void announceCreatureDeath(Creature creature) {
+		gui.announceCreatureDeath(creature);
+	}
+
+	public void showEffectOfCastSpell(Creature caster, Spell castSpell, Creature target, byte damageDealt, StatusEnum spellStatusEffect) {
+		gui.showEffectOfCastSpell(caster, castSpell, target, damageDealt, spellStatusEffect);
 	}
 }
