@@ -2,7 +2,6 @@ package services;
 
 import entities.Creature;
 import entities.Position;
-import entities.actions.EndTurn;
 import entities.actions.Movement;
 import entities.tiles.*;
 import entities.utils.Strings;
@@ -15,8 +14,8 @@ import static enums.TrapEvasionMovementEnum.FALLEN_INTO_PIT;
 
 public class MovementService {
 
-    private HeroQuest heroQuest;
-    private EndTurnService endTurnService;
+    private final HeroQuest heroQuest;
+    private final EndTurnService endTurnService;
 
     public MovementService(HeroQuest heroQuest, EndTurnService endTurnService) {
         this.heroQuest = heroQuest;

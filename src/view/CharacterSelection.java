@@ -23,8 +23,8 @@ public class CharacterSelection extends JFrame {
 	private String chosenPlayer;
 	private final GUI GUI;
 
-	public CharacterSelection(GUI GUI) {
-		this.GUI = GUI;
+	public CharacterSelection(GUI gui) {
+		this.GUI = gui;
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setTitle(Strings.SELECT_YOUR_CHARACTER.toString());
@@ -45,7 +45,7 @@ public class CharacterSelection extends JFrame {
                         || chosenPlayer.equals("4")){
                     int chosenIndex = Integer.parseInt(chosenPlayer);
                     try {
-                        GUI.heroQuest.processCharacterSelection(chosenIndex);
+                        gui.processCharacterSelection(chosenIndex);
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }

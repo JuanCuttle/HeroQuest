@@ -22,22 +22,14 @@ import javax.swing.JOptionPane;
 
 import entities.*;
 import entities.actions.*;
-import entities.enemies.Monster;
-import entities.enemies.Mummy;
-import entities.enemies.Skeleton;
-import entities.enemies.Zombie;
 import entities.players.*;
 import entities.tiles.*;
 import entities.utils.Strings;
 import enums.*;
 import interfaces.LogicInterface;
 import quests.BasicMap;
-import quests.MelarsMaze;
 import view.ClientServerProxy;
 import view.GUI;
-import exceptions.PositionNotEmptyException;
-
-import static enums.TrapEvasionMovementEnum.FALLEN_INTO_PIT;
 
 public class HeroQuest implements LogicInterface {
 
@@ -65,6 +57,7 @@ public class HeroQuest implements LogicInterface {
 	private EndTurnService endTurnService;
 	private SearchForTrapsAndHiddenDoorsService searchForTrapsAndHiddenDoorsService;
 	private SearchForTreasureService searchForTreasureService;
+	private SelectCharacterService selectCharacterService;
 
 
 	public HeroQuest() {
@@ -88,6 +81,7 @@ public class HeroQuest implements LogicInterface {
 		this.castSpellService = new CastSpellService(this);
 		this.searchForTrapsAndHiddenDoorsService = new SearchForTrapsAndHiddenDoorsService(this);
 		this.searchForTreasureService = new SearchForTreasureService(this);
+		this.selectCharacterService = new SelectCharacterService(this);
 	}
 
 	public boolean isConnected() {
@@ -106,23 +100,23 @@ public class HeroQuest implements LogicInterface {
 		this.gameInSession = gameInSession;
 	}
 
-	private boolean isBarbarianAvailable() {
+	public boolean isBarbarianAvailable() {
 		return barbarianAvailable;
 	}
 
-	private boolean isWizardAvailable() {
+	public boolean isWizardAvailable() {
 		return wizardAvailable;
 	}
 
-	private boolean isElfAvailable() {
+	public boolean isElfAvailable() {
 		return elfAvailable;
 	}
 
-	private boolean isDwarfAvailable() {
+	public boolean isDwarfAvailable() {
 		return dwarfAvailable;
 	}
 
-	private boolean getZargonAvailable() {
+	public boolean getZargonAvailable() {
 		return zargonAvailable;
 	}
 
@@ -189,14 +183,14 @@ public class HeroQuest implements LogicInterface {
 	public void openDoor(int doorId) {
 		String error = openDoorService.openDoor(doorId);
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 	
 	public void openDoorWithKeyboard() {
 		String error = openDoorService.openDoorWithKeyboard();
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 
@@ -221,14 +215,14 @@ public class HeroQuest implements LogicInterface {
 	public void move(DirectionEnum direction) {
 		String error = movementService.move(direction);
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 
 	public void attack() {
 		String error = attackService.attack();
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 
@@ -252,7 +246,7 @@ public class HeroQuest implements LogicInterface {
 	public void castSpell() {
 		String error = castSpellService.castSpell();
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 
@@ -419,103 +413,12 @@ public class HeroQuest implements LogicInterface {
 	public void searchForTreasure() {
 		String error = searchForTreasureService.searchForTreasure();
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 
 	public void selectCharacter() throws ClassNotFoundException {
-		boolean doesSaveFileWithPlayerNameExist = this.gui.checkSaveFileExists(localPlayerName);
-		if (doesSaveFileWithPlayerNameExist) {
-			int choice = JOptionPane.showConfirmDialog(null, Strings.CONFIRM_LOAD_FILE);
-			if (choice == JOptionPane.YES_OPTION) {
-				ArrayList<String> fileInformation = null;
-				try {
-					fileInformation = this.gui.readSaveFile(localPlayerName);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				this.processCharacterSelection(Integer.parseInt(Objects.requireNonNull(fileInformation).get(0)));
-				this.localAdventurer.getPlayableCharacter().increaseGold(Integer.parseInt(fileInformation.get(1)));
-			} else {
-				this.gui.showCharacterSelectionScreen();
-			}
-		} else {
-			this.gui.showCharacterSelectionScreen();
-		}
-	}
-	
-	public void processCharacterSelection(int selectedCharacterId) throws ClassNotFoundException {
-		boolean isCharacterAvailable;
-		Zargon playerZargon = new Zargon(this);
-		Adventurer playerAdventurer = new Adventurer();
-		PlayableCharacter character;
-		SelectCharacter action = new SelectCharacter();
-		action.setSelectedCharacterId((byte)selectedCharacterId);
-		switch (CharacterEnum.getEnumById(selectedCharacterId)) {
-			case ZARGON:
-				isCharacterAvailable = this.getZargonAvailable();
-				break;
-			case BARBARIAN:
-				isCharacterAvailable = this.isBarbarianAvailable();
-				break;
-			case WIZARD:
-				isCharacterAvailable = this.isWizardAvailable();
-				break;
-			case ELF:
-				isCharacterAvailable = this.isElfAvailable();
-				break;
-			case DWARF:
-				isCharacterAvailable = this.isDwarfAvailable();
-				break;
-			default:
-				this.gui.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
-				isCharacterAvailable = false;
-				break;
-		}
-		if (isCharacterAvailable) {
-			switch (CharacterEnum.getEnumById(selectedCharacterId)) {
-				case ZARGON:
-					this.localZargon = playerZargon;
-					action.setZargon(playerZargon);
-					break;
-				case BARBARIAN:
-					character = new Barbarian();
-					character.setID((byte) (map.getCreatureQueueSize()-3));
-					playerAdventurer.setPlayableCharacter(character);
-					this.localAdventurer = playerAdventurer;
-					action.setAdventurer(playerAdventurer);
-					break;
-				case WIZARD:
-					character = new Wizard();
-					character.setID((byte) (map.getCreatureQueueSize()-2));
-					playerAdventurer.setPlayableCharacter(character);
-					this.localAdventurer = playerAdventurer;
-					action.setAdventurer(playerAdventurer);
-					break;
-				case ELF:
-					character = new Elf();
-					character.setID((byte) (map.getCreatureQueueSize()-1));
-					playerAdventurer.setPlayableCharacter(character);
-					this.localAdventurer = playerAdventurer;
-					action.setAdventurer(playerAdventurer);
-					break;
-				case DWARF:
-					character = new Dwarf();
-					character.setID((byte) (map.getCreatureQueueSize()));
-					playerAdventurer.setPlayableCharacter(character);
-					this.localAdventurer = playerAdventurer;
-					action.setAdventurer(playerAdventurer);
-					break;
-				default:
-					this.gui.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
-					break;
-			}
-			this.processAction(action);
-			this.sendAction(action);
-		} else {
-			this.gui.reportError(Strings.CHARACTER_UNAVAILABLE.toString());
-			this.selectCharacter();
-		}
+		selectCharacterService.selectCharacter();
 	}
 
 	public void killCreature(int creatureID) {
@@ -533,14 +436,14 @@ public class HeroQuest implements LogicInterface {
 	public void searchForTrapsAndHiddenDoors() {
 		String error = searchForTrapsAndHiddenDoorsService.searchForTrapsAndHiddenDoors();
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 
 	public void endTurn() {
 		String error = endTurnService.endTurn();
 		if (error != null) {
-			gui.reportError(error);
+			reportError(error);
 		}
 	}
 
@@ -749,5 +652,41 @@ public class HeroQuest implements LogicInterface {
 
 	public void showTrapRemovalMessage() {
 		gui.showTrapRemovalMessage();
+	}
+
+	public boolean checkSaveFileExists() {
+		return gui.checkSaveFileExists(localPlayerName);
+	}
+
+	public ArrayList<String> readSaveFile() throws IOException, ClassNotFoundException {
+		return gui.readSaveFile(localPlayerName);
+	}
+
+	public void showCharacterSelectionScreen() {
+		gui.showCharacterSelectionScreen();
+	}
+
+	public void reportError(String error) {
+		gui.reportError(error);
+	}
+
+	public void setLocalZargon(Zargon playerZargon) {
+		this.localZargon = playerZargon;
+	}
+
+	public int getCreatureQueueSize() {
+		return map.getCreatureQueueSize();
+	}
+
+	public void setLocalAdventurer(Adventurer playerAdventurer) {
+		this.localAdventurer = playerAdventurer;
+	}
+
+	public void setLocalAdventurerStartingGold(int startingGold) {
+		localAdventurer.getPlayableCharacter().increaseGold(startingGold);
+	}
+
+	public void processCharacterSelection(int chosenCharacter) throws ClassNotFoundException {
+		selectCharacterService.processCharacterSelection(chosenCharacter);
 	}
 }

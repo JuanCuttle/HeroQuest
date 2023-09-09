@@ -1194,4 +1194,8 @@ public class GUI extends JFrame implements GUIInterface {
 		}
 		return false;
 	}
+
+	public void processCharacterSelection(int chosenCharacter) throws ClassNotFoundException {
+		heroQuest.processCharacterSelection(chosenCharacter);
+	}
 }

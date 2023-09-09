@@ -9,7 +9,7 @@ import enums.StatusEnum;
 
 public class EndTurnService {
 
-    private HeroQuest heroQuest;
+    private final HeroQuest heroQuest;
 
     public EndTurnService(HeroQuest heroQuest) {
         this.heroQuest = heroQuest;

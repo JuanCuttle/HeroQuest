@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class CastSpellService {
 
-    private HeroQuest heroQuest;
+    private final HeroQuest heroQuest;
 
     public CastSpellService(HeroQuest heroQuest) {
         this.heroQuest = heroQuest;

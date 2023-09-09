@@ -12,7 +12,7 @@ import quests.MelarsMaze;
 
 public class SearchForTrapsAndHiddenDoorsService {
 
-    private HeroQuest heroQuest;
+    private final HeroQuest heroQuest;
 
     public SearchForTrapsAndHiddenDoorsService(HeroQuest heroQuest) {
         this.heroQuest = heroQuest;

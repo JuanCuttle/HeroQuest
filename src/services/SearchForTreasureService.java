@@ -10,7 +10,7 @@ import enums.ItemEnum;
 
 public class SearchForTreasureService {
 
-    private HeroQuest heroQuest;
+    private final HeroQuest heroQuest;
 
     public SearchForTreasureService(HeroQuest heroQuest) {
         this.heroQuest = heroQuest;

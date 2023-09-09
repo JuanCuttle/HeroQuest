@@ -31,9 +31,7 @@ public interface LogicInterface {
 	void searchForTreasure();
 	
 	void selectCharacter() throws ClassNotFoundException;
-	
-	void processCharacterSelection(int selectedCharacterId) throws ClassNotFoundException;
-	
+
 	void searchForTrapsAndHiddenDoors();
 	
 	void endTurn();

@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class AttackService {
 
-    private HeroQuest heroQuest;
+    private final HeroQuest heroQuest;
 
     public AttackService(HeroQuest heroQuest) {
         this.heroQuest = heroQuest;
