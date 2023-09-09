@@ -59,6 +59,7 @@ public class HeroQuest implements LogicInterface {
 	private Zargon localZargon;
 	private String localPlayerName = "";
 	private OpenDoorService openDoorService;
+	private MovementService movementService;
 
 
 	public HeroQuest() {
@@ -76,6 +77,7 @@ public class HeroQuest implements LogicInterface {
 		this.localAdventurer = null;
 		this.localZargon = null;
 		this.openDoorService = new OpenDoorService(this);
+		this.movementService = new MovementService(this);
 	}
 
 	public boolean isConnected() {
@@ -229,159 +231,10 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void move(DirectionEnum direction) {
-		if (this.verifyIfItIsCurrentPlayersTurn()) {
-			Creature creature = this.getCurrentCreature();
-			
-			if (StatusEnum.SLEEPING.equals(creature.getStatus())){
-				this.gui.reportError(Strings.SLEEP_FREEZE.toString());
-			} else {
-				byte remainingMovement = creature.getMovement();
-				if (remainingMovement > 0) {
-					Position currentPosition = creature.getCurrentPosition();
-					byte row = currentPosition.getRow();
-					byte column = currentPosition.getColumn();
-					Position newPosition;
-					try {
-						newPosition = this.getNewPosition(direction, row, column);
-
-						Movement movement = new Movement();
-						movement.setSourceRow(row);
-						movement.setSourceColumn(column);
-						movement.setDestinationRow(newPosition.getRow());
-						movement.setDestinationColumn(newPosition.getColumn());
-
-						Trap trap = newPosition.getTrap();
-					
-						if (trap != null) {
-							byte trapDamage = trap.getDeliveredDamage();
-							movement.setDamage(trapDamage);
-							
-							if (trap instanceof FallingRock) {
-								TrapEvasionMovementEnum evasionOption = this.gui.showFallingRockMovementOptions();
-
-								switch(direction){
-									case UP: {
-										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-											newPosition = map.getPosition((byte) (newPosition.getRow()-1), movement.getDestinationColumn());
-										}
-										break;
-									}
-									case DOWN: {
-										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-											newPosition = map.getPosition((byte) (newPosition.getRow()+1), movement.getDestinationColumn());
-										}
-										break;
-									}
-									case LEFT: {
-										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-											newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()-1));
-										}
-										break;
-									}
-									default: {
-										if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
-											newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()+1));
-										}
-										break;
-									}
-								}
-								if (newPosition instanceof Wall) {
-									evasionOption = TrapEvasionMovementEnum.BACKWARD;
-								}
-								movement.setDirection(direction);
-								movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
-
-							} else if (trap instanceof Pit) {
-								
-								if (trap.getVisible()) {
-								
-									TrapEvasionMovementEnum evasionOption = this.gui.showPitJumpingOptions();
-									
-									switch(direction) {
-										case UP: {
-											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-												newPosition = map.getPosition((byte) (newPosition.getRow()-1), movement.getDestinationColumn());
-											}
-											break;
-										}
-										case DOWN: {
-											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-												newPosition = map.getPosition((byte) (newPosition.getRow()+1), movement.getDestinationColumn());
-											}
-											break;
-										}
-										case LEFT: {
-											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-												newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()-1));
-											}
-											break;
-										}
-										default: {
-											if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-												newPosition = map.getPosition(movement.getDestinationRow(), (byte) (newPosition.getColumn()+1));
-											}
-											break;
-										}
-									}
-									if (newPosition instanceof Wall) {
-										evasionOption = TrapEvasionMovementEnum.BACKWARD;
-									}
-									movement.setDirection(direction);
-									movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(evasionOption));
-
-								} else {
-									movement.setDirection(direction);
-									movement.setTrapEvasionMovementId(TrapEvasionMovementEnum.getIdByEnum(FALLEN_INTO_PIT));
-								}
-							}
-						}
-						this.processAction(movement);
-						this.sendAction(movement);
-					} catch (PositionNotEmptyException e) {
-						this.gui.reportError(Strings.PHYSICS_LAWS.toString());
-					}
-				} else {
-					this.gui.reportError(Strings.NO_MOVE_LEFT.toString());
-					}
-				}
-			} else {
-				this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
-			}
-	}
-
-	private Position getNewPosition(DirectionEnum direction, byte row, byte column) throws PositionNotEmptyException {
-		Position newPosition = null;
-		switch (direction) {
-			case DOWN:
-				newPosition = this.map.getPosition((byte) (row + 1), column);
-				break;
-			case UP:
-				newPosition = this.map.getPosition((byte) (row - 1), column);
-				break;
-			case LEFT:
-				newPosition = this.map.getPosition(row, (byte) (column - 1));
-				break;
-			case RIGHT:
-				newPosition = this.map.getPosition(row, (byte) (column + 1));
-				break;
+		String error = movementService.move(direction);
+		if (error != null) {
+			gui.reportError(error);
 		}
-		if (newPosition.getCreature() != null
-				|| newPosition instanceof Wall
-				|| newPosition instanceof Furniture
-				|| isNewPositionAClosedDoor(newPosition)
-				|| doesNewPositionHaveATriggeredFallingRock(newPosition)) {
-			throw new PositionNotEmptyException();
-		} else {
-			return newPosition;
-		}
-	}
-
-	private static boolean doesNewPositionHaveATriggeredFallingRock(Position newPosition) {
-		return newPosition.getTrap() != null && newPosition.getTrap() instanceof FallingRock && newPosition.getTrap().getTriggered();
-	}
-
-	private static boolean isNewPositionAClosedDoor(Position newPosition) {
-		return newPosition instanceof Door && !((Door) newPosition).isOpen();
 	}
 
 	public void attack() {
@@ -632,7 +485,7 @@ public class HeroQuest implements LogicInterface {
 		String actionType = action.getClass().getSimpleName();
 		switch (ActionTypeEnum.getByName(actionType)) {
 			case MOVEMENT:
-				this.processMovement((Movement) action);
+				movementService.processMovement((Movement) action);
 				break;
 			case OPEN_DOOR:
 				openDoorService.processOpenDoor((OpenDoor) action);
@@ -754,6 +607,19 @@ public class HeroQuest implements LogicInterface {
 		}
 		this.sortCreatureQueueByID();
 		this.gui.showVisibleCreaturesInQueue();
+	}
+
+	public void setAreaVisible(byte sourceRow, byte sourceColumn) {
+		for (int i = sourceRow - 2; i <= sourceRow + 2; i++) {
+			for (int j = sourceColumn - 2; j <= sourceColumn + 2; j++) {
+				if (i >= 0 && j >= 0 && i < getTotalNumberOfRows() && j < getTotalNumberOfColumns()) {
+					Position position = getPosition((byte)i, (byte)j);
+					position.setVisible(true);
+					if (position.getCreature() != null)
+						getCreatureByID(position.getCreature().getID()).setVisible(true);
+				}
+			}
+		}
 	}
 
 	private void processSearchForTreasure(SearchForTreasure action) {
@@ -921,159 +787,7 @@ public class HeroQuest implements LogicInterface {
 		return null;
 	}
 
-	private void processMovement(Movement action) {
-		Creature creature = this.getCurrentCreature();
-		byte creatureCurrentBody;
-		byte newCreatureRow;
-		byte newCreatureColumn;
-
-		Position currentPosition = map.getPosition(action.getSourceRow(), action.getSourceColumn());
-		Position newPosition = map.getPosition(action.getDestinationRow(), action.getDestinationColumn());
-		
-		currentPosition.removeCreature();
-		this.map.updatePosition(currentPosition);
-		creature.decreaseMovement();
-		
-		newPosition.setCreature(creature);
-		creature.setCurrentPosition(newPosition);
-		this.map.updatePosition(newPosition);
-		
-		this.setAreaVisible(newPosition.getRow(), newPosition.getColumn());
-
-		byte damageTaken = action.getDamage();
-		if (newPosition.getTrap() != null) {
-			Trap trap = newPosition.getTrap();
-
-			if (!trap.getTriggered()) {
-				creature.decreaseBody(damageTaken);
-				this.gui.showTrapActivationMessage(damageTaken, creature);
-				trap.makeTrapVisible();
-				trap.makeTrapTriggered();
-			}
-
-			if (trap instanceof Pit) {
-				if (!FALLEN_INTO_PIT.equals(TrapEvasionMovementEnum.getEnumById(action.getTrapEvasionMovementId()))) {
-					newPosition.removeCreature();
-
-					TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(action.getTrapEvasionMovementId());
-					switch(action.getDirection()) {
-						case UP: {
-							if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)){
-								newPosition = map.getPosition((byte) (newPosition.getRow()-1), action.getDestinationColumn());
-							} else {
-								newPosition = map.getPosition((byte) (newPosition.getRow()+1), action.getDestinationColumn());
-							}
-							break;
-						}
-						case DOWN: {
-							if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-								newPosition = map.getPosition((byte) (newPosition.getRow()+1), action.getDestinationColumn());
-							} else {
-								newPosition = map.getPosition((byte) (newPosition.getRow()-1), action.getDestinationColumn());
-							}
-							break;
-						}
-						case LEFT: {
-							if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-								newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()-1));
-							} else {
-								newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()+1));
-							}
-							break;
-						}
-						default: {
-							if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-								newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()+1));
-							} else {
-								newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()-1));
-							}
-							break;
-						}
-					}
-					newPosition.setCreature(creature);
-					creature.setCurrentPosition(newPosition);
-
-					newCreatureRow = newPosition.getRow();
-					newCreatureColumn = newPosition.getColumn();
-					this.map.updatePosition(newPosition);
-
-					this.setAreaVisible(newCreatureRow, newCreatureColumn);
-				}
-			}
-
-			if (trap instanceof FallingRock) {
-				newPosition.removeCreature();
-
-				TrapEvasionMovementEnum evasionOption = TrapEvasionMovementEnum.getEnumById(action.getTrapEvasionMovementId());
-				switch(action.getDirection()) {
-					case UP: {
-						if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-							newPosition = map.getPosition((byte) (newPosition.getRow()-1), action.getDestinationColumn());
-						} else {
-							newPosition = map.getPosition((byte) (newPosition.getRow()+1), action.getDestinationColumn());
-						}
-						break;
-					}
-					case DOWN: {
-						if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-							newPosition = map.getPosition((byte) (newPosition.getRow()+1), action.getDestinationColumn());
-						} else {
-							newPosition = map.getPosition((byte) (newPosition.getRow()-1), action.getDestinationColumn());
-						}
-						break;
-					}
-					case LEFT: {
-						if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-							newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()-1));
-						} else {
-							newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()+1));
-						}
-						break;
-					}
-					default: {
-						if (TrapEvasionMovementEnum.FORWARD.equals(evasionOption)) {
-							newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()+1));
-						} else {
-							newPosition = map.getPosition(action.getDestinationRow(), (byte) (newPosition.getColumn()-1));
-						}
-						break;
-					}
-				}
-				newPosition.setCreature(creature);
-				creature.setCurrentPosition(newPosition);
-
-				newCreatureRow = newPosition.getRow();
-				newCreatureColumn = newPosition.getColumn();
-				this.map.updatePosition(newPosition);
-
-				this.setAreaVisible(newCreatureRow, newCreatureColumn);
-			}
-
-			creatureCurrentBody = creature.getBody();
-			if (creatureCurrentBody <= 0) {
-				creature.setStatus(StatusEnum.DEAD);
-				this.gui.announceUnfortunateDeath(creature);
-				this.killCreature(creature.getID());
-
-				this.processEndTurn();
-			}
-		}
-	}
-
-	private void setAreaVisible(byte sourceRow, byte sourceColumn) {
-		for (int i = sourceRow - 2; i <= sourceRow + 2; i++) {
-			for (int j = sourceColumn - 2; j <= sourceColumn + 2; j++) {
-				if (i >= 0 && j >= 0 && i < this.map.getTotalNumberOfRows() && j < this.map.getTotalNumberOfColumns()) {
-					Position position = this.map.getPosition((byte)i, (byte)j);
-					position.setVisible(true);
-					if (position.getCreature() != null)
-						this.getCreatureByID(position.getCreature().getID()).setVisible(true);
-				}
-			}
-		}
-	}
-
-	private void processEndTurn() {
+	public void processEndTurn() {
 		this.gui.updatePlayerSurroundings(); // added for GUI refresh
 
 		Creature endingCreature = this.removeCreatureFromQueue();
@@ -1247,7 +961,7 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void killCreature(int creatureID) {
+	public void killCreature(int creatureID) {
         for (Creature creature : this.creatureQueue) {
             if (creature.getID() == creatureID) {
                 creature.setStatus(StatusEnum.DEAD);
@@ -1438,5 +1152,33 @@ public class HeroQuest implements LogicInterface {
 
 	public int selectDoorToOpenOrClose(ArrayList<String> directionsWithOpenableDoors) {
 		return gui.selectDoorToOpenOrClose(directionsWithOpenableDoors);
+	}
+
+	public TrapEvasionMovementEnum showPitJumpingOptions() {
+		return gui.showPitJumpingOptions();
+	}
+
+	public TrapEvasionMovementEnum showFallingRockMovementOptions() {
+		return gui.showFallingRockMovementOptions();
+	}
+
+	public void updatePosition(Position currentPosition) {
+		map.updatePosition(currentPosition);
+	}
+
+	public int getTotalNumberOfRows() {
+		return map.getTotalNumberOfRows();
+	}
+
+	public int getTotalNumberOfColumns() {
+		return map.getTotalNumberOfColumns();
+	}
+
+	public void announceUnfortunateDeath(Creature creature) {
+		gui.announceUnfortunateDeath(creature);
+	}
+
+	public void showTrapActivationMessage(byte damageTaken, Creature creature) {
+		gui.showTrapActivationMessage(damageTaken, creature);
 	}
 }
