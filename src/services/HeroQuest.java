@@ -64,6 +64,7 @@ public class HeroQuest implements LogicInterface {
 	private CastSpellService castSpellService;
 	private EndTurnService endTurnService;
 	private SearchForTrapsAndHiddenDoorsService searchForTrapsAndHiddenDoorsService;
+	private SearchForTreasureService searchForTreasureService;
 
 
 	public HeroQuest() {
@@ -86,6 +87,7 @@ public class HeroQuest implements LogicInterface {
 		this.attackService = new AttackService(this);
 		this.castSpellService = new CastSpellService(this);
 		this.searchForTrapsAndHiddenDoorsService = new SearchForTrapsAndHiddenDoorsService(this);
+		this.searchForTreasureService = new SearchForTreasureService(this);
 	}
 
 	public boolean isConnected() {
@@ -286,7 +288,7 @@ public class HeroQuest implements LogicInterface {
 				searchForTrapsAndHiddenDoorsService.processSearchForTrapsAndHiddenDoors((SearchForTrapsAndHiddenDoors) action);
 				break;
 			case SEARCH_FOR_TREASURE:
-				this.processSearchForTreasure((SearchForTreasure) action);
+				searchForTreasureService.processSearchForTreasure((SearchForTreasure) action);
 				break;
 			case SELECT_CHARACTER:
 				this.processSelectCharacter((SelectCharacter) action);
@@ -399,58 +401,6 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void processSearchForTreasure(SearchForTreasure action) {
-		boolean foundGold = false;
-		boolean foundItem = false;
-		String itemName = "";
-
-		byte sourceRow = action.getSourceRow();
-		byte sourceColumn = action.getSourceColumn();
-		
-		Position position = this.map.getPosition(sourceRow, sourceColumn);
-		PlayableCharacter character = (PlayableCharacter) position.getCreature();
-		for (int i = sourceRow - 2; i <= sourceRow + 2; i++) {
-			for (int j = sourceColumn - 2; j <= sourceColumn + 2; j++) {
-				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()) {
-					position = this.map.getPosition((byte)i, (byte)j);
-					Treasure treasureInPosition = position.getTreasure();
-					if (treasureInPosition != null) {
-						int gold = treasureInPosition.getGoldAmount();
-						ItemEnum item = treasureInPosition.getItem();
-						
-						if (treasureInPosition.isTrap()) {
-							character.decreaseBody((byte) 1);
-							treasureInPosition.setAsTrap(false);
-							this.gui.showTrapActivationMessage((byte) 1, character);
-						} else {
-							if (gold >= 0) {
-								treasureInPosition.setGoldAmount(-1);
-								character.increaseGold(gold);
-								foundGold = true;
-							}
-							if (item != null) {
-								character.addItemToBag(item);
-								treasureInPosition.setItem(null);
-								foundItem = true;
-								itemName = item.name();
-							}
-						}
-					}
-				}
-			}
-		}
-		if (foundGold) {
-			this.gui.showMessagePopup(Strings.THE_PLAYER
-					+ character.getClass().getSimpleName()
-					+ Strings.FOUND_GOLD);
-		}
-		if (foundItem) {
-			this.gui.showMessagePopup(Strings.THE_PLAYER
-					+ character.getClass().getSimpleName()
-					+ Strings.FOUND_ITEM +itemName);
-		}
-	}
-
 	private void processSendPlayer(SendPlayer action) {
 		Player player = action.getPlayer();
 		this.insertPlayerIntoQueue(player);
@@ -467,20 +417,9 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void searchForTreasure() {
-		if (this.verifyIfItIsCurrentPlayersTurn()) {
-			Creature caster = this.getCurrentCreature();
-			if (caster instanceof PlayableCharacter) {
-				Position source = caster.getCurrentPosition();
-				SearchForTreasure action = new SearchForTreasure();
-				action.setSourceRow(source.getRow());
-				action.setSourceColumn(source.getColumn());
-				this.processAction(action);
-				this.sendAction(action);
-			} else {
-				this.gui.reportError(Strings.MONSTER_CANT_UNDERSTAND_COMMAND.toString());
-			}
-		} else {
-			this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
+		String error = searchForTreasureService.searchForTreasure();
+		if (error != null) {
+			gui.reportError(error);
 		}
 	}
 
