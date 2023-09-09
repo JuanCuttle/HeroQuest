@@ -135,7 +135,7 @@ public class Creature implements Jogada, Comparable<Creature> {
 
 	@Override
 	public int compareTo(Creature comparedCreature) {
-		return Byte.compare(comparedCreature.getID(), this.getID());
+		return Byte.compare(this.getID(), comparedCreature.getID());
 	}
 
 	public void spendSpell(Spell spell) {

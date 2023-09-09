@@ -107,6 +107,10 @@ public class HeroQuest implements LogicInterface {
 		return dwarfAvailable;
 	}
 
+	private boolean getZargonAvailable() {
+		return zargonAvailable;
+	}
+
 	private void setDwarfUnavailable() {
 		dwarfAvailable = false;
 	}
@@ -135,19 +139,32 @@ public class HeroQuest implements LogicInterface {
 		return this.creatureQueue;
 	}
 
-	private void sortCreatureQueueByID() {
+	public void sortCreatureQueueByID() {
 		Collections.sort(this.creatureQueue);
 	}
 
-	private Creature removeCreatureFromQueue() {
+	public Creature removeCreatureFromQueue() {
 		Creature creature = this.creatureQueue.remove(0);
 		this.creatureQueue.trimToSize();
 		return creature;
 	}
 
-	private void insertCreatureIntoQueue(Creature creature) {
+	public void insertCreatureIntoQueue(Creature creature) {
 		int index = this.creatureQueue.size();
 		this.creatureQueue.add(index, creature);
+	}
+
+	public Player removePlayerFromQueue() {
+		return this.players.remove(0);
+	}
+
+	public void insertPlayerIntoQueue(Player player) {
+		int index = this.players.size();
+		this.players.add(index, player);
+	}
+
+	public ArrayList<Player> getPlayerQueue() {
+		return this.players;
 	}
 
 	public ArrayList<Door> getDoors() {
@@ -1329,19 +1346,6 @@ public class HeroQuest implements LogicInterface {
 			this.gui.reportError(Strings.CHARACTER_UNAVAILABLE.toString());
 			this.selectCharacter();
 		}
-	}
-
-	private boolean getZargonAvailable() {
-		return zargonAvailable;
-	}
-
-	private Player removePlayerFromQueue() {
-		return this.players.remove(0);
-	}
-
-	private void insertPlayerIntoQueue(Player player) {
-		int index = this.players.size();
-		this.players.add(index, player);
 	}
 
 	private void killCreature(int creatureID) {
