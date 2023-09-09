@@ -2,6 +2,7 @@ package services;
 
 import entities.Creature;
 import entities.Position;
+import entities.actions.EndTurn;
 import entities.actions.Movement;
 import entities.tiles.*;
 import entities.utils.Strings;
@@ -15,9 +16,11 @@ import static enums.TrapEvasionMovementEnum.FALLEN_INTO_PIT;
 public class MovementService {
 
     private HeroQuest heroQuest;
+    private EndTurnService endTurnService;
 
-    public MovementService(HeroQuest heroQuest) {
+    public MovementService(HeroQuest heroQuest, EndTurnService endTurnService) {
         this.heroQuest = heroQuest;
+        this.endTurnService = endTurnService;
     }
 
     public String move(DirectionEnum direction) {
@@ -311,7 +314,7 @@ public class MovementService {
                 heroQuest.announceUnfortunateDeath(creature);
                 heroQuest.killCreature(creature.getID());
 
-                heroQuest.processEndTurn();
+                endTurnService.processEndTurn();
             }
         }
     }

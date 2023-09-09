@@ -62,6 +62,7 @@ public class HeroQuest implements LogicInterface {
 	private MovementService movementService;
 	private AttackService attackService;
 	private CastSpellService castSpellService;
+	private EndTurnService endTurnService;
 
 
 	public HeroQuest() {
@@ -78,8 +79,9 @@ public class HeroQuest implements LogicInterface {
 		this.gameInSession = false;
 		this.localAdventurer = null;
 		this.localZargon = null;
+		this.endTurnService = new EndTurnService(this);
 		this.openDoorService = new OpenDoorService(this);
-		this.movementService = new MovementService(this);
+		this.movementService = new MovementService(this, endTurnService);
 		this.attackService = new AttackService(this);
 		this.castSpellService = new CastSpellService(this);
 	}
@@ -265,18 +267,18 @@ public class HeroQuest implements LogicInterface {
 				break;
 			case ATTACK:
 				attackService.processAttack((Attack) action);
-				this.processEndTurn();
+				endTurnService.processEndTurn();
 				break;
 			case SEND_PLAYER:
 				this.processSendPlayer((SendPlayer) action);
 				break;
 			case END_TURN:
-				this.processEndTurn();
+				endTurnService.processEndTurn();
 				this.gui.showVisibleCreaturesInQueue();
 				break;
 			case CAST_SPELL:
 				castSpellService.processCastSpell((CastSpell) action);
-				this.processEndTurn();
+				endTurnService.processEndTurn();
 				break;
 			case SEARCH_FOR_TRAPS_AND_HIDDEN_DOORS:
 				this.processSearchForTrapsAndHiddenDoors((SearchForTrapsAndHiddenDoors) action);
@@ -507,67 +509,6 @@ public class HeroQuest implements LogicInterface {
 		return null;
 	}
 
-	public void processEndTurn() {
-		this.gui.updatePlayerSurroundings(); // added for GUI refresh
-
-		Creature endingCreature = this.removeCreatureFromQueue();
-		this.creatureQueue.trimToSize();
-		this.insertCreatureIntoQueue(endingCreature);
-		
-		if (!(endingCreature instanceof Wizard) && !(endingCreature instanceof Elf)) {
-			StatusEnum creatureWhoEndedTurnStatus = endingCreature.getStatus();
-			if (StatusEnum.AGILITY_UP.equals(creatureWhoEndedTurnStatus)
-				|| StatusEnum.AGILITY_DOWN.equals(creatureWhoEndedTurnStatus)) {
-
-				endingCreature.setStatus(StatusEnum.NEUTRAL);
-			}
-		}
-
-		Creature newCurrentCreature = this.getCurrentCreature();
-		StatusEnum newCurrentCreatureStatus = newCurrentCreature.getStatus();
-		
-		byte verifiedCreatures = 0;
-		while ((StatusEnum.DEAD.equals(newCurrentCreatureStatus)
-				|| !newCurrentCreature.isVisible()
-				|| StatusEnum.CURSED.equals(newCurrentCreatureStatus)
-				|| StatusEnum.SLEEPING.equals(newCurrentCreatureStatus)) && verifiedCreatures <= this.getCreatureQueue().size()) {
-			
-			if (StatusEnum.CURSED.equals(newCurrentCreatureStatus)
-					|| StatusEnum.AGILITY_UP.equals(newCurrentCreatureStatus)
-					|| StatusEnum.AGILITY_DOWN.equals(newCurrentCreatureStatus)) {
-				
-				newCurrentCreature.setStatus(StatusEnum.NEUTRAL);
-			}
-			
-			if (StatusEnum.SLEEPING.equals(newCurrentCreatureStatus)) {
-				byte roundsToSleep = (byte)(newCurrentCreature.getRoundsToSleep()-1);
-				newCurrentCreature.setRoundsToSleep(roundsToSleep);
-				if (roundsToSleep == 0){
-					newCurrentCreature.setStatus(StatusEnum.NEUTRAL);
-					this.gui.showMessagePopup(Strings.THE_CREATURE + newCurrentCreature.getClass().getSimpleName()+ Strings.WOKE_UP);
-				}
-			}
-			endingCreature = this.removeCreatureFromQueue();
-			this.creatureQueue.trimToSize();
-			this.insertCreatureIntoQueue(endingCreature);
-			newCurrentCreature = this.getCurrentCreature();
-			newCurrentCreatureStatus = newCurrentCreature.getStatus();
-			
-			verifiedCreatures++;
-		}
-		newCurrentCreature.setMovement();
-
-		if (StatusEnum.COURAGE.equals(newCurrentCreature.getStatus()) && areThereNoEnemiesOnSight(newCurrentCreature)) {
-			newCurrentCreature.setStatus(StatusEnum.NEUTRAL);
-		}
-		this.map.specialOccurrence(this);
-		this.endTheGame();
-	}
-
-	private boolean areThereNoEnemiesOnSight(Creature sourceCreature) {
-		return this.getAvailableTargets(1, sourceCreature.getCurrentPosition()).size() == 1;
-	}
-
 	public void searchForTreasure() {
 		if (this.verifyIfItIsCurrentPlayersTurn()) {
 			Creature caster = this.getCurrentCreature();
@@ -712,12 +653,9 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void endTurn() {
-		if (this.verifyIfItIsCurrentPlayersTurn()) {
-			EndTurn action = new EndTurn();
-			this.processAction(action);
-			this.sendAction(action);
-		} else {
-			this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
+		String error = endTurnService.endTurn();
+		if (error != null) {
+			gui.reportError(error);
 		}
 	}
 
@@ -740,7 +678,7 @@ public class HeroQuest implements LogicInterface {
 		this.gui.refreshGUI();
 	}
 
-	private void endTheGame() {
+	public void endTheGame() {
 		if (this.areHeroesAlive()) {
 			boolean haveConditionsBeenMet = this.map.verifyWinningConditions(this);
 			if (haveConditionsBeenMet) {
@@ -914,5 +852,13 @@ public class HeroQuest implements LogicInterface {
 
 	public void showEffectOfCastSpell(Creature caster, Spell castSpell, Creature target, byte damageDealt, StatusEnum spellStatusEffect) {
 		gui.showEffectOfCastSpell(caster, castSpell, target, damageDealt, spellStatusEffect);
+	}
+
+	public void updatePlayerSurroundings() {
+		gui.updatePlayerSurroundings();
+	}
+
+	public void specialOccurrence() {
+		map.specialOccurrence(this);
 	}
 }
