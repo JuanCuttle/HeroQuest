@@ -7,7 +7,7 @@ import entities.Creature;
 import entities.enemies.Fimir;
 import entities.tiles.Furniture;
 import entities.enemies.Goblin;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.enemies.Monster;
 import entities.enemies.Orc;
 import entities.tiles.Pit;

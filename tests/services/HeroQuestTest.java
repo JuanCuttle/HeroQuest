@@ -1,5 +1,7 @@
+package services;
+
 import entities.Creature;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.Player;
 import entities.enemies.Gargoyle;
 import entities.enemies.Monster;
@@ -8,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 

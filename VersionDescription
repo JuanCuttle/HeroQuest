@@ -145,3 +145,4 @@ Can be troublesome with Creature objects (change not made through ID)
 62) Fix TheFireMage map
 63) Verify need for	this.setLocalPlayer(player); in startNewGame() in HeroQuest.java
 64) Remove Player localPlayer in HeroQuest
+65) Fix creatureQueue bug

@@ -7,7 +7,7 @@ import enums.StatusEnum;
 import entities.enemies.ChaosSorcerer;
 import entities.Creature;
 import entities.tiles.Furniture;
-import entities.HeroQuest;
+import services.HeroQuest;
 import enums.ItemEnum;
 import entities.enemies.Monster;
 import entities.enemies.Mummy;

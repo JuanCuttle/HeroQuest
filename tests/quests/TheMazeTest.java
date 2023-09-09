@@ -1,7 +1,7 @@
 package quests;
 
 import entities.Creature;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.Position;
 import entities.players.Barbarian;
 import entities.players.Wizard;

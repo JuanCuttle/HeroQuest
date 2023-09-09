@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import entities.tiles.Corridor;
 import entities.tiles.Door;
 import entities.tiles.FallingRock;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.enemies.Monster;
 import entities.tiles.Pit;
 import entities.Position;

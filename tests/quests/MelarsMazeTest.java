@@ -1,6 +1,6 @@
 package quests;
 
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.tiles.Treasure;
 import enums.ItemEnum;
 import org.junit.Before;

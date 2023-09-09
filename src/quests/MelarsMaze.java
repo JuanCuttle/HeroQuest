@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import entities.tiles.FallingRock;
 import entities.tiles.Furniture;
 import entities.enemies.Gargoyle;
-import entities.HeroQuest;
+import services.HeroQuest;
 import enums.ItemEnum;
 import entities.enemies.Monster;
 import entities.enemies.Mummy;

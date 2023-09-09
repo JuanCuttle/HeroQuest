@@ -10,6 +10,7 @@ import entities.utils.Strings;
 import enums.*;
 import interfaces.GUIInterface;
 import quests.BasicMap;
+import services.HeroQuest;
 
 import javax.sound.sampled.*;
 import javax.swing.*;

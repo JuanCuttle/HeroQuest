@@ -1,6 +1,6 @@
 package quests;
 
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.Position;
 import entities.tiles.Door;
 import entities.tiles.FallingRock;

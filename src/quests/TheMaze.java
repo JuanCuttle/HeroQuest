@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import entities.players.*;
 import entities.Creature;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.enemies.Monster;
 import entities.enemies.Orc;
 import entities.utils.Strings;

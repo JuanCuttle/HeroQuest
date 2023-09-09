@@ -1,6 +1,6 @@
 package entities.players;
 
-import entities.HeroQuest;
+import services.HeroQuest;
 import enums.ItemEnum;
 import org.junit.Before;
 import org.junit.Test;

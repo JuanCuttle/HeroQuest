@@ -13,13 +13,14 @@
 
  	Essa classe est� sendo observada pelo Polar Warbear
  */
-package entities;
+package services;
 
 import java.io.IOException;
 import java.util.*;
 
 import javax.swing.JOptionPane;
 
+import entities.*;
 import entities.actions.*;
 import entities.enemies.Monster;
 import entities.enemies.Mummy;
@@ -57,9 +58,10 @@ public class HeroQuest implements LogicInterface {
 	private Adventurer localAdventurer;
 	private Zargon localZargon;
 	private String localPlayerName = "";
+	private OpenDoorService openDoorService;
 
 
-	public HeroQuest(){
+	public HeroQuest() {
 		this.players = new ArrayList<>();
 		this.clientServerProxy = new ClientServerProxy(this);
 		this.creatureQueue = new ArrayList<>();
@@ -73,6 +75,7 @@ public class HeroQuest implements LogicInterface {
 		this.gameInSession = false;
 		this.localAdventurer = null;
 		this.localZargon = null;
+		this.openDoorService = new OpenDoorService(this);
 	}
 
 	public boolean isConnected() {
@@ -172,96 +175,21 @@ public class HeroQuest implements LogicInterface {
 	}
 	
 	public void openDoor(int doorId) {
-		Creature creature = this.getCurrentCreature();
-		if (creature instanceof PlayableCharacter) {
-			boolean isItTheCurrentPlayersTurn = this.verifyIfItIsCurrentPlayersTurn();
-			if (isItTheCurrentPlayersTurn) {
-				Door door = this.getDoorById(doorId);
-				boolean isDoorReachable = this.verifyIfPlayerIsNearDoor((PlayableCharacter) creature, Objects.requireNonNull(door));
-				boolean isDoorHidden = door.isSecret();
-				if (!isDoorHidden) {
-					if (isDoorReachable) {
-						OpenDoor lance = new OpenDoor();
-						lance.setDoorId(doorId);
-						this.processAction(lance);
-						this.sendAction(lance);
-					} else {
-						this.gui.reportError(Strings.DOOR_OUT_OF_RANGE.toString());
-					}
-				}
-			} else {
-				this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
-			}
-		} else {
-			this.gui.reportError(Strings.CANT_OPEN_DOOR.toString());
+		String error = openDoorService.openDoor(doorId);
+		if (error != null) {
+			gui.reportError(error);
 		}
 	}
 	
 	public void openDoorWithKeyboard() {
-		Creature creature = this.getCurrentCreature();
-		if (creature instanceof PlayableCharacter) {
-			boolean isItTheCurrentPlayersTurn = this.verifyIfItIsCurrentPlayersTurn();
-			if (isItTheCurrentPlayersTurn) {
-				byte creatureRow = creature.getCurrentPosition().getRow();
-				byte creatureColumn = creature.getCurrentPosition().getColumn();
-
-				Position northTile = this.getPosition((byte)(creatureRow-1), creatureColumn);
-				Position eastTile = this.getPosition(creatureRow, (byte)(creatureColumn+1));
-				Position southTile = this.getPosition((byte)(creatureRow+1), creatureColumn);
-				Position westTile = this.getPosition(creatureRow, (byte)(creatureColumn-1));
-				
-				ArrayList<String> directionsWithOpenableDoors = new ArrayList<>();
-				ArrayList<String> openableDoorIds = new ArrayList<>();
-				String doorId;
-				
-				if (northTile instanceof Door) {
-					if (!((Door) northTile).isSecret()) {
-						doorId = "" + northTile.getRow() + northTile.getColumn();
-						openableDoorIds.add(doorId);
-						directionsWithOpenableDoors.add(Strings.NORTH.toString());
-					}
-				} if (eastTile instanceof Door) {
-					if (!((Door) eastTile).isSecret()) {
-						doorId = "" + eastTile.getRow() + eastTile.getColumn();
-						openableDoorIds.add(doorId);
-						directionsWithOpenableDoors.add(Strings.EAST.toString());
-					}
-				} if (southTile instanceof Door) {
-					if (!((Door) southTile).isSecret()) {
-						doorId = "" + southTile.getRow() + southTile.getColumn();
-						openableDoorIds.add(doorId);
-						directionsWithOpenableDoors.add(Strings.SOUTH.toString());
-					}
-				} if (westTile instanceof Door) {
-					if (!((Door) westTile).isSecret()) {
-						doorId = "" + westTile.getRow() + westTile.getColumn();
-						openableDoorIds.add(doorId);
-						directionsWithOpenableDoors.add(Strings.WEST.toString());
-					}
-				}
-
-				if (!directionsWithOpenableDoors.isEmpty()) {
-					
-					int chosenDoorDirection = this.gui.selectDoorToOpenOrClose(directionsWithOpenableDoors);
-					int selectedDoorId = Integer.parseInt(openableDoorIds.get(chosenDoorDirection));
-					
-					OpenDoor lance = new OpenDoor();
-					lance.setDoorId(selectedDoorId);
-					this.processAction(lance);
-					this.sendAction(lance);
-				} else {
-					this.gui.reportError(Strings.DOOR_OUT_OF_RANGE.toString());
-				}
-			} else {
-				this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
-			}
-		} else {
-			this.gui.reportError(Strings.CANT_OPEN_DOOR.toString());
+		String error = openDoorService.openDoorWithKeyboard();
+		if (error != null) {
+			gui.reportError(error);
 		}
 	}
 	
 
-	private boolean verifyIfItIsCurrentPlayersTurn() {
+	public boolean verifyIfItIsCurrentPlayersTurn() {
 		int localCreatureId, currentTurnCreatureId;
 		currentTurnCreatureId = this.getCurrentCreature().getID();
 		if (this.localAdventurer != null) {
@@ -277,14 +205,6 @@ public class HeroQuest implements LogicInterface {
 			return false;
 
 		}
-	}
-
-	private Door getDoorById(int doorId) {
-        for (Door door : this.doors) {
-            if (door.getID() == doorId)
-                return door;
-        }
-		return null;
 	}
 
 	private boolean checkIfAttackerReachesTarget(Position attackerPosition, Position targetPosition, boolean attackerHasSpear) {
@@ -306,17 +226,6 @@ public class HeroQuest implements LogicInterface {
 				|| (attackerColumn == targetColumn && attackerRow == targetRow - 1)
 				|| (attackerColumn == targetColumn && attackerRow == targetRow + 1)
 				|| (attackerPosition.equals(targetPosition));
-	}
-
-	private boolean verifyIfPlayerIsNearDoor(PlayableCharacter hero, Door door) {
-		byte heroRow = hero.getCurrentPosition().getRow();
-		byte heroColumn = hero.getCurrentPosition().getColumn();
-		byte doorRow = door.getRow();
-		byte doorColumn = door.getColumn();
-		return (heroRow == doorRow && heroColumn == doorColumn - 1)
-				|| (heroRow == doorRow && heroColumn == doorColumn + 1)
-				|| (heroColumn == doorColumn && heroRow == doorRow - 1)
-				|| (heroColumn == doorColumn && heroRow == doorRow + 1);
 	}
 
 	public void move(DirectionEnum direction) {
@@ -726,7 +635,7 @@ public class HeroQuest implements LogicInterface {
 				this.processMovement((Movement) action);
 				break;
 			case OPEN_DOOR:
-				this.processOpenDoor((OpenDoor) action);
+				openDoorService.processOpenDoor((OpenDoor) action);
 				break;
 			case ATTACK:
 				this.processAttack((Attack) action);
@@ -1164,16 +1073,6 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private void processOpenDoor(OpenDoor lance) {
-		int doorId = lance.getDoorId();
-		Door door = this.getDoorById(doorId);
-		if (door.isOpen()) {
-			door.closeDoor();
-		} else {
-			door.openDoor();
-		}
-	}
-	
 	private void processEndTurn() {
 		this.gui.updatePlayerSurroundings(); // added for GUI refresh
 
@@ -1535,5 +1434,9 @@ public class HeroQuest implements LogicInterface {
 
 	public GUI getGui() {
 		return gui;
+	}
+
+	public int selectDoorToOpenOrClose(ArrayList<String> directionsWithOpenableDoors) {
+		return gui.selectDoorToOpenOrClose(directionsWithOpenableDoors);
 	}
 }

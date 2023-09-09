@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import entities.enemies.*;
 import quests.BasicMap;
+import services.HeroQuest;
 
 public class Zargon extends Player {
 

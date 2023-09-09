@@ -1,6 +1,6 @@
 package quests;
 
-import entities.HeroQuest;
+import services.HeroQuest;
 import org.junit.Before;
 import org.junit.Test;
 

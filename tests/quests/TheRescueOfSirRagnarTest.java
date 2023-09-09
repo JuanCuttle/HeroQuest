@@ -1,13 +1,12 @@
 package quests;
 
 import entities.Creature;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.Position;
 import entities.SirRagnar;
 import entities.tiles.Door;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import view.GUI;
 
 import java.util.ArrayList;
@@ -15,8 +14,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 
 public class TheRescueOfSirRagnarTest {
 

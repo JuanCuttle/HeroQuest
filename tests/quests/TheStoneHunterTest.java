@@ -1,7 +1,7 @@
 package quests;
 
 import entities.Creature;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.enemies.Orc;
 import enums.StatusEnum;
 import org.junit.Before;

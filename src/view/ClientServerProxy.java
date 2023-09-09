@@ -2,7 +2,7 @@ package view;
 
 import javax.swing.JOptionPane;
 
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.actions.Action;
 import entities.utils.Strings;
 import br.ufsc.inf.leobr.cliente.Jogada;

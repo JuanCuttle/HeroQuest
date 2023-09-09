@@ -10,7 +10,7 @@ import entities.enemies.Fimir;
 import entities.tiles.Furniture;
 import entities.enemies.Gargoyle;
 import entities.enemies.Goblin;
-import entities.HeroQuest;
+import services.HeroQuest;
 import entities.enemies.Monster;
 import entities.enemies.Mummy;
 import entities.enemies.Orc;
