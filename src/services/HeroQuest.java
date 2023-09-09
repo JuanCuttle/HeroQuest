@@ -60,6 +60,7 @@ public class HeroQuest implements LogicInterface {
 	private String localPlayerName = "";
 	private OpenDoorService openDoorService;
 	private MovementService movementService;
+	private AttackService attackService;
 
 
 	public HeroQuest() {
@@ -78,6 +79,7 @@ public class HeroQuest implements LogicInterface {
 		this.localZargon = null;
 		this.openDoorService = new OpenDoorService(this);
 		this.movementService = new MovementService(this);
+		this.attackService = new AttackService(this);
 	}
 
 	public boolean isConnected() {
@@ -209,27 +211,6 @@ public class HeroQuest implements LogicInterface {
 		}
 	}
 
-	private boolean checkIfAttackerReachesTarget(Position attackerPosition, Position targetPosition, boolean attackerHasSpear) {
-		int attackerRow = attackerPosition.getRow();
-		int attackerColumn = attackerPosition.getColumn();
-		int targetRow = targetPosition.getRow();
-		int targetColumn = targetPosition.getColumn();
-		boolean result = false;
-		if (attackerHasSpear){
-			// add diagonal
-			result = (attackerRow == targetRow-1 && attackerColumn == targetColumn-1)
-					|| (attackerRow == targetRow+1 && attackerColumn == targetColumn+1)
-					|| (attackerRow == targetRow+1 && attackerColumn == targetColumn-1)
-					|| (attackerRow == targetRow-1 && attackerColumn == targetColumn+1);
-		}
-		return result
-				|| (attackerRow == targetRow && attackerColumn == targetColumn - 1)
-				|| (attackerRow == targetRow && attackerColumn == targetColumn + 1)
-				|| (attackerColumn == targetColumn && attackerRow == targetRow - 1)
-				|| (attackerColumn == targetColumn && attackerRow == targetRow + 1)
-				|| (attackerPosition.equals(targetPosition));
-	}
-
 	public void move(DirectionEnum direction) {
 		String error = movementService.move(direction);
 		if (error != null) {
@@ -238,42 +219,13 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void attack() {
-		if (this.verifyIfItIsCurrentPlayersTurn()) {
-			Creature attacker = this.getCurrentCreature();
-			
-			if (StatusEnum.SLEEPING.equals(attacker.getStatus())) {
-				this.gui.reportError(Strings.SLEEP_NO_ATTACK.toString());
-			} else {
-				Position attackerPosition = attacker.getCurrentPosition();
-				boolean hasSpear = checkIfAttackerIsAHeroAndHasSpear(attacker);
-                ArrayList<Creature> availableTargets = this.getAvailableTargets(1,
-						attackerPosition);
-				Creature selectedTarget = this.gui.selectTarget(availableTargets);
-				Position selectedTargetPosition = selectedTarget.getCurrentPosition();
-				boolean isTargetReachable = this.checkIfAttackerReachesTarget(
-						attackerPosition, selectedTargetPosition, hasSpear);
-				if (isTargetReachable) {
-					byte damage = this.calculateAttackDamage(attacker, selectedTarget);
-					Attack action = new Attack();
-					action.setValue(damage);
-					action.setTargetID(selectedTarget.getID());
-					this.processAction(action);
-					this.sendAction(action);
-				} else {
-					this.gui.reportError(Strings.TARGET_OUT_OF_RANGE.toString());
-				}
-			}
-		} else {
-			this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
+		String error = attackService.attack();
+		if (error != null) {
+			gui.reportError(error);
 		}
 	}
 
-	private boolean checkIfAttackerIsAHeroAndHasSpear(Creature attacker) {
-		return attacker instanceof PlayableCharacter &&
-				((PlayableCharacter) attacker).getItems(this.map).contains(ItemEnum.Spear);
-	}
-
-	private ArrayList<Creature> getAvailableTargets(int area, Position sourcePosition) {
+	public ArrayList<Creature> getAvailableTargets(int area, Position sourcePosition) {
 		ArrayList<Creature> availableTargets = new ArrayList<>();
 		byte sourceRow = sourcePosition.getRow();
 		byte sourceColumn = sourcePosition.getColumn();
@@ -288,63 +240,6 @@ public class HeroQuest implements LogicInterface {
 			}
 		}
 		return availableTargets;
-	}
-
-	private byte calculateAttackDamage(Creature attacker, Creature defender) {
-		boolean hit;
-		int damage = 0;
-		int defence = 0;
-		int atkDiceAmount = attacker.getAttackDiceAmount();
-		if (isCreatureInAPit(attacker)) {
-			atkDiceAmount--;
-		}
-		int defDiceAmount = defender.getDefenceDiceAmount();
-		if (isCreatureInAPit(defender)) {
-				defDiceAmount--;
-		}
-		if (StatusEnum.ROCK_SKIN.equals(defender.getStatus())) {
-			defDiceAmount++;
-		}
-		if (StatusEnum.COURAGE.equals(attacker.getStatus())) {
-			atkDiceAmount += 2;
-		}
-		int probability = 2;
-		for (byte i = 1; i <= atkDiceAmount; i++) {
-			hit = new Random().nextInt(probability) == 0;
-			if (hit) {
-				damage++;
-			}
-		}
-		if (defender instanceof Monster) {
-			probability = 6;
-		} else {
-			probability = 3;
-		}
-		if (StatusEnum.SLEEPING.equals(defender.getStatus())) {
-			defence = 0;
-		} else {
-			for (byte i = 1; i <= defDiceAmount; i++) {
-				hit = new Random().nextInt(probability) == 0;
-				if (hit) {
-					defence++;
-				}
-			}
-		}
-		byte result = (byte) (damage - defence);
-		
-		if (result >= 0) {
-			/*if(alvo.getStatus() == Status.ROCK_SKIN){
-				alvo.setStatus(Status.NEUTRAL);
-			}*/
-			return result;
-		} else {
-			return 0;
-		}
-	}
-
-	private static boolean isCreatureInAPit(Creature creature) {
-		return creature.getCurrentPosition().getTrap() != null
-				&& creature.getCurrentPosition().getTrap() instanceof Pit;
 	}
 
 	public void castSpell() {
@@ -1180,5 +1075,9 @@ public class HeroQuest implements LogicInterface {
 
 	public void showTrapActivationMessage(byte damageTaken, Creature creature) {
 		gui.showTrapActivationMessage(damageTaken, creature);
+	}
+
+	public Creature selectTarget(ArrayList<Creature> availableTargets) {
+		return gui.selectTarget(availableTargets);
 	}
 }
