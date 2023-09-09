@@ -272,11 +272,11 @@ public class HeroQuest implements LogicInterface {
 				endTurnService.processEndTurn();
 				break;
 			case SEND_PLAYER:
-				this.processSendPlayer((SendPlayer) action);
+				processSendPlayer((SendPlayer) action);
 				break;
 			case END_TURN:
 				endTurnService.processEndTurn();
-				this.gui.showVisibleCreaturesInQueue();
+				gui.showVisibleCreaturesInQueue();
 				break;
 			case CAST_SPELL:
 				castSpellService.processCastSpell((CastSpell) action);
@@ -592,20 +592,9 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void searchForTrapsAndHiddenDoors() {
-		if (this.verifyIfItIsCurrentPlayersTurn()) {
-			Creature caster = this.getCurrentCreature();
-			if (caster instanceof PlayableCharacter){
-				Position casterPosition = caster.getCurrentPosition();
-				SearchForTrapsAndHiddenDoors action = new SearchForTrapsAndHiddenDoors();
-				action.setSourceColumn(casterPosition.getColumn());
-				action.setSourceRow(casterPosition.getRow());
-				processAction(action);
-				sendAction(action);
-			} else {
-				this.gui.reportError(Strings.MONSTER_CANT_UNDERSTAND_COMMAND.toString());
-			}
-		} else {
-			this.gui.reportError(Strings.NOT_YOUR_TURN.toString());
+		String error = searchForTrapsAndHiddenDoorsService.searchForTrapsAndHiddenDoors();
+		if (error != null) {
+			gui.reportError(error);
 		}
 	}
 

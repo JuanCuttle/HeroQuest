@@ -1,8 +1,10 @@
 package services;
 
+import entities.Creature;
 import entities.Position;
 import entities.actions.SearchForTrapsAndHiddenDoors;
 import entities.players.Dwarf;
+import entities.players.PlayableCharacter;
 import entities.tiles.Door;
 import entities.tiles.Pit;
 import entities.utils.Strings;
@@ -14,6 +16,25 @@ public class SearchForTrapsAndHiddenDoorsService {
 
     public SearchForTrapsAndHiddenDoorsService(HeroQuest heroQuest) {
         this.heroQuest = heroQuest;
+    }
+
+    public String searchForTrapsAndHiddenDoors() {
+        if (heroQuest.verifyIfItIsCurrentPlayersTurn()) {
+            Creature caster = heroQuest.getCurrentCreature();
+            if (caster instanceof PlayableCharacter){
+                Position casterPosition = caster.getCurrentPosition();
+                SearchForTrapsAndHiddenDoors action = new SearchForTrapsAndHiddenDoors();
+                action.setSourceColumn(casterPosition.getColumn());
+                action.setSourceRow(casterPosition.getRow());
+                heroQuest.processAction(action);
+                heroQuest.sendAction(action);
+            } else {
+                return Strings.MONSTER_CANT_UNDERSTAND_COMMAND.toString();
+            }
+        } else {
+            return Strings.NOT_YOUR_TURN.toString();
+        }
+        return null;
     }
 
     public void processSearchForTrapsAndHiddenDoors(SearchForTrapsAndHiddenDoors action) {
