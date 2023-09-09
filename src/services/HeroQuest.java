@@ -63,6 +63,7 @@ public class HeroQuest implements LogicInterface {
 	private AttackService attackService;
 	private CastSpellService castSpellService;
 	private EndTurnService endTurnService;
+	private SearchForTrapsAndHiddenDoorsService searchForTrapsAndHiddenDoorsService;
 
 
 	public HeroQuest() {
@@ -84,6 +85,7 @@ public class HeroQuest implements LogicInterface {
 		this.movementService = new MovementService(this, endTurnService);
 		this.attackService = new AttackService(this);
 		this.castSpellService = new CastSpellService(this);
+		this.searchForTrapsAndHiddenDoorsService = new SearchForTrapsAndHiddenDoorsService(this);
 	}
 
 	public boolean isConnected() {
@@ -281,7 +283,7 @@ public class HeroQuest implements LogicInterface {
 				endTurnService.processEndTurn();
 				break;
 			case SEARCH_FOR_TRAPS_AND_HIDDEN_DOORS:
-				this.processSearchForTrapsAndHiddenDoors((SearchForTrapsAndHiddenDoors) action);
+				searchForTrapsAndHiddenDoorsService.processSearchForTrapsAndHiddenDoors((SearchForTrapsAndHiddenDoors) action);
 				break;
 			case SEARCH_FOR_TREASURE:
 				this.processSearchForTreasure((SearchForTreasure) action);
@@ -446,51 +448,6 @@ public class HeroQuest implements LogicInterface {
 			this.gui.showMessagePopup(Strings.THE_PLAYER
 					+ character.getClass().getSimpleName()
 					+ Strings.FOUND_ITEM +itemName);
-		}
-	}
-
-	private void processSearchForTrapsAndHiddenDoors(SearchForTrapsAndHiddenDoors action) {
-		int sourceRow = action.getSourceRow();
-		int sourceColumn = action.getSourceColumn();
-		boolean isActionSourceADwarf = this.getPosition((byte)sourceRow, (byte)sourceColumn).getCreature() instanceof Dwarf;
-		Position position;
-		
-		boolean removedTraps = false;
-		for (int i = sourceRow - 2; i <= sourceRow + 2; i++) {
-			for (int j = sourceColumn - 2; j <= sourceColumn + 2; j++) {
-				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()) {
-					position = this.map.getPosition((byte)i, (byte)j);
-					if (position.getTrap() != null) {
-						position.makeTrapVisible();
-						
-						if (position.getTrap() instanceof Pit) {
-							position.getTrap().setTriggered(true);
-						}
-						
-						if (isActionSourceADwarf) {
-							position.removeTrap();
-							removedTraps = true;
-						}
-						
-					}
-					if (position.getTreasure() != null && position.getTreasure().isTrap()) {
-						position.getTreasure().setAsTrap(false);
-						this.gui.showMessagePopup(Strings.DISARMED_TREASURE_TRAP.toString());
-					}
-					if (position instanceof Door && ((Door) position).isSecret()) {
-						((Door) position).setSecret(false);
-						if (this.map instanceof MelarsMaze) {
-							if (((Door) position).getID() == 118) { // Throne room door
-								((MelarsMaze) map).moveThrone(this);	
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		if (removedTraps){
-			this.gui.showTrapRemovalMessage();
 		}
 	}
 
@@ -860,5 +817,9 @@ public class HeroQuest implements LogicInterface {
 
 	public void specialOccurrence() {
 		map.specialOccurrence(this);
+	}
+
+	public void showTrapRemovalMessage() {
+		gui.showTrapRemovalMessage();
 	}
 }
