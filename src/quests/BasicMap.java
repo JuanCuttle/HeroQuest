@@ -482,7 +482,7 @@ public class BasicMap {
 		return barbInitialPosition;
 	}
 
-	public byte[] getWizInitialPosition() {
+	public byte[] getWizardInitialPosition() {
 		return wizInitialPosition;
 	}
 

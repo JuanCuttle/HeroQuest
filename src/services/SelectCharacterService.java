@@ -114,4 +114,94 @@ public class SelectCharacterService {
             selectCharacter();
         }
     }
+
+    public void processSelectCharacter(SelectCharacter action) {
+        PlayableCharacter character;
+        Adventurer playerAdventurer;
+        byte[] position;
+        byte selectedCharacterId = action.getSelectedCharacterId();
+
+        switch (CharacterEnum.getEnumById(selectedCharacterId)) {
+            case ZARGON:
+                heroQuest.setZargonUnavailable();
+
+                Zargon playerZ = action.getZargon();
+                for (int i = 0; i < playerZ.getMonsters().size(); i++) {
+                    heroQuest.insertCreatureIntoQueue(playerZ.getMonster(i));
+                }
+                heroQuest.removePlayerFromQueue();
+                heroQuest.insertPlayerIntoQueue(playerZ);
+
+                break;
+            case BARBARIAN:
+                heroQuest.setBarbarianUnavailable();
+
+                playerAdventurer = action.getAdventurer();
+                heroQuest.removePlayerFromQueue();
+                heroQuest.insertPlayerIntoQueue(playerAdventurer);
+                character = playerAdventurer.getPlayableCharacter();
+                heroQuest.insertCreatureIntoQueue(character);
+
+                position = heroQuest.getBarbarianInitialPosition();
+                heroQuest.setCreatureInPosition(character, position[0], position[1]);
+
+                character.setMovement();
+                heroQuest.setAreaVisible(position[0], position[1]);
+
+                break;
+            case WIZARD:
+                heroQuest.setWizardUnavailable();
+
+                playerAdventurer = action.getAdventurer();
+                heroQuest.removePlayerFromQueue();
+                heroQuest.insertPlayerIntoQueue(playerAdventurer);
+                character = playerAdventurer.getPlayableCharacter();
+                ((Wizard) character).createSpells();
+                heroQuest.insertCreatureIntoQueue(character);
+                position = heroQuest.getWizardInitialPosition();
+                heroQuest.setCreatureInPosition(character, position[0], position[1]);
+
+                character.setMovement();
+                heroQuest.setAreaVisible(position[0], position[1]);
+
+                break;
+            case ELF:
+                heroQuest.setElfUnavailable();
+
+                playerAdventurer = action.getAdventurer();
+                heroQuest.removePlayerFromQueue();
+                heroQuest.insertPlayerIntoQueue(playerAdventurer);
+                character = playerAdventurer.getPlayableCharacter();
+                ((Elf) character).createSpells();
+                heroQuest.insertCreatureIntoQueue(character);
+                position = heroQuest.getElfInitialPosition();
+                heroQuest.setCreatureInPosition(character, position[0], position[1]);
+
+                character.setMovement();
+                heroQuest.setAreaVisible(position[0], position[1]);
+
+                break;
+            case DWARF:
+                heroQuest.setDwarfUnavailable();
+
+                playerAdventurer = action.getAdventurer();
+                heroQuest.removePlayerFromQueue();
+                heroQuest.insertPlayerIntoQueue(playerAdventurer);
+                character = playerAdventurer.getPlayableCharacter();
+                heroQuest.insertCreatureIntoQueue(character);
+
+                position = heroQuest.getDwarfInitialPosition();
+                heroQuest.setCreatureInPosition(character, position[0], position[1]);
+
+                character.setMovement();
+                heroQuest.setAreaVisible(position[0], position[1]);
+
+                break;
+            default:
+                heroQuest.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
+                break;
+        }
+        heroQuest.sortCreatureQueueByID();
+        heroQuest.showVisibleCreaturesInQueue();
+    }
 }

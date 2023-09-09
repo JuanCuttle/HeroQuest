@@ -120,23 +120,23 @@ public class HeroQuest implements LogicInterface {
 		return zargonAvailable;
 	}
 
-	private void setDwarfUnavailable() {
+	public void setDwarfUnavailable() {
 		dwarfAvailable = false;
 	}
 
-	private void setElfUnavailable() {
+	public void setElfUnavailable() {
 		elfAvailable = false;
 	}
 
-	private void setWizardUnavailable() {
+	public void setWizardUnavailable() {
 		wizardAvailable = false;
 	}
 
-	private void setBarbarianUnavailable() {
+	public void setBarbarianUnavailable() {
 		barbarianAvailable = false;
 	}
 
-	private void setZargonUnavailable() {
+	public void setZargonUnavailable() {
 		zargonAvailable = false;
 	}
 
@@ -285,101 +285,11 @@ public class HeroQuest implements LogicInterface {
 				searchForTreasureService.processSearchForTreasure((SearchForTreasure) action);
 				break;
 			case SELECT_CHARACTER:
-				this.processSelectCharacter((SelectCharacter) action);
+				selectCharacterService.processSelectCharacter((SelectCharacter) action);
 				this.gui.refreshGUI();
 				break;
 		}
 		this.gui.updatePlayerSurroundings();
-	}
-	
-	private void processSelectCharacter(SelectCharacter action) {
-		PlayableCharacter character;
-		Adventurer playerA;
-		byte[] position;
-		byte selectedCharacterId = action.getSelectedCharacterId();
-
-		switch (CharacterEnum.getEnumById(selectedCharacterId)) {
-			case ZARGON:
-				this.setZargonUnavailable();
-				
-				Zargon playerZ = action.getZargon();
-				for (int i = 0; i < playerZ.getMonsters().size(); i++) {
-					this.insertCreatureIntoQueue(playerZ.getMonster(i));
-				}
-				this.removePlayerFromQueue();
-				this.insertPlayerIntoQueue(playerZ);
-				
-				break;
-			case BARBARIAN:
-				this.setBarbarianUnavailable();
-				
-				playerA = action.getAdventurer();
-				this.removePlayerFromQueue();
-				this.insertPlayerIntoQueue(playerA);
-				character = playerA.getPlayableCharacter();
-				this.insertCreatureIntoQueue(character);
-
-				position = map.getBarbarianInitialPosition();
-				this.setCreatureInPosition(character, position[0], position[1]);
-
-				character.setMovement();
-				this.setAreaVisible(position[0], position[1]);
-	
-				break;
-			case WIZARD:
-				this.setWizardUnavailable();
-				
-				playerA = action.getAdventurer();
-				this.removePlayerFromQueue();
-				this.insertPlayerIntoQueue(playerA);
-				character = playerA.getPlayableCharacter();
-				((Wizard) character).createSpells();
-				this.insertCreatureIntoQueue(character);
-				position = map.getWizInitialPosition();
-				this.setCreatureInPosition(character, position[0], position[1]);
-
-				character.setMovement();
-				this.setAreaVisible(position[0], position[1]);
-	
-				break;
-			case ELF:
-				this.setElfUnavailable();
-				
-				playerA = action.getAdventurer();
-				this.removePlayerFromQueue();
-				this.insertPlayerIntoQueue(playerA);
-				character = playerA.getPlayableCharacter();
-				((Elf) character).createSpells();
-				this.insertCreatureIntoQueue(character);
-				position = map.getElfInitialPosition();
-				this.setCreatureInPosition(character, position[0], position[1]);
-
-				character.setMovement();
-				this.setAreaVisible(position[0], position[1]);
-				
-				break;
-			case DWARF:
-				this.setDwarfUnavailable();
-				
-				playerA = action.getAdventurer();
-				this.removePlayerFromQueue();
-				this.insertPlayerIntoQueue(playerA);
-				character = playerA.getPlayableCharacter();
-				this.insertCreatureIntoQueue(character);
-				
-				position = map.getDwarfInitialPosition();
-				this.setCreatureInPosition(character, position[0], position[1]);
-
-				character.setMovement();
-				this.setAreaVisible(position[0], position[1]);
-				
-				break;
-			default:
-				this.gui.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
-				break;
-		}
-		this.sortCreatureQueueByID();
-		this.gui.showVisibleCreaturesInQueue();
 	}
 
 	public void setAreaVisible(byte sourceRow, byte sourceColumn) {
@@ -688,5 +598,25 @@ public class HeroQuest implements LogicInterface {
 
 	public void processCharacterSelection(int chosenCharacter) throws ClassNotFoundException {
 		selectCharacterService.processCharacterSelection(chosenCharacter);
+	}
+
+	public byte[] getBarbarianInitialPosition() {
+		return map.getBarbarianInitialPosition();
+	}
+
+	public byte[] getWizardInitialPosition() {
+		return map.getWizardInitialPosition();
+	}
+
+	public byte[] getElfInitialPosition() {
+		return map.getElfInitialPosition();
+	}
+
+	public byte[] getDwarfInitialPosition() {
+		return map.getDwarfInitialPosition();
+	}
+
+	public void showVisibleCreaturesInQueue() {
+		gui.showVisibleCreaturesInQueue();
 	}
 }
