@@ -148,7 +148,7 @@ public class HeroQuest implements LogicInterface {
 		return this.creatureQueue;
 	}
 
-	public void sortCreatureQueueByID() {
+	public void sortCreatureQueueById() {
 		Collections.sort(this.creatureQueue);
 	}
 

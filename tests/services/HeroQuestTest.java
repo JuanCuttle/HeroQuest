@@ -1,7 +1,6 @@
 package services;
 
 import entities.Creature;
-import services.HeroQuest;
 import entities.Player;
 import entities.enemies.Gargoyle;
 import entities.enemies.Monster;
@@ -36,7 +35,7 @@ public class HeroQuestTest {
         sortedCreatureQueue.add(polarWarbear);
         sortedCreatureQueue.add(gargoyle);
 
-        heroQuest.sortCreatureQueueByID();
+        heroQuest.sortCreatureQueueById();
         assertEquals(sortedCreatureQueue, heroQuest.getCreatureQueue());
     }
 
