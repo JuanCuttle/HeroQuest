@@ -286,7 +286,7 @@ public class HeroQuest implements LogicInterface {
 				break;
 			case SELECT_CHARACTER:
 				selectCharacterService.processSelectCharacter((SelectCharacter) action);
-				this.gui.refreshGUI();
+				gui.refreshGUI();
 				break;
 		}
 		this.gui.updatePlayerSurroundings();

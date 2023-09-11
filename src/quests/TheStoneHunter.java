@@ -170,13 +170,13 @@ public class TheStoneHunter extends BasicMap {
 	}
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
-		Creature karlen = game.getCreatureByID(6);
+		Creature karlen = game.getCreatureById(6);
         return StatusEnum.DEAD.equals(karlen.getStatus());
     }
 	
 	public void specialOccurrence(HeroQuest game) {
 		if (!foundKarlen) {
-			Creature karlen = game.getCreatureByID(6);
+			Creature karlen = game.getCreatureById(6);
 			if (karlen.isVisible()) {
 				foundKarlen = true;
 				game.getGui().showMessagePopup(Strings.FOUND_KARLEN.toString());

@@ -123,13 +123,12 @@ Can be troublesome with Creature objects (change not made through ID)
 40) Refactor verifyIfItIsPlayersTurn() (if currentCreature instanceof PlayableCharacter ... else ...
 41) Verify need to update creatureQueue in updatePlayerSurroundings()
 42) Fix creatureQueue blackened buttons
-43) Create unit tests (HeroQuest class)
+43) Create unit tests (HeroQuest + Action classes. Import powermock? If so, add test to TheStoneHunterTest where Karlen was found)
 44) Revise Class hierarchy
 45) Remove unused Classes
 46) Recreate PolarWarbear quest (reuse basicMap + defaultCreatureQueue in Zargon)
 47) Revise TheFireMage traps and create ChaosSorcerer (with Chaos Spells)
 48) Break down interfaces into smaller ones
-49) Separate class responsibilities (instead of everything being in HeroQuest.java)
 50) Make Action processing work using enums and ids instead of Strings
 51) Fix TrapEvasionMovementEnum
 52) Swap for loop formats to foreach
@@ -148,3 +147,4 @@ Can be troublesome with Creature objects (change not made through ID)
 65) Fix creatureQueue bug (not cycling through invisible creatures on game start?)
 66) Make adventurer start quest with items already acquired in previous ones (as well as gold)
 67) Analyse and rename processSelectCharacter() and processCharacterSelection()
+68) Extract creatureQueue controls to service

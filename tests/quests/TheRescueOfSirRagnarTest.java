@@ -80,7 +80,7 @@ public class TheRescueOfSirRagnarTest {
     public void shouldReturnTrueWhenAllCreaturesAreVisibleFromFindingSirRagnar() {
         game.getCreatureQueue().addAll(quest.createMonsters(game));
         List<Creature> creatureQueue = game.getCreatureQueue();
-        Creature sirRagnar = game.getCreatureByID(14);
+        Creature sirRagnar = game.getCreatureById(14);
         sirRagnar.setVisible(true);
         quest.specialOccurrence(game);
 

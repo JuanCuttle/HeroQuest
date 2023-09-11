@@ -163,7 +163,7 @@ public class LairOfTheOrcWarlord extends BasicMap {
 	}
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
-		Creature ulag = game.getCreatureByID(6);
+		Creature ulag = game.getCreatureById(6);
         return StatusEnum.DEAD.equals(ulag.getStatus());
     }
 }

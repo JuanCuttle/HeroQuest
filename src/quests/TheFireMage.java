@@ -165,7 +165,7 @@ public class TheFireMage extends BasicMap {
 	}
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
-		Creature balur = game.getCreatureByID(15);
+		Creature balur = game.getCreatureById(15);
         return StatusEnum.DEAD.equals(balur.getStatus());
     }
 }

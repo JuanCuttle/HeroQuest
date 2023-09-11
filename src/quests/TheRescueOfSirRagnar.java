@@ -149,13 +149,13 @@ public class TheRescueOfSirRagnar extends BasicMap {
 	}
 	
 	public boolean verifyWinningConditions(HeroQuest game) {
-		Position sirRagnarCurrentPosition = game.getCreatureByID(14).getCurrentPosition(); // Sir Ragnar
+		Position sirRagnarCurrentPosition = game.getCreatureById(14).getCurrentPosition(); // Sir Ragnar
 		return onStairs(sirRagnarCurrentPosition, stairsPosition[0], stairsPosition[1]);
     }
 	
 	public void specialOccurrence(HeroQuest game) {
 		if (!foundRagnar) {
-			Creature sirRagnar = game.getCreatureByID(14);
+			Creature sirRagnar = game.getCreatureById(14);
 			if (sirRagnar.isVisible()) {
 				foundRagnar = true;
 				ArrayList<Door> doors = game.getDoors();
