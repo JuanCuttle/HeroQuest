@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HeroQuest.iml" filepath="$PROJECT_DIR$/HeroQuest.iml" />
       <module fileurl="file://$PROJECT_DIR$/../Netgames/NetgamesNRT.iml" filepath="$PROJECT_DIR$/../Netgames/NetgamesNRT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/heroquest.iml" filepath="$PROJECT_DIR$/heroquest.iml" />
     </modules>
   </component>
 </project>
