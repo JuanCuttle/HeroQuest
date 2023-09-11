@@ -196,14 +196,14 @@ public class HeroQuest implements LogicInterface {
 
 	public boolean verifyIfItIsCurrentPlayersTurn() {
 		int localCreatureId, currentTurnCreatureId;
-		currentTurnCreatureId = this.getCurrentCreature().getID();
-		if (this.localAdventurer != null) {
-			localCreatureId = (this.localAdventurer).getPlayableCharacter()
+		currentTurnCreatureId = getCurrentCreature().getID();
+		if (localAdventurer != null) {
+			localCreatureId = localAdventurer.getPlayableCharacter()
 					.getID();
 			return localCreatureId == currentTurnCreatureId;
 		} else {
-			for (int i = 0; i < this.creatureQueue.size() - players.size(); i++) {
-				localCreatureId = (this.localZargon).getMonster(i).getID();
+			for (int i = 0; i < creatureQueue.size() - players.size(); i++) {
+				localCreatureId = localZargon.getMonster(i).getID();
 				if (currentTurnCreatureId == localCreatureId)
 					return true;
 			}

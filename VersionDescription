@@ -120,7 +120,6 @@ Can be troublesome with Creature objects (change not made through ID)
 			   Take Spells away from players until found, in Legacy of the Orc Warlord.
 			   Implement items.
 
-40) Refactor verifyIfItIsPlayersTurn() (if currentCreature instanceof PlayableCharacter ... else ...
 42) Fix creatureQueue blackened buttons
 43) Create unit tests (HeroQuest + Action classes. Import powermock? If so, add test to TheStoneHunterTest where Karlen was found)
 46) Recreate PolarWarbear quest (reuse basicMap + defaultCreatureQueue in Zargon)

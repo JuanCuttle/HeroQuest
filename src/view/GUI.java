@@ -94,7 +94,7 @@ public class GUI extends JFrame implements GUIInterface {
 		// GUI attributes
 		game.setGui(this);
 		this.heroQuest = game;
-		BasicMap map = this.heroQuest.getMap();
+		BasicMap map = heroQuest.getMap();
 		this.boardButtons = new JButton[map.getTotalNumberOfRows()][map.getTotalNumberOfColumns()];
 		this.creatureButtons = new ArrayList<>();
 		addKeyListener(listener);
@@ -208,7 +208,7 @@ public class GUI extends JFrame implements GUIInterface {
 		contentPane.add(textArea);
 		
 		if (autoConnectToServer){
-			this.connectToServer();
+			connectToServer();
 		}
 	}
 	
@@ -308,15 +308,15 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void selectCharacter() throws ClassNotFoundException {
-		this.heroQuest.selectCharacter();
+		heroQuest.selectCharacter();
 	}
 
 	public void openDoorWithKeyboard() {
-		this.heroQuest.openDoorWithKeyboard();
+		heroQuest.openDoorWithKeyboard();
 	}
 
 	public void openDoor(int doorId) {
-		this.heroQuest.openDoor(doorId);
+		heroQuest.openDoor(doorId);
 	}
 
 	public void showMessagePopup(String msg) {
@@ -324,19 +324,19 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void reportError(String msg) {
-		this.textArea.setText(msg);
+		textArea.setText(msg);
 	}
 
 	public void moveCreature(DirectionEnum direction) {
-		this.heroQuest.move(direction);
+		heroQuest.move(direction);
 	}
 
 	public void attack() {
-		this.heroQuest.attack();
+		heroQuest.attack();
 	}
 
 	public void castSpell() {
-		this.heroQuest.castSpell();
+		heroQuest.castSpell();
 	}
 
 	public Spell selectSpell(ArrayList<Spell> availableSpells) {
@@ -360,17 +360,17 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void refreshGUI() {
-		for (byte i = 0; i < this.heroQuest.getMap().getTotalNumberOfRows(); i++) {
-			for (byte j = 0; j < this.heroQuest.getMap().getTotalNumberOfColumns(); j++) {
-				Position position = this.heroQuest.getPosition(i, j);
-				this.refreshTile(this.boardButtons[i][j], position);
+		for (byte i = 0; i < heroQuest.getMap().getTotalNumberOfRows(); i++) {
+			for (byte j = 0; j < heroQuest.getMap().getTotalNumberOfColumns(); j++) {
+				Position position = heroQuest.getPosition(i, j);
+				refreshTile(boardButtons[i][j], position);
 			}
 		}
-		this.showVisibleCreaturesInQueue();
+		showVisibleCreaturesInQueue();
 	}
 
 	public void searchForTreasure() {
-		this.heroQuest.searchForTreasure();
+		heroQuest.searchForTreasure();
 	}
 
 	public void showCharacterSelectionScreen() {
@@ -379,11 +379,11 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void searchForTrapsAndHiddenDoors() {
-		this.heroQuest.searchForTrapsAndHiddenDoors();
+		heroQuest.searchForTrapsAndHiddenDoors();
 	}
 
 	public void endTurn() {
-		this.heroQuest.endTurn();
+		heroQuest.endTurn();
 	}
 
 	public String obtainPlayerName() {
@@ -402,15 +402,15 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void connectToServer() {
-		boolean isConnected = this.heroQuest.isConnected();
+		boolean isConnected = heroQuest.isConnected();
 		if (!isConnected) {
-			String serverAddress = this.obtainServerAddress();
+			String serverAddress = obtainServerAddress();
 			String playerName = obtainPlayerName();
-			boolean success = this.heroQuest.getClientServerProxy().connect(serverAddress, playerName);
+			boolean success = heroQuest.getClientServerProxy().connect(serverAddress, playerName);
 			if (success) {
-				this.heroQuest.setConnected(true);
-				this.heroQuest.setLocalPlayerName(playerName);
-				this.heroQuest.setServerAddress(serverAddress);
+				heroQuest.setConnected(true);
+				heroQuest.setLocalPlayerName(playerName);
+				heroQuest.setServerAddress(serverAddress);
 				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFUL_CONNECTION.getId());
 				showQuestDescription();
 			} else {
@@ -422,7 +422,7 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	private void showQuestDescription() {
-		this.textArea.setText(this.heroQuest.getMap().description);
+		textArea.setText(heroQuest.getMap().description);
 	}
 
 	public void showConnectionResultMessage(int result) {
@@ -459,15 +459,15 @@ public class GUI extends JFrame implements GUIInterface {
 				connectionResultMessage = "";
 				break;
 		}
-		this.textArea.setText(connectionResultMessage);
+		textArea.setText(connectionResultMessage);
 	}
 
 	public void disconnectFromServer() {
-		boolean isConnected = this.heroQuest.isConnected();
+		boolean isConnected = heroQuest.isConnected();
 		if (isConnected) {
-			boolean success = this.heroQuest.getClientServerProxy().disconnect();
+			boolean success = heroQuest.getClientServerProxy().disconnect();
 			if (success) {
-				this.heroQuest.setConnected(false);
+				heroQuest.setConnected(false);
 				showConnectionResultMessage(ConnectionResultEnum.SUCCESSFUL_DISCONNECTION.getId());
 			} else {
 				showConnectionResultMessage(ConnectionResultEnum.FAILED_DISCONNECTION.getId());
@@ -480,15 +480,15 @@ public class GUI extends JFrame implements GUIInterface {
 	public void startGame() {
 		boolean isConnected = false;
 		boolean isInterrupted = false;
-		boolean inSession = this.heroQuest.isGameInSession();
+		boolean inSession = heroQuest.isGameInSession();
 		if (inSession) {
 			isInterrupted = true;
 		} else {
-			isConnected = this.heroQuest.isConnected();
+			isConnected = heroQuest.isConnected();
 		}
 		if (isInterrupted || isConnected) {
-			int numberOfPlayersInGame = this.setTotalNumberOfPlayersInTheGame();
-			this.heroQuest.getClientServerProxy().startGame(numberOfPlayersInGame);
+			int numberOfPlayersInGame = setTotalNumberOfPlayersInTheGame();
+			heroQuest.getClientServerProxy().startGame(numberOfPlayersInGame);
 			showConnectionResultMessage(ConnectionResultEnum.SUCCESSFUL_START.getId());
 		}
 		if (!isConnected) {
@@ -498,15 +498,15 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void announceHeroesWon() {
-		this.textArea.setText(Strings.HEROES_WON.toString());
+		textArea.setText(Strings.HEROES_WON.toString());
 	}
 
 	public void announceZargonWon() {
-		this.textArea.setText(Strings.ZARGON_WON.toString());
+		textArea.setText(Strings.ZARGON_WON.toString());
 	}
 
 	public void showInventory() {
-		this.heroQuest.showInventory();
+		heroQuest.showInventory();
 	}
 
 	public void showInventory(int gold, ArrayList<ItemEnum> items) {
@@ -514,12 +514,12 @@ public class GUI extends JFrame implements GUIInterface {
 		for (ItemEnum item : items){
 			itemList.append(item).append("\n");
 		}
-		this.textArea.setText(Strings.YOU_HAVE.toString() + gold
+		textArea.setText(Strings.YOU_HAVE.toString() + gold
 				+ Strings.COINS_IN_INVENTORY + itemList);
 	}
 
 	public void showCreatureInformation(int creatureId) {
-		this.heroQuest.showCreatureInformation(creatureId);
+		heroQuest.showCreatureInformation(creatureId);
 	}
 
 	public void showCreatureInformation(byte body, byte mind, byte movement,
@@ -531,7 +531,7 @@ public class GUI extends JFrame implements GUIInterface {
 		if (roundsToSleep != null && roundsToSleep != 0){
 			output += Strings.TURNS_LEFT_TO_WAKE_UP.toString() + roundsToSleep;
 		}
-		this.textArea.setText(output);
+		textArea.setText(output);
 	}
 
 	public int setTotalNumberOfPlayersInTheGame() {
@@ -592,7 +592,7 @@ public class GUI extends JFrame implements GUIInterface {
 					path = "/images/tiles/" + position.getClass().getSimpleName()
 							+ ".png";
 				}
-				BasicMap map = this.heroQuest.getMap();
+				BasicMap map = heroQuest.getMap();
 				int stairRow = map.getStairsPosition()[0];
 				int stairColumn = map.getStairsPosition()[1];
 				if (stairRow != 0) {
@@ -961,15 +961,15 @@ public class GUI extends JFrame implements GUIInterface {
 		// Each button was assigned to a creature via creature.ID at button initialize
 		// For each creature in the queue, we find its button, and move it to its new position
 		// in the GUI button list
-		ArrayList<Creature> creaturesInQuest = this.heroQuest.getCreatureQueue();
+		ArrayList<Creature> creaturesInQuest = heroQuest.getCreatureQueue();
 		for (int i = 0; i < creaturesInQuest.size(); i++) {
 			Creature creature = creaturesInQuest.get(i);
-			this.refreshCreatureInQueue(this.creatureButtons.get(creature.getID()), creature, i);
+			refreshCreatureInQueue(creatureButtons.get(creature.getID()), creature, i);
 		}
 	}
 
 	public void showTrapActivationMessage(byte damage, Creature creature) {
-		this.textArea.setText(Strings.OH_NO
+		textArea.setText(Strings.OH_NO
 						+ creature.getClass().getSimpleName()
 						+ Strings.ACTIVATED_TRAP + damage
 						+ Strings.OF_BP);
@@ -977,18 +977,18 @@ public class GUI extends JFrame implements GUIInterface {
 
 	public void showAttackDamageMessage(Creature target, byte damage, boolean selfInflicted) {
 		if (selfInflicted) {
-			this.textArea.setText(Strings.THE_CREATURE
+			textArea.setText(Strings.THE_CREATURE
 					+ target.getClass().getSimpleName()
 					+ Strings.ATTEMPTS_SEPPUKU + damage + Strings.OF_DAMAGE);
 		} else {
-			this.textArea.setText(Strings.THE_CREATURE
+			textArea.setText(Strings.THE_CREATURE
 					+ target.getClass().getSimpleName() + Strings.RECEIVED + damage
 					+ Strings.OF_DAMAGE);
 		}
 	}
 
 	public void announceCreatureDeath(Creature creature) {
-		this.textArea.setText(Strings.THE_CREATURE
+		textArea.setText(Strings.THE_CREATURE
 				+ creature.getClass().getSimpleName()
 				+ Strings.DIED_HONORABLY);
 	}
@@ -996,7 +996,7 @@ public class GUI extends JFrame implements GUIInterface {
 	public void showEffectOfCastSpell(Creature caster, Spell spell, Creature target,
 									  byte damage, StatusEnum statusEnum) {
 		if (statusEnum != null) {
-			this.textArea.setText(Strings.THE
+			textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
 					+ Strings.WHISPERED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
 					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
@@ -1004,7 +1004,7 @@ public class GUI extends JFrame implements GUIInterface {
 					+ Strings.BP_MODIFIED_STATUS + statusEnum
 					+ Strings.EXCLAMATION_MARK);
 		} else {
-			this.textArea.setText(Strings.THE
+			textArea.setText(Strings.THE
 					+ caster.getClass().getSimpleName()
 					+ Strings.WHISPERED_SPELL + SpellNameEnum.getNameById(spell.getSpellId())
 					+ Strings.AND_THE_CREATURE + target.getClass().getSimpleName()
@@ -1014,26 +1014,26 @@ public class GUI extends JFrame implements GUIInterface {
 	}
 
 	public void announceUnfortunateDeath(Creature creature) {
-		this.textArea.setText(Strings.OH_NO + " " + Strings.THE_CREATURE
+		textArea.setText(Strings.OH_NO + " " + Strings.THE_CREATURE
 				+ creature.getClass().getSimpleName()
 				+ Strings.WAS_KILLED_BY_TRAP);
 	}
 
 	public void updatePlayerSurroundings() {
-		Creature currentCreature = this.heroQuest.getCurrentCreature();
+		Creature currentCreature = heroQuest.getCurrentCreature();
 		Position currentPosition = currentCreature.getCurrentPosition();
 		byte currentRow = currentPosition.getRow();
 		byte currentColumn = currentPosition.getColumn();
 
 		for (byte i = (byte) (currentRow - 2); i <= currentRow + 2; i++) {
 			for (byte j = (byte) (currentColumn - 2); j <= currentColumn + 2; j++) {
-				if (i >= 0 && i < this.heroQuest.getMap().getTotalNumberOfRows() && j >= 0 && j < this.heroQuest.getMap().getTotalNumberOfColumns()) {
-					Position position = this.heroQuest.getPosition(i, j);
-					this.refreshTile(this.boardButtons[i][j], position);
+				if (i >= 0 && i < heroQuest.getMap().getTotalNumberOfRows() && j >= 0 && j < heroQuest.getMap().getTotalNumberOfColumns()) {
+					Position position = heroQuest.getPosition(i, j);
+					refreshTile(boardButtons[i][j], position);
 				}
 			}
 		}
-		this.showVisibleCreaturesInQueue();
+		showVisibleCreaturesInQueue();
 	}
 
 	public int selectDoorToOpenOrClose(ArrayList<String> doorIds) {
@@ -1063,17 +1063,17 @@ public class GUI extends JFrame implements GUIInterface {
 			e.printStackTrace();
 		}
 
-        this.musicThread = new MusicThread(clip) {
+        musicThread = new MusicThread(clip) {
 		};
 		SwingUtilities.invokeLater(musicThread);
 	}
 
 	public void toggleMusic() {
-		this.musicThread.toggleMusic();
+		musicThread.toggleMusic();
 	}
 
 	public void showTrapRemovalMessage() {
-		this.textArea.setText(Strings.DWARF_DISARMED_TRAPS.toString());
+		textArea.setText(Strings.DWARF_DISARMED_TRAPS.toString());
 	}
 
 	public TrapEvasionMovementEnum showFallingRockMovementOptions() {
@@ -1104,7 +1104,7 @@ public class GUI extends JFrame implements GUIInterface {
 	
 	// Bad, look for alternatives
 	public void updateLanguageButtons() {
-		JMenuBar mBar = this.menuBar;
+		JMenuBar mBar = menuBar;
 		mBar.getMenu(0).setText(Strings.MENU.toString());
 		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(0)).setText(Strings.INSTRUCTIONS.toString());
 		((JButton) mBar.getMenu(0).getAccessibleContext().getAccessibleChild(1)).setText(Strings.SELECT_CHARACTER.toString());
