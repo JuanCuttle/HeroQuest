@@ -488,7 +488,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void setGui(GUI gui) {
-		gui = gui;
+		this.gui = gui;
 	}
 
 	public GUI getGui() {
