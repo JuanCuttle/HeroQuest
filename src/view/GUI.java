@@ -1033,7 +1033,7 @@ public class GUI extends JFrame implements GUIInterface {
 				}
 			}
 		}
-		this.showVisibleCreaturesInQueue(); //precisa?
+		this.showVisibleCreaturesInQueue();
 	}
 
 	public int selectDoorToOpenOrClose(ArrayList<String> doorIds) {

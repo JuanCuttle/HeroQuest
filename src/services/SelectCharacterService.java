@@ -31,7 +31,7 @@ public class SelectCharacterService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                processCharacterSelection(Integer.parseInt(Objects.requireNonNull(fileInformation).get(0)));
+                defineLocalCharacterAsSelectedCharacter(Integer.parseInt(Objects.requireNonNull(fileInformation).get(0)));
                 heroQuest.setLocalAdventurerStartingGold(Integer.parseInt(fileInformation.get(1)));
             } else {
                 heroQuest.showCharacterSelectionScreen();
@@ -41,7 +41,7 @@ public class SelectCharacterService {
         }
     }
 
-    public void processCharacterSelection(int selectedCharacterId) throws ClassNotFoundException {
+    public void defineLocalCharacterAsSelectedCharacter(int selectedCharacterId) throws ClassNotFoundException {
         boolean isCharacterAvailable;
         Zargon playerZargon = new Zargon(heroQuest);
         Adventurer playerAdventurer = new Adventurer();

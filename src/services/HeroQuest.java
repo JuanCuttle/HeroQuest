@@ -597,7 +597,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void processCharacterSelection(int chosenCharacter) throws ClassNotFoundException {
-		selectCharacterService.processCharacterSelection(chosenCharacter);
+		selectCharacterService.defineLocalCharacterAsSelectedCharacter(chosenCharacter);
 	}
 
 	public byte[] getBarbarianInitialPosition() {
