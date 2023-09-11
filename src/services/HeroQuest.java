@@ -208,7 +208,6 @@ public class HeroQuest implements LogicInterface {
 					return true;
 			}
 			return false;
-
 		}
 	}
 
@@ -232,8 +231,8 @@ public class HeroQuest implements LogicInterface {
 		byte sourceColumn = sourcePosition.getColumn();
 		for (int i = sourceRow - area; i <= sourceRow + area; i++) {
 			for (int j = sourceColumn - area; j <= sourceColumn + area; j++) {
-				if (i >= 0 && i < this.map.getTotalNumberOfRows() && j >= 0 && j < this.map.getTotalNumberOfColumns()) {
-					Position position = this.map.getPosition((byte)i, (byte)j);
+				if (i >= 0 && i < map.getTotalNumberOfRows() && j >= 0 && j < map.getTotalNumberOfColumns()) {
+					Position position = map.getPosition((byte)i, (byte)j);
 					if (position.getCreature() != null) {
 						availableTargets.add(position.getCreature());
 					}
@@ -289,7 +288,7 @@ public class HeroQuest implements LogicInterface {
 				gui.refreshGUI();
 				break;
 		}
-		this.gui.updatePlayerSurroundings();
+		gui.updatePlayerSurroundings();
 	}
 
 	public void setAreaVisible(byte sourceRow, byte sourceColumn) {
@@ -307,11 +306,11 @@ public class HeroQuest implements LogicInterface {
 
 	private void processSendPlayer(SendPlayer action) {
 		Player player = action.getPlayer();
-		this.insertPlayerIntoQueue(player);
+		insertPlayerIntoQueue(player);
 	}
 
 	public Creature getCreatureById(int creatureId) {
-        for (Creature creature : this.creatureQueue) {
+        for (Creature creature : creatureQueue) {
             int id = creature.getID();
             if (id == creatureId) {
                 return creature;
@@ -332,12 +331,12 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void killCreature(int creatureID) {
-        for (Creature creature : this.creatureQueue) {
+        for (Creature creature : creatureQueue) {
             if (creature.getID() == creatureID) {
                 creature.setStatus(StatusEnum.DEAD);
                 Position pos = creature.getCurrentPosition();
                 pos.removeCreature();
-                this.map.updatePosition(pos);
+                map.updatePosition(pos);
                 pos.setVisible(true);
             }
         }
@@ -365,44 +364,44 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void startNewGame() {
-		this.setGameInSession(true);
+		setGameInSession(true);
 
-		Player player = this.createPlayer(this.localPlayerName);
-		this.setLocalPlayer(player);
+		Player player = createPlayer(localPlayerName);
+		setLocalPlayer(player);
 		SendPlayer action = new SendPlayer();
 		action.setPlayer(player);
-		this.processAction(action);
-		this.sendAction(action);
-		this.gui.refreshGUI();
+		processAction(action);
+		sendAction(action);
+		gui.refreshGUI();
 	}
 
 	public void endTheGame() {
-		if (this.areHeroesAlive()) {
-			boolean haveConditionsBeenMet = this.map.verifyWinningConditions(this);
+		if (areHeroesAlive()) {
+			boolean haveConditionsBeenMet = map.verifyWinningConditions(this);
 			if (haveConditionsBeenMet) {
-				if (this.localAdventurer != null) {
+				if (localAdventurer != null) {
 					try {
 						int heroType;
-						PlayableCharacter localPlayableCharacter = this.localAdventurer.getPlayableCharacter();
+						PlayableCharacter localPlayableCharacter = localAdventurer.getPlayableCharacter();
 						if (!StatusEnum.DEAD.equals(localPlayableCharacter.getStatus())) {
 							heroType = CharacterEnum.getIdByName(localPlayableCharacter.getClass().getSimpleName());
-							this.gui.writeSaveFile(localPlayerName, heroType, localPlayableCharacter.getGold(), localPlayableCharacter.getItems(this.map));
+							gui.writeSaveFile(localPlayerName, heroType, localPlayableCharacter.getGold(), localPlayableCharacter.getItems(map));
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
-				this.gui.announceHeroesWon();
-				this.endGame();
+				gui.announceHeroesWon();
+				endGame();
 			}
 		} else {
-			this.gui.announceZargonWon();
-			this.endGame();
+			gui.announceZargonWon();
+			endGame();
 		}
 	}
 
 	private boolean areHeroesAlive() {
-		for (Creature creature : this.creatureQueue) {
+		for (Creature creature : creatureQueue) {
             if (creature instanceof PlayableCharacter) {
                 if (!StatusEnum.DEAD.equals(creature.getStatus()))
                     return true;
@@ -416,18 +415,18 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void showInventory() {
-		if (this.localAdventurer != null) {
+		if (localAdventurer != null) {
 			PlayableCharacter character = localAdventurer.getPlayableCharacter();
 			int localPlayerGold = character.getGold();
-			ArrayList<ItemEnum> localPlayerItems = character.getItems(this.map);
-			this.gui.showInventory(localPlayerGold, localPlayerItems);
+			ArrayList<ItemEnum> localPlayerItems = character.getItems(map);
+			gui.showInventory(localPlayerGold, localPlayerItems);
 		} else {
-			this.gui.reportError(Strings.ZARGON_DOES_NOT_CARRY_GOLD.toString());
+			gui.reportError(Strings.ZARGON_DOES_NOT_CARRY_GOLD.toString());
 		}
 	}
 
 	public void showCreatureInformation(int creatureID) {
-		Creature creature = this.getCreatureFromQueue(creatureID);
+		Creature creature = getCreatureFromQueue(creatureID);
 		if (creature.isVisible()) {
 			byte body = creature.getBody();
 			byte mind = creature.getMind();
@@ -438,16 +437,16 @@ public class HeroQuest implements LogicInterface {
 			byte currentCreatureColumn = creatureCurrentPosition.getColumn();
 			byte roundsToSleep = creature.getRoundsToSleep();
 		
-			this.gui.showCreatureInformation(body, mind, movement, status,
+			gui.showCreatureInformation(body, mind, movement, status,
 					currentCreatureRow, currentCreatureColumn, roundsToSleep);
 		} else {
-			this.gui.showMessagePopup(Strings.UNKNOWN.toString());
+			gui.showMessagePopup(Strings.UNKNOWN.toString());
 		}
 	}
 
 	private Creature getCreatureFromQueue(int creatureID) {
 		Creature criatura = null;
-        for (Creature creature : this.creatureQueue) {
+        for (Creature creature : creatureQueue) {
             if (creature.getID() == creatureID) {
                 criatura = creature;
             }
@@ -460,12 +459,12 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public Position getPosition(byte i, byte j) {
-		return this.map.getPosition(i, j);
+		return map.getPosition(i, j);
 	}
 
 	public void setCreatureInPosition(Creature creature, int row, int column) {
-		this.map.positions[row][column].setCreature(creature);
-		creature.setCurrentPosition(this.map.positions[row][column]);
+		map.positions[row][column].setCreature(creature);
+		creature.setCurrentPosition(map.positions[row][column]);
 	}
 
 	public void setLocalPlayerName(String playerName) {
@@ -473,7 +472,7 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void setServerAddress(String serverAddress) {
-		this.gui.setTitle(this.gui.getTitle()+ Strings.SERVER + serverAddress + Strings.COMMA_PLAYER + this.localPlayerName);
+		gui.setTitle(gui.getTitle()+ Strings.SERVER + serverAddress + Strings.COMMA_PLAYER + localPlayerName);
 	}
 
 	public ClientServerProxy getClientServerProxy() {
@@ -489,11 +488,11 @@ public class HeroQuest implements LogicInterface {
 	}
 
 	public void setGui(GUI gui) {
-		this.gui = gui;
+		gui = gui;
 	}
 
 	public GUI getGui() {
-		return gui;
+		return this.gui;
 	}
 
 	public int selectDoorToOpenOrClose(ArrayList<String> directionsWithOpenableDoors) {
