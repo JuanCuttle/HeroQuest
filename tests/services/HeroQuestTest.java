@@ -22,20 +22,20 @@ public class HeroQuestTest {
     }
 
     @Test
-    public void shouldSortCreatureQueueById() {
+    public void shouldSortCreatureQueueByIdReversed() {
         PolarWarbear polarWarbear = new PolarWarbear();
         polarWarbear.setID((byte)1);
         Gargoyle gargoyle = new Gargoyle();
         gargoyle.setID((byte)2);
 
-        heroQuest.insertCreatureIntoQueue(gargoyle);
         heroQuest.insertCreatureIntoQueue(polarWarbear);
+        heroQuest.insertCreatureIntoQueue(gargoyle);
 
         ArrayList<Monster> sortedCreatureQueue = new ArrayList<>();
-        sortedCreatureQueue.add(polarWarbear);
         sortedCreatureQueue.add(gargoyle);
+        sortedCreatureQueue.add(polarWarbear);
 
-        heroQuest.sortCreatureQueueById();
+        heroQuest.sortCreatureQueueByIdReversed();
         assertEquals(sortedCreatureQueue, heroQuest.getCreatureQueue());
     }
 

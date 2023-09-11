@@ -184,7 +184,7 @@ public class SelectCharacterService {
                 heroQuest.reportError(Strings.CHARACTER_SELECTION_ERROR.toString());
                 break;
         }
-        heroQuest.sortCreatureQueueById();
+        heroQuest.sortCreatureQueueByIdReversed();
         heroQuest.showVisibleCreaturesInQueue();
     }
 }

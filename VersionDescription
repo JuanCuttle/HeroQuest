@@ -144,7 +144,6 @@ Can be troublesome with Creature objects (change not made through ID)
 62) Fix TheFireMage map
 63) Verify need for	this.setLocalPlayer(player); in startNewGame() in HeroQuest.java
 64) Remove Player localPlayer in HeroQuest
-65) Fix creatureQueue bug (not cycling through invisible creatures on game start?)
 66) Make adventurer start quest with items already acquired in previous ones (as well as gold)
 67) Analyse and rename processSelectCharacter() and processCharacterSelection()
 68) Extract creatureQueue controls to service
