@@ -45,6 +45,56 @@ public class LairOfTheOrcWarlordTest {
     }
 
     @Test
+    public void shouldReturnFalseIfUlagIsAgilityDown() {
+        List<Creature> creatureQueue = game.getCreatureQueue();
+        Orc ulag = new Orc();
+        ulag.setID((byte)6);
+        ulag.setStatus(StatusEnum.AGILITY_DOWN);
+        creatureQueue.add(ulag);
+        assertFalse(quest.verifyWinningConditions(game));
+    }
+
+    @Test
+    public void shouldReturnFalseIfUlagIsAgilityUp() {
+        List<Creature> creatureQueue = game.getCreatureQueue();
+        Orc ulag = new Orc();
+        ulag.setID((byte)6);
+        ulag.setStatus(StatusEnum.AGILITY_UP);
+        creatureQueue.add(ulag);
+        assertFalse(quest.verifyWinningConditions(game));
+    }
+
+    @Test
+    public void shouldReturnFalseIfUlagIsCourage() {
+        List<Creature> creatureQueue = game.getCreatureQueue();
+        Orc ulag = new Orc();
+        ulag.setID((byte)6);
+        ulag.setStatus(StatusEnum.COURAGE);
+        creatureQueue.add(ulag);
+        assertFalse(quest.verifyWinningConditions(game));
+    }
+
+    @Test
+    public void shouldReturnFalseIfUlagIsCursed() {
+        List<Creature> creatureQueue = game.getCreatureQueue();
+        Orc ulag = new Orc();
+        ulag.setID((byte)6);
+        ulag.setStatus(StatusEnum.CURSED);
+        creatureQueue.add(ulag);
+        assertFalse(quest.verifyWinningConditions(game));
+    }
+
+    @Test
+    public void shouldReturnFalseIfUlagIsRockSkin() {
+        List<Creature> creatureQueue = game.getCreatureQueue();
+        Orc ulag = new Orc();
+        ulag.setID((byte)6);
+        ulag.setStatus(StatusEnum.ROCK_SKIN);
+        creatureQueue.add(ulag);
+        assertFalse(quest.verifyWinningConditions(game));
+    }
+
+    @Test
     public void shouldReturnTrueIfUlagIsDead() {
         List<Creature> creatureQueue = game.getCreatureQueue();
         Orc ulag = new Orc();
