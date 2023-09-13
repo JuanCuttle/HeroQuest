@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -95,4 +96,14 @@ public interface GUIInterface {
 	TrapEvasionMovementEnum showFallingRockMovementOptions();
 	
 	TrapEvasionMovementEnum showPitJumpingOptions();
+
+	ArrayList<String> readSaveFile(String localPlayerName) throws IOException, ClassNotFoundException;
+
+	boolean checkSaveFileExists(String localPlayerName);
+
+	String getTitle();
+
+	void setTitle(String s);
+
+	void writeSaveFile(String localPlayerName, int heroType, int gold, ArrayList<ItemEnum> items) throws IOException;
 }

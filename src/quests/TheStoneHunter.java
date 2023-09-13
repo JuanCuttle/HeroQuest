@@ -179,7 +179,7 @@ public class TheStoneHunter extends BasicMap {
 			Creature karlen = game.getCreatureById(6);
 			if (karlen.isVisible()) {
 				foundKarlen = true;
-				game.getGui().showMessagePopup(Strings.FOUND_KARLEN.toString());
+				game.showMessagePopup(Strings.FOUND_KARLEN.toString());
 			}
 		}
 	}

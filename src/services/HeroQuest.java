@@ -26,6 +26,7 @@ import entities.players.*;
 import entities.tiles.*;
 import entities.utils.Strings;
 import enums.*;
+import interfaces.GUIInterface;
 import interfaces.LogicInterface;
 import quests.BasicMap;
 import view.ClientServerProxy;
@@ -35,7 +36,7 @@ public class HeroQuest implements LogicInterface {
 
 	private BasicMap map;
 	private ArrayList<Player> players;
-	private GUI gui;
+	private GUIInterface gui;
 	private final ClientServerProxy clientServerProxy;
 	private Player localPlayer;
 	private ArrayList<Creature> creatureQueue;
@@ -487,11 +488,11 @@ public class HeroQuest implements LogicInterface {
 		this.map = map;
 	}
 
-	public void setGui(GUI gui) {
+	public void setGui(GUIInterface gui) {
 		this.gui = gui;
 	}
 
-	public GUI getGui() {
+	public GUIInterface getGui() {
 		return this.gui;
 	}
 
@@ -617,5 +618,9 @@ public class HeroQuest implements LogicInterface {
 
 	public void showVisibleCreaturesInQueue() {
 		gui.showVisibleCreaturesInQueue();
+	}
+
+	public void refreshGUI() {
+		gui.refreshGUI();
 	}
 }

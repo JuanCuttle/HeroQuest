@@ -1,11 +1,13 @@
 package quests;
 
 import entities.Creature;
-import services.HeroQuest;
+import entities.enemies.Orc;
 import entities.enemies.Zombie;
 import enums.StatusEnum;
 import org.junit.Before;
 import org.junit.Test;
+import services.HeroQuest;
+import view.GUIMock;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class TheStoneHunterTest {
         game = new HeroQuest();
         quest = new TheStoneHunter(game);
         game.setMap(quest);
+        game.setGui(new GUIMock());
     }
 
     @Test
@@ -113,5 +116,16 @@ public class TheStoneHunterTest {
         creatureQueue.add(karlen);
         quest.specialOccurrence(game);
         assertFalse(quest.getFoundKarlen());
+    }
+
+    @Test
+    public void shouldReturnTrueIfKarlenHasBeenFound() {
+        List<Creature> creatureQueue = game.getCreatureQueue();
+        Orc karlen = new Orc();
+        karlen.setID((byte)6);
+        karlen.setVisible(true);
+        creatureQueue.add(karlen);
+        quest.specialOccurrence(game);
+        assertTrue(quest.getFoundKarlen());
     }
 }

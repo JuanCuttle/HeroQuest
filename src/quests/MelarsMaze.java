@@ -206,7 +206,7 @@ public class MelarsMaze extends BasicMap {
 			throneMoved = true;
 			positions[11][7] = new Room((byte)11, (byte)7);
 			generate1x1(thronePosition);
-			game.getGui().showMessagePopup(Strings.THRONE_PASSAGE_REVEALED.toString());
+			game.showMessagePopup(Strings.THRONE_PASSAGE_REVEALED.toString());
 		}
 	}
 }

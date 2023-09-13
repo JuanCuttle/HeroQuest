@@ -173,7 +173,7 @@ public class TheRescueOfSirRagnar extends BasicMap {
 					c.setVisible(true);
 				}
 				
-				game.getGui().refreshGUI();
+				game.refreshGUI();
 			}
 		}
 	}
